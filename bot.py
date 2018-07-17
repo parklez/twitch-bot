@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
 
-import re
+###################################
+BOT_NICKNAME = ""
+CHANNEL_NICKNAME = ""
+IRC_TOKEN = "" # Get your access token here www.twitchapps.com/tmi/
+
+API_CLIENT_ID = "" # Get your bot application client_id here https://glass.twitch.tv/console/apps
+API_CHANNEL_NICKNAME = CHANNEL_NICKNAME
+API_TOKEN = "" # Get your token at https://twitchapps.com/tokengen/ for "user_read channel_editor" scopes.
+###################################
+
 import socket
+import re
 import time
 import datetime
-import random
+import os
 
 import requests
 import simpleaudio
-
-
-SOUNDS = {
-        '!crow': 'sounds/crow.wav',
-        '!owee': 'sounds/owee.wav',
-        }
 
 GREETINGS = {
         'friend1': 'Welcome friend1!',
@@ -24,53 +28,106 @@ EDITORS = (
         'MyTwitchChannel',
         'MyTrustyMod',
         )
-            
-# ------------------------------------------- IRC Settings -------------------------------------------
-HOST = "irc.twitch.tv"                          # Hostname of the IRC-Server in this case twitch's
-PORT = 6667                                     # Default IRC-Port
-CHAN = "#MyTwitchChannel"                       # Channelname = #{Nickname}
-NICK = "MyBotOrChannel"                         # Nickname = Twitch username
-PASS = ""                                       # www.twitchapps.com/tmi/ will help to retrieve the required authkey
 
-# -------------------------------------------- Twitch API --------------------------------------------
-CLIENT_ID = ''                               # Your bot's client_id https://glass.twitch.tv/console/apps
-URL = 'https://api.twitch.tv/kraken/'
-CHANNEL_ID = ''                              # get_id() can help retrieving this info
-OAUTH_KEY = ''                               # https://twitchapps.com/tokengen/ for "user_read channel_editor"
 
-HEADERS = {
-        'Client-ID': CLIENT_ID,
-        'Accept': 'application/vnd.twitchtv.v5+json',
-        'Authorization': 'OAuth ' + OAUTH_KEY
-        }
+class TwitchIRC:
+    def __init__(self, username, channel, token):
+        self.username = username
+        self.token = token
+        self.channel = '#' + channel
+        self.host = 'irc.twitch.tv'
+        self.port = 6667
+        self._sock = socket.socket()
+        self.welcome()
+
+    def welcome(self):
+        """
+        This function connects to twitch IRC, sends password, nickname and joins a channel.
+        """
+        self._sock.connect((self.host, self.port))
+        self.send_pass()
+        self.send_nick()
+        self.join_channel()
+
+    def disconnect(self):
+        self._sock.close()
         
-def update_game(game_title):
-    game_title = game_title[6:]
-    data = {'game': game_title}
-    post_data = {'channel': data}
-    response = requests.put(URL + 'channels/' + CHANNEL_ID, json=post_data, headers=HEADERS)
-    
-    if response.status_code == 200:
-        send_message(CHAN, 'Game updated: ' + game_title)
-    else:
-        print(response.text)
+    def send(self, data):
+        """
+        This function converts data into bytes with UTF-8 encoding then socket.send()
+        """
+        self._sock.send(bytes(data, 'UTF-8'))
 
-def update_status(stream_title):
-    stream_title = stream_title[7:]
-    data = {'status': stream_title}
-    post_data = {'channel': data}
-    response = requests.put(URL + 'channels/' + CHANNEL_ID, json=post_data, headers=HEADERS)
+    def send_pong(self):
+        self.send("PONG :tmi.twitch.tv\r\n")
 
-    if response.status_code == 200:
-        send_message(CHAN, 'Status updated: ' + stream_title)
-    else:
-        print(response.text)
+    def send_nick(self):
+        self.send("NICK {}\r\n".format(self.username))
 
-def get_id(username):
-    r = requests.get(URL + 'users?login=' + username, headers=HEADERS)
-    print(r.json())
+    def send_pass(self):
+        self.send("PASS {}\r\n".format(self.token))
 
-# --------------------------------------------- Classes ----------------------------------------------
+    def join_channel(self):
+        self.send("JOIN {}\r\n".format(self.channel))
+
+    def part_channel(self):
+        self.send("PART {}\r\n".format(self.channel))
+
+    def send_message(self, message):
+        self.send("PRIVMSG {} :{}\r\n".format(self.channel, message))
+
+
+class TwitchAPI:
+    def __init__(self, client_id, channel, token=None):
+        """
+        Basic Twitch API calls using kraken v5
+        
+        client_id = client id from your bot application <string> https://glass.twitch.tv/console/apps
+        token = token for "user_read channel_editor" scopes <string> https://twitchapps.com/tokengen/
+        channel = username of the channel authorized above <string>
+        """
+        self.client_id = client_id
+        self.token = token
+        self.channel = channel
+        self.base_api = "https://api.twitch.tv/kraken/"
+        self.last_call = ""
+        
+        self.headers = {'Client-ID': self.client_id,
+                        'Accept': 'application/vnd.twitchtv.v5+json'}
+                        
+        if self.token:
+            self.headers['Authorization'] = 'OAuth ' + self.token
+            
+        self.channel_id = self.get_channel_id()
+        
+    def get_channel_id(self):
+        r = requests.get(self.base_api + 'users?login=' + self.channel, headers=self.headers)
+        if r.status_code == 200:
+            return r.json()['users'][0]['_id']
+        else:
+            print('[Twitch API]', r.text)
+            
+    def update_game(self, game_title):
+        data = {'game': game_title}
+        post_data = {'channel': data}
+        response = requests.put(self.base_api + 'channels/' + self.channel_id, json=post_data, headers=self.headers)
+        
+        if response.status_code == 200:
+            self.last_call = 'Game updated: ' + game_title
+        else:
+            self.last_call = response.text
+
+    def update_status(self, stream_title):
+        data = {'status': stream_title}
+        post_data = {'channel': data}
+        response = requests.put(self.base_api + 'channels/' + self.channel_id, json=post_data, headers=self.headers)
+
+        if response.status_code == 200:
+            self.last_call = 'Status updated: ' + stream_title
+        else:
+            self.last_call = response.text
+            
+
 class SFX:
     
     sounds = list()
@@ -100,149 +157,113 @@ class Greeter:
         self.message = message
         self.greeted = False
         Greeter.people.append(self)
+
+        
+def message_pooling(chat):
+    data = ""
+    
+    while True:
+        time.sleep(0.1)
+        
+        try:
+            data = chat._sock.recv(1024).decode('UTF-8')
+            #print(data)
             
+            if data == "PING :tmi.twitch.tv\r\n":
+                chat.send_pong()
             
-# ----------------------------------------- Basic Functions ------------------------------------------
-def send_pong(msg):
-    con.send(bytes('PONG %s\r\n' % msg, 'UTF-8'))
+            if data.split(' ')[1] == 'PRIVMSG':
+                username = re.search(r"\w+", data).group(0)
+                message = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :").sub("", data).rstrip('\n').rstrip()
+                parse_message(message, username)
+                #print(time.strftime("[%H:%M]"), username + ': ' + message)
+                
+            data = ""
 
-def send_message(chan, msg):
-    con.send(bytes('PRIVMSG %s :%s\r\n' % (chan, msg), 'UTF-8'))
+        except socket.error:
+            print("Socket died")
 
-def send_nick(nick):
-    con.send(bytes('NICK %s\r\n' % nick, 'UTF-8'))
+        except socket.timeout:
+            print("Socket timeout")
+ 
+def parse_message(message, sender):
 
-def send_pass(password):
-    con.send(bytes('PASS %s\r\n' % password, 'UTF-8'))
-
-def join_channel(chan):
-    con.send(bytes('JOIN %s\r\n' % chan, 'UTF-8'))
-
-def part_channel(chan):
-    con.send(bytes('PART %s\r\n' % chan, 'UTF-8'))
-
-# ---------------------------------------- Parsing Functions -----------------------------------------
-def get_sender(msg):
-    result = ""
-    for char in msg:
-        if char == "!":
-            break
-        if char != ":":
-            result += char
-    return result
-
-def get_message(msg):
-    result = ""
-    i = 3
-    length = len(msg)
-    while i < length:
-        result += msg[i] + " "
-        i += 1
-    result = result.lstrip(':')
-    return result
-
-def parse_message(msg, sender):
-    if sender not in CHATTERS and sender != NICK:
+    request = message.lower().split()[0]
+    
+    if sender not in CHATTERS and sender != CHAT.username:
         CHATTERS.append(sender)
     
-    # msg string always ends with an space, so the list below ends with an empty <string> object which means False in bool()
-    if len(msg) >= 1:
-        full = msg[:-1]
-        msg = msg.split(' ')
+    commands = {
+               '!commands': command_commands,
+               '!sfx': command_sounds,
+               '!sounds': command_sounds,
+               '!uptime': command_uptime,
+               '!ping': command_ping,
+                }
+    
+    if request in commands.keys():
+        commands[request](message, sender)
         
-        OPTIONS = {
-           '!commands': command_commands,
-           '!pat': command_pat,
-           '!sfx': command_sounds,
-           '!shoot': command_shoot,
-           '!sounds': command_sounds,
-           '!uptime': command_uptime,
-            }
-                   
-        if msg[0] in OPTIONS:
-            OPTIONS[msg[0]](sender, msg[1])
+    if request in SOUNDS:
+        for sfx in SFX.sounds:
+            if sfx.command == request:
+                sfx.play_sound()
+                
+    if sender.lower() in GREETINGS:
+        for item in Greeter.people:
+            if item.username == sender.lower():
+                if item.greeted == False:
+                    CHAT.send_message(item.message)
+                    item.greeted = True
+                    ## Hardcode oie
+                    if item.username == 'sayan3':
+                        simpleaudio.WaveObject.from_wave_file('sounds/sayan.wav').play()
+                        
+    if sender.lower() in EDITORS:
+        if request == "!game":
+            API.update_game(message[6:])
+            CHAT.send_message(API.last_call)
             
-        if msg[0] in SOUNDS:
-            for sfx in SFX.sounds:
-                if sfx.command == msg[0]:
-                    sfx.play_sound()
-                    
-        if sender.lower() in GREETINGS:
-            for item in Greeter.people:
-                if item.username.lower() == sender.lower():
-                    if item.greeted == False:
-                        send_message(CHAN, item.message)
-                        item.greeted = True
-                            
-        if sender.lower() in EDITORS:
-            if msg[0] == "!game":
-                update_game(full)
-            if msg[0] == "!status":
-                update_status(full)
-
-# ------------------------------------------ Bot Functions -------------------------------------------
-def command_uptime(sender=None, target=None):
+        if request == "!status":
+            API.update_status(message[7:])
+            CHAT.send_message(API.last_call)
+    
+########## Bot Functions
+def command_uptime(message=None, sender=None):
     delta = int(time.time() - STARTUP)
     message = "Stream uptime {} h:m:s dogeWink".format(str(datetime.timedelta(seconds=delta)))
-    send_message(CHAN, message)
+    CHAT.send_message(message)
 
-def command_sounds(sender=None, target=None):
+def command_sounds(message=None, sender=None):
     message = ""
     for sfx in sorted(SOUNDS.keys()):
         message += sfx + ', '
         
-    message += 'dogeKek'
-    send_message(CHAN, message)
+    message = message[:-2] + ' dogeKek'
+    CHAT.send_message(message)
     
-def command_commands(sender=None, target=None):
-    send_message(CHAN, 'My tricks: !sounds, !uptime, !pat, !shoot dogeKek')
+def command_commands(message=None, sender=None):
+    CHAT.send_message('My tricks: !sounds, !uptime, !ping dogeKek')
 
-# --------------------------------------------- Startup ----------------------------------------------
-STARTUP = time.time()
+def command_ping(message=None, sender=None):
+    CHAT.send_message('pong!')
+    
+########## Startup
+CHAT = TwitchIRC(BOT_NICKNAME, CHANNEL_NICKNAME, IRC_TOKEN)
+API = TwitchAPI(API_CLIENT_ID, API_CHANNEL_NICKNAME, API_TOKEN)
 CHATTERS = list()
+STARTUP = time.time()
+SOUNDS = {}
 
+for file in os.listdir('sounds'):
+    SOUNDS["!" + file[:-4]] = 'sounds/' + file
+    
 for key in SOUNDS:
     SFX(key, SOUNDS[key])
     
 for key in GREETINGS:
     Greeter(key, GREETINGS[key])
 
-# -------------------------------------------- Main Loop ---------------------------------------------
 
-con = socket.socket()
-con.connect((HOST, PORT))
-#con.settimeout(0.1) # Helps main loop but I don't know how to handle this properly.
-
-send_pass(PASS)
-send_nick(NICK)
-join_channel(CHAN)
-
-data = ""
-
-while True:
-
-    time.sleep(0.05) # 20 request per second?
-    
-    try:
-        data = data+con.recv(1024).decode('UTF-8')
-        data_split = re.split(r"[~\r\n]+", data)
-        data = data_split.pop()
-
-        for line in data_split:
-            line = str.rstrip(line)
-            line = str.split(line)
-
-            if len(line) >= 1:
-                if line[0] == 'PING':
-                    send_pong(line[1])
-
-                if line[1] == 'PRIVMSG':
-                    sender = get_sender(line[0])
-                    message = get_message(line)
-                    parse_message(message, sender)
-
-    except socket.error:
-        print("Socket died")
-
-    except socket.timeout:
-        print("Socket timeout")
+if __name__ == "__main__":
+    message_pooling(CHAT)
