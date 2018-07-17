@@ -12,5 +12,8 @@
 2. Requests ```pip install requests```
 3. Simple Audio ```pip install simpleaudio```
 
+### Known issues
+- simpleaudio doesn't support adjusting volume [see issue](https://github.com/hamiltron/py-simple-audio/issues/21)
+
 ### Disclaimer
 This is still work in progress, along with the fact I'm also learning a lot.
