@@ -215,9 +215,6 @@ def parse_message(message, sender):
                 if item.greeted == False:
                     CHAT.send_message(item.message)
                     item.greeted = True
-                    ## Hardcode oie
-                    if item.username == 'sayan3':
-                        simpleaudio.WaveObject.from_wave_file('sounds/sayan.wav').play()
                         
     if sender.lower() in EDITORS:
         if request == "!game":
