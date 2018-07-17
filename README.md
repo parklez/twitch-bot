@@ -2,8 +2,8 @@
 
 ### What can it do?
 - Connect to Twitch chat via IRC, parse messages/sender
-- Conenct to Twitch API via kraken v5, allowing editors to change stream status/game
-- Play .wav sounds asyncronously thanks to simpleaudio module
+- Connect to Twitch API via kraken v5, allowing editors to change stream status/game
+- Play .wav sounds asynchronously thanks to simpleaudio module
 - Greet certain viewers once when they say something
 - Print uptime in chat
 
@@ -13,4 +13,4 @@
 3. Simple Audio ```pip install simpleaudio```
 
 ### Disclaimer
-This is still work in progress, along with the fact I'm also learning how to handle all this.
+This is still work in progress, along with the fact I'm also learning a lot.
