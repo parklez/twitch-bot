@@ -1,0 +1,9 @@
+{
+    "global": [
+        {
+            "command": "!owee",
+            "path": "sounds/owee.wav",
+            "cooldown": "0"
+        },
+    ]
+}

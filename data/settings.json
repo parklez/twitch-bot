@@ -1,0 +1,12 @@
+{
+    "irc": {
+        "username": "bots_username",
+        "channel": "your_channel",
+        "token": "Get your access token here www.twitchapps.com/tmi/"
+    },
+    "api": {
+        "client_id": "https://glass.twitch.tv/console/apps",
+        "channel": "your_channel",
+        "token": "https://twitchapps.com/tokengen/"
+    }
+}
