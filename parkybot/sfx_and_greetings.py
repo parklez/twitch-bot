@@ -2,7 +2,6 @@ import simpleaudio
 
 
 class SFX:
-    
     sounds = dict()
     
     def __init__(self, command, path, cooldown=False):
@@ -13,12 +12,10 @@ class SFX:
         self.lastplayed = 0
         SFX.sounds[command] = self
         
-    def play_sound(self):
-        if self.cooldown:
-            return ## TODO
-            
-        else:
-            self.sound.play()
+    def play_sound(self, message):
+        # FUTURE:
+        # With the Message object, limit or cooldown specific users.
+        self.sound.play()
 
             
 class Greeter:
@@ -31,20 +28,4 @@ class Greeter:
         self.sound = sound
         self.greeted = False
         Greeter.people[username] = self
-        
-class Chain:
-    
-    chains = dict()
-    
-    def __init__(self, trigger, message, cooldown, counter=None, target=None):
-        self.trigger = trigger
-        self.message = message
-        self.cooldown = cooldown
-        self.target = target
-        self.counter = counter
-        
-        Chain.chains[trigger] = self
-        
-    def count(self):
-        self.counter += 1
-        
+

@@ -11,7 +11,7 @@ def load_json(file):
     with open(file, "r") as _file:
         return dict(json.load(_file))
 
-def create_default_json(file="settings.json"):
+def create_default_json(file="data/settings.json"):
     data = {
         'irc': {
             'username': 'username',
@@ -26,15 +26,19 @@ def create_default_json(file="settings.json"):
         }
     create_json(data, file)
         
-def create_default_sounds_json(file="sounds.json"):
+def create_default_sounds_json(file="data/sounds.json"):
     data = {
-        'global': {
-            '!command': 'path to file.wav',
-            }
+        'global': [
+                {
+                    "command": "!example",
+                    "path": "sounds/hi.wav",
+                    "cooldown": "0"
+                }
+            ]
         }
     create_json(data, file)
     
-def create_default_users(file="users.json"):
+def create_default_users(file="data/users.json"):
     data = {
         'users': [
             {
@@ -61,3 +65,13 @@ def sound_files_to_dict(folder):
                 'cooldown': '0'
                 }
             )
+
+def make_dir(folder_name):
+    'Creates a folder.'
+    import os
+    if not os.path.exists(folder_name):
+        try:
+            os.makedirs(folder_name)
+            print('The folder', folder_name, 'has been created!')
+        except Exception as e:
+            print(e)
