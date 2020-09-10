@@ -68,7 +68,6 @@ def sound_files_to_dict(folder):
 
 def make_dir(folder_name):
     'Creates a folder.'
-    import os
     if not os.path.exists(folder_name):
         try:
             os.makedirs(folder_name)

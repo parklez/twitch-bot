@@ -65,10 +65,6 @@ class TwitchAPI:
         client_id = client id from your bot application <string> https://glass.twitch.tv/console/apps
         channel = username of the channel authorized above <string>
         token = token for "user_read channel_editor" scopes <string> https://twitchapps.com/tokengen/
-        
-        Methods:
-            TODO: REWRITE
-            
         """
         self.base_api = "https://api.twitch.tv/kraken/"
         self.client_id = client_id

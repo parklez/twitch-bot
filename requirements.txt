@@ -1,0 +1,2 @@
+python-vlc>=3.0.1
+gTTs>=2.1.1

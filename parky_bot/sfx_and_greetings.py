@@ -1,25 +1,23 @@
-import simpleaudio
+from parky_bot.settings import VOLUME
+from vlc import MediaPlayer
 
 
 class SFX:
-    sounds = dict()
-    
-    def __init__(self, command, path, cooldown=False):
-        self.command = command
+    def __init__(self, path, cooldown=False):
         self.path = path
-        self.sound = simpleaudio.WaveObject.from_wave_file(path)
         self.cooldown = cooldown
         self.lastplayed = 0
-        SFX.sounds[command] = self
         
     def play_sound(self, message):
         # FUTURE:
         # With the Message object, limit or cooldown specific users.
-        self.sound.play()
+        print('play_sound.VOLUME', VOLUME)
+        audio = MediaPlayer(self.path)
+        audio.audio_set_volume(VOLUME)
+        audio.play()
 
-            
+
 class Greeter:
-
     people = dict()
     
     def __init__(self, username, message, sound=None):
@@ -28,4 +26,3 @@ class Greeter:
         self.sound = sound
         self.greeted = False
         Greeter.people[username] = self
-
