@@ -12,6 +12,18 @@ BOT = ParkyBot(API, IRC)
 print('----------------------------')
 import random
 
+@BOT.decorator('!game')
+def command_updategame(message):
+    if 'broadcaster' in message.badges.get('badges'):
+        BOT.twitch.update_game(message.message[6:])
+        BOT.send_message("We're now playing: {}".format(BOT.twitch.last_call))
+
+@BOT.decorator('!status')
+def command_updatestatus(message):
+    if 'broadcaster' in message.badges.get('badges'):
+        BOT.twitch.update_status(message.message[8:])
+        BOT.send_message("Stream title: {}".format(BOT.twitch.last_call))
+
 @BOT.decorator('!uptime')
 def command_uptime(message):
     time = BOT.twitch.get_uptime()
@@ -101,6 +113,8 @@ def command_gtts(message):
     #Need to find a way to play this audio from the memory directly.
     import gtts
     import vlc
+    if not message.message[3:]:
+        return
     meme = gtts.gTTS(message.message[3:])
     meme.save('tts_temp.mp3')
     audio = vlc.MediaPlayer('tts_temp.mp3')

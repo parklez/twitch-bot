@@ -28,6 +28,7 @@ class TwitchIRC:
         self.send_token()
         self.send_nick()
         self.join_channel()
+        self.request_tags()
 
     def disconnect(self):
         self.irc_sock.close()
@@ -55,6 +56,11 @@ class TwitchIRC:
 
     def send_message(self, message):
         self.send("PRIVMSG {} :{}\r\n".format(self.channel, message))
+    
+    def request_tags(self):
+        #https://discuss.dev.twitch.tv/t/unable-to-register-for-irc-capabilities/27023
+        self.send("CAP REQ :twitch.tv/tags\r\n")
+
         
 
 class TwitchAPI:

@@ -6,12 +6,13 @@ class Message:
         self.string = string
         self.message = ''
         self.sender = ''
+        self.badges = dict()
         self.targets = []
         self.command = None
         
-        self._parse(self.string)
+        self.new_parser()
 
-    def _parse(self, string):
+    def simple_parser(self):
         """Splits sender, message and target(s)
         and returns attributes"""
     
@@ -28,6 +29,29 @@ class Message:
             
         words = self.message.split(" ")
         
+        for word in words:
+            if word.startswith("@"):
+                self.targets.append(word.strip("@"))
+
+    def new_parser(self):
+        if self.string.split()[2] != "PRIVMSG":
+            return
+
+        self.message = re.search(r'PRIVMSG #\w+ :(.*)', self.string).group(1)
+        
+        string = self.string.split()
+        badges = string[0].split(';')
+        for item in badges:
+            item = item.split('=')
+            self.badges[item[0]] = item[1]
+        print(self.badges)
+        
+        self.sender = self.badges.get('display-name')
+
+        if self.message.startswith("!"):
+            self.command = self.message.lower().split()[0]
+
+        words = self.message.split(" ")
         for word in words:
             if word.startswith("@"):
                 self.targets.append(word.strip("@"))
