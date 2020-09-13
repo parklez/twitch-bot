@@ -1,5 +1,4 @@
 import socket
-import time
 import datetime
 import threading
 
@@ -61,7 +60,6 @@ class TwitchIRC:
         #https://discuss.dev.twitch.tv/t/unable-to-register-for-irc-capabilities/27023
         self.send("CAP REQ :twitch.tv/tags\r\n")
 
-        
 
 class TwitchAPI:
     def __init__(self, client_id, channel, token=None):
@@ -81,31 +79,26 @@ class TwitchAPI:
                         'Accept': 'application/vnd.twitchtv.v5+json'}
                         
         if self.token:
-            self.headers['Authorization'] = 'OAuth ' + self.token
+            self.headers['Authorization'] = f'OAuth {self.token}'
             
-        self.user = None
+        self.user = {}
         self.channel_id = ''
         self.title = ''
         self.game = ''
-        self.last_call = ''
-        
-        self.channel_info = None
-        self.recent_followers = []
+        self.channel_info = {}
         
         self.connect()
         
     def connect(self):
         user = threading.Thread(target=self.get_user)
         info = threading.Thread(target=self.get_channel_by_id)
-        followers = threading.Thread(target=self.retrieve_followers)
         
         user.start()
         user.join()
         
-        self.channel_id = self.fetch_channel_id()
+        self.channel_id = self.user.get('_id')
         
         info.start()
-        followers.start()
         
         info.join()
         self.status = self.fetch_status()
@@ -118,74 +111,57 @@ class TwitchAPI:
         if r.status_code == 200:
             self.user = r.json()
             return r.json()
-        else:
-            print('[Twitch API] get_user_json():', r.text)
-        
-    def fetch_channel_id(self):
-        if type(self.user) == dict:
-            return self.user["_id"]
-        else:
-            print('[Twitch API] fetch_channel_id(): No "_id" was found.')
-            return None
 
     def get_channel_by_id(self):
         #https://dev.twitch.tv/docs/v5/reference/channels/#get-channel-by-id
-
         if self.channel_id:
             r = requests.get(self.base_api + "channels/" + self.channel_id, headers=self.headers)
-        else:
-            print('[Twitch API] get_channel_by_id: channel ID is None.')
-            return
-
-        if r.status_code == 200:
-            self.channel_info = r.json()
-            return r.json()
-        else:
-            print('[Twitch API] get_channel_by_id():', r.text)
-            return None
+            
+            if r.status_code == 200:
+                self.channel_info = r.json()
+                return r.json()
+        
+        return {}
 
     def fetch_status(self):
-        if type(self.channel_info) == dict:
-            return self.channel_info["status"]
-            
-        else:
-            print('[Twitch API] fetch_status(): No "status" was found.')
+        if self.channel_info:
+            return self.channel_info.get('status')
 
     def fetch_game(self):
-        if type(self.channel_info) == dict:
-            return self.channel_info["game"]
-            
-        else:
-            print('[Twitch API] fetch_game(): No "game" was found.')
+        if self.channel_info:
+            return self.channel_info.get('game')
     
     def update_game(self, game_title):
-        data = {'game': game_title}
-        post_data = {'channel': data}
+        post_data = {
+            'channel': {
+                'game': game_title
+            }
+        }
+        
         response = requests.put(self.base_api + 'channels/' + self.channel_id, json=post_data, headers=self.headers)
         
         if response.status_code == 200:
             self.game = game_title
-            self.last_call = game_title
-        else:
-            self.last_call = response.text
+        return response
 
     def update_status(self, stream_title):
-        data = {'status': stream_title}
-        post_data = {'channel': data}
+        post_data = {
+            'channel': {
+                'status': stream_title
+            }
+        }
+
         response = requests.put(self.base_api + 'channels/' + self.channel_id, json=post_data, headers=self.headers)
 
         if response.status_code == 200:
-            self.status = stream_title
-            self.last_call = stream_title
-        else:
-            self.last_call = response.text
-            
+            self.title = stream_title
+        return response
+    
     def retrieve_followers(self, count=5):
-        count = str(count)
         followers = list()
 
         if self.channel_id:
-            response = requests.get(self.base_api + 'channels/' + self.channel_id + '/follows?limit=' + count, headers=self.headers)
+            response = requests.get(self.base_api + 'channels/' + self.channel_id + '/follows?limit=' + str(count), headers=self.headers)
         else:
             print('[Twitch API] retrieve_followers: channel ID is None.')
             return
@@ -206,7 +182,7 @@ class TwitchAPI:
         for user in latest_followers:
             if user not in self.recent_followers:
                 new_followers.append(user)
-                
+        
         self.recent_followers = latest_followers
         
         return new_followers
@@ -217,40 +193,26 @@ class TwitchAPI:
 
         return response.json()
         
-    def _get_current_stream_startup_time(self):
+    def get_current_stream_startup_time(self):
         json = self.get_stream_by_user()
-        if json['stream'] != None:
-            return json['stream']['created_at']
-        else:
-            return None
-            
-    def _convert(self, seconds):
-        #https://www.geeksforgeeks.org/python-program-to-convert-seconds-into-hours-minutes-and-seconds/
-        min, sec = divmod(seconds, 60)
-        hour, min = divmod(min, 60)
-        return (hour, min, sec)
+        if json.get('stream'):
+            return json.get('stream').get('created_at')
         
-    def get_uptime(self) -> str:
+    def get_uptime(self):
         #json format "2016-12-14T22:49:56Z"
-        string = self._get_current_stream_startup_time()
+        string = self.get_current_stream_startup_time()
         
         if not string:
-            return "{} is currently not live.".format(self.channel)
+            return None
         else:
-            #Eventually find a better solution for this mess
-            #TODO: streams over 24 hours won't increase the hour counter
+            then = datetime.datetime.strptime(string, '%Y-%m-%dT%H:%M:%SZ')
             now = datetime.datetime.now()
-            year, month, day = string.split("T")[0].split("-")
-            hours, minutes, seconds = string[:-1].split("T")[1].split(":")
-            then = datetime.datetime(int(year), int(month), int(day), int(hours), int(minutes), int(seconds))
-            delta = now - then
-            uptime = self._convert(delta.seconds)
+            diff = now - then
             
-            return "{} has been live for {} hours, {} minutes, {} seconds.".format(self.channel, uptime[0], uptime[1], uptime[2])
+            return diff
           
-    def get_users(self, username) -> str:
+    def get_users(self, username):
         #https://dev.twitch.tv/docs/v5/reference/users/#get-users
         
         r = requests.get(self.base_api + 'users?login=' + username, headers=self.headers)
         return r.json()
-        

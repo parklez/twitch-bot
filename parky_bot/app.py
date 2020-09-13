@@ -1,36 +1,58 @@
-from parky_bot.settings import SETTINGS, SOUNDS
+from parky_bot.settings import SETTINGS
 from parky_bot.twitch_api.twitch import TwitchIRC, TwitchAPI
 from parky_bot.bot import ParkyBot
-from parky_bot.sfx_and_greetings import SFX, VOLUME
+from parky_bot.models.sfx_and_greetings import SFX, VOLUME
 
 
 IRC = TwitchIRC(SETTINGS['irc']['username'], SETTINGS['irc']['channel'], SETTINGS['irc']['token'])
 API = TwitchAPI(SETTINGS['api']['client_id'], SETTINGS['api']['channel'], SETTINGS['api']['token'])
 BOT = ParkyBot(API, IRC)
+SOUNDS = dict()
 
 # Adding custom chat functionality
 print('----------------------------')
 import random
+import gtts
+import vlc
+import os
+
 
 @BOT.decorator('!game')
 def command_updategame(message):
-    if 'broadcaster' in message.badges.get('badges'):
-        BOT.twitch.update_game(message.message[6:])
-        BOT.send_message("We're now playing: {}".format(BOT.twitch.last_call))
+    if message.message[6:]:
+        if 'broadcaster' in message.badges.get('badges'):
+            result = BOT.twitch.update_game(message.message[6:])
+            if result.ok:
+                BOT.send_message(f'Game set to: "{BOT.twitch.game}"')
+            else:
+                BOT.send_message(f'{result.text}')
+    else:
+        BOT.send_message(f'Currently playing: "{BOT.twitch.game}"')
 
 @BOT.decorator('!status')
 def command_updatestatus(message):
-    if 'broadcaster' in message.badges.get('badges'):
-        BOT.twitch.update_status(message.message[8:])
-        BOT.send_message("Stream title: {}".format(BOT.twitch.last_call))
+    if message.message[8:]:
+        if 'broadcaster' in message.badges.get('badges'):
+            result = BOT.twitch.update_status(message.message[8:])
+            if result.ok:
+                BOT.send_message(f'Status set to: "{BOT.twitch.title}"')
+            else:
+                BOT.send_message(f'{result.text}')
+    else:
+        BOT.send_message(f'Status: "{BOT.twitch.title}"')
 
 @BOT.decorator('!uptime')
 def command_uptime(message):
     time = BOT.twitch.get_uptime()
-    BOT.send_message(time)
+    if time:
+        time = str(time)
+        BOT.send_message(f'Stream has been live for: {time.split(".")[0]}')
+    else:
+        BOT.send_message('Stream is offline.')
 
 @BOT.decorator('!pat')
 def command_pat(message):
+    print(message.targets)
     if not message.targets:
         target = message.message[5:]
         if not target:
@@ -42,11 +64,12 @@ def command_pat(message):
         doggos = ('dogeWink', 'dogeKek', 'Wowee', 'WooferWhat')
         BOT.send_message(random.choice(doggos))
         return
-        
+    
+    """
     if target.lower() == message.sender.lower():
         BOT.send_message("WanISee // {} pat pat pat".format(message.sender))
         return
-        
+    """
     responses = ("{} gives {}'s head a soft pat Daijoubu",
     "{} WanISee // pat pat pat {}",
     "{} slowly strokes {}'s hair LoudDoge",
@@ -59,7 +82,7 @@ def command_pat(message):
         
 @BOT.decorator('!commands')
 def command_replycommands(message):
-    BOT.send_message('!sounds, !uptime, !pat <someone>, !remind <something> Daijoubu')
+    BOT.send_message('!sounds, !uptime, !pat <someone>, !remind, !love <whom> <something> Daijoubu')
     
 @BOT.decorator('!love')
 def command_love(message):
@@ -106,16 +129,15 @@ def load_sounds():
                 'access': 0}
         BOT.handlers.append(new)
     print("Sounds loaded!")
-load_sounds()
+#load_sounds()
 
 @BOT.decorator('!s')
 def command_gtts(message):
-    #Need to find a way to play this audio from the memory directly.
-    import gtts
-    import vlc
     if not message.message[3:]:
         return
-    meme = gtts.gTTS(message.message[3:])
+    meme = gtts.gTTS(message.message[3:103])
+    # TODO: find a way to play this audio from the memory directly.
+    # BUG: Audio will be overwriten and playback will reset.
     meme.save('tts_temp.mp3')
     audio = vlc.MediaPlayer('tts_temp.mp3')
     audio.audio_set_volume(VOLUME)

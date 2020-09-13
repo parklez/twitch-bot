@@ -1,9 +1,0 @@
-{
-    "global": [
-        {
-            "command": "!owee",
-            "path": "parky_bot/sounds/owee.wav",
-            "cooldown": "0"
-        }
-    ]
-}

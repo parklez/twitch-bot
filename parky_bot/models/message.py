@@ -34,17 +34,16 @@ class Message:
                 self.targets.append(word.strip("@"))
 
     def new_parser(self):
-        if self.string.split()[2] != "PRIVMSG":
+        if "PRIVMSG" not in self.string.split():
             return
 
-        self.message = re.search(r'PRIVMSG #\w+ :(.*)', self.string).group(1)
+        self.message = re.search(r'PRIVMSG #\w+ :(.*)', self.string).group(1).rstrip()
         
         string = self.string.split()
         badges = string[0].split(';')
         for item in badges:
             item = item.split('=')
             self.badges[item[0]] = item[1]
-        print(self.badges)
         
         self.sender = self.badges.get('display-name')
 
