@@ -83,7 +83,7 @@ class TwitchAPI:
             
         self.user = {}
         self.channel_id = ''
-        self.title = ''
+        self.status = ''
         self.game = ''
         self.channel_info = {}
         
@@ -96,7 +96,7 @@ class TwitchAPI:
         user.start()
         user.join()
         
-        self.channel_id = self.user.get('_id')
+        self.channel_id = self.user.get('_id', '')
         
         info.start()
         
@@ -110,26 +110,21 @@ class TwitchAPI:
         
         if r.status_code == 200:
             self.user = r.json()
-            return r.json()
+        return r.json()
 
     def get_channel_by_id(self):
         #https://dev.twitch.tv/docs/v5/reference/channels/#get-channel-by-id
-        if self.channel_id:
-            r = requests.get(self.base_api + "channels/" + self.channel_id, headers=self.headers)
-            
-            if r.status_code == 200:
-                self.channel_info = r.json()
-                return r.json()
+        r = requests.get(self.base_api + "channels/" + self.channel_id, headers=self.headers)
         
-        return {}
+        if r.status_code == 200:
+            self.channel_info = r.json()
+        return r.json()
 
     def fetch_status(self):
-        if self.channel_info:
-            return self.channel_info.get('status')
+        return self.channel_info.get('status')
 
     def fetch_game(self):
-        if self.channel_info:
-            return self.channel_info.get('game')
+        return self.channel_info.get('game')
     
     def update_game(self, game_title):
         post_data = {
@@ -154,7 +149,7 @@ class TwitchAPI:
         response = requests.put(self.base_api + 'channels/' + self.channel_id, json=post_data, headers=self.headers)
 
         if response.status_code == 200:
-            self.title = stream_title
+            self.status = stream_title
         return response
     
     def retrieve_followers(self, count=5):
@@ -164,7 +159,7 @@ class TwitchAPI:
             response = requests.get(self.base_api + 'channels/' + self.channel_id + '/follows?limit=' + str(count), headers=self.headers)
         else:
             print('[Twitch API] retrieve_followers: channel ID is None.')
-            return
+            return followers
         
         if response.status_code == 200:
             for block in response.json()["follows"]:
@@ -190,7 +185,6 @@ class TwitchAPI:
     def get_stream_by_user(self):
         #https://dev.twitch.tv/docs/v5/reference/streams/#get-stream-by-user
         response = requests.get(self.base_api + 'streams/' + self.channel_id, headers=self.headers)
-
         return response.json()
         
     def get_current_stream_startup_time(self):
@@ -213,6 +207,5 @@ class TwitchAPI:
           
     def get_users(self, username):
         #https://dev.twitch.tv/docs/v5/reference/users/#get-users
-        
         r = requests.get(self.base_api + 'users?login=' + username, headers=self.headers)
         return r.json()

@@ -14,7 +14,6 @@ print('----------------------------')
 import random
 import gtts
 import vlc
-import os
 
 
 @BOT.decorator('!game')
@@ -35,11 +34,11 @@ def command_updatestatus(message):
         if 'broadcaster' in message.badges.get('badges'):
             result = BOT.twitch.update_status(message.message[8:])
             if result.ok:
-                BOT.send_message(f'Status set to: "{BOT.twitch.title}"')
+                BOT.send_message(f'Status set to: "{BOT.twitch.status}"')
             else:
                 BOT.send_message(f'{result.text}')
     else:
-        BOT.send_message(f'Status: "{BOT.twitch.title}"')
+        BOT.send_message(f'Status: "{BOT.twitch.status}"')
 
 @BOT.decorator('!uptime')
 def command_uptime(message):
