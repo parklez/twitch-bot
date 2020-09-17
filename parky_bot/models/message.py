@@ -43,7 +43,10 @@ class Message:
         badges = string[0].split(';')
         for item in badges:
             item = item.split('=')
-            self.badges[item[0]] = item[1]
+            try:
+                self.badges[item[0]] = item[1]
+            except Exception:
+                pass
         
         self.sender = self.badges.get('display-name')
 

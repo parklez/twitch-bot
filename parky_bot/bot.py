@@ -25,9 +25,8 @@ class ParkyBot:
                 self.irc.send_pong()
             
             else:
+                # BUG: If 'data' contains two or more lines (when people spam), this will crash:
                 m = Message(data)
-
-                #print("{}: {}".format(m.sender, m.message))
                 
                 if m.sender not in self.chatters and m.sender:
                     self.chatters.append(m.sender)
@@ -39,14 +38,12 @@ class ParkyBot:
     def _filter(self, message: Message):
         'Tests each filter on the Message object'
         for decorator in self.handlers:
-            if decorator['command'] == message.command:
-                decorator['function'](message)
-        """
-        for user in self.users:
-            if m.sender == user['username']:
-                self.send_message(user['message'])
-                user['sound']
-        """
+            if type(decorator['command']) == str:
+                if message.command == decorator['command']:
+                    decorator['function'](message)
+            elif type(decorator['command']) == list:
+                if message.command in decorator['command']:
+                    decorator['function'](message)
         
     def decorator(self, command='', regexp='', access=0):
         def wrapper(function):

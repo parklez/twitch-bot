@@ -21,7 +21,13 @@ class TwitchIRC:
 
     def welcome(self):
         """
-        This function connects to twitch IRC, sends token & nickname and joins a channel.
+        This function connects to twitch IRC in few steps:
+
+        1. Connects to the server
+        2. Sends a token
+        3. Sends the username
+        4. Joins a channel
+        5. Requests extra tags (badges, emotes, etc)
         """
         self.irc_sock.connect((self.host, self.port))
         self.send_token()
@@ -196,9 +202,7 @@ class TwitchAPI:
         #json format "2016-12-14T22:49:56Z"
         string = self.get_current_stream_startup_time()
         
-        if not string:
-            return None
-        else:
+        if string:
             then = datetime.datetime.strptime(string, '%Y-%m-%dT%H:%M:%SZ')
             now = datetime.datetime.now()
             diff = now - then

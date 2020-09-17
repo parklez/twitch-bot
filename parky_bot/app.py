@@ -1,7 +1,12 @@
-from parky_bot.settings import SETTINGS
+from parky_bot.settings import SETTINGS, SOUNDS_PATH
 from parky_bot.twitch_api.twitch import TwitchIRC, TwitchAPI
 from parky_bot.bot import ParkyBot
 from parky_bot.models.sfx_and_greetings import SFX, VOLUME
+
+import os
+import random
+import gtts
+import vlc
 
 
 IRC = TwitchIRC(SETTINGS['irc']['username'], SETTINGS['irc']['channel'], SETTINGS['irc']['token'])
@@ -11,11 +16,6 @@ SOUNDS = dict()
 
 # Adding custom chat functionality
 print('----------------------------')
-import random
-import gtts
-import vlc
-
-
 @BOT.decorator('!game')
 def command_updategame(message):
     if message.message[6:]:
@@ -119,28 +119,43 @@ def load_greeetings():
         Greeter(key['username'], key['message'], key['sound'])
     """
 
-def load_sounds():
-    "This is a hacky way of adding functions into the bot's handling list"
-    for key in SOUNDS['global']:
-        new = {'function': SFX(key['path']).play_sound,
-                'command': key['command'],
+
+for file in os.listdir(SOUNDS_PATH):
+    if file.endswith(('.wav', '.mp3')):
+        print(file)
+        new = {'function': SFX(os.path.join(SOUNDS_PATH, file)).play_sound,
+                'command': '!' + file[:-4].lower(),
                 'regexp': '',
                 'access': 0}
         BOT.handlers.append(new)
-    print("Sounds loaded!")
-#load_sounds()
+print("Sounds loaded!")
 
-@BOT.decorator('!s')
+
+@BOT.decorator([
+    '!s', '!br', '!af', '!ar', '!bn', '!bs', '!ca', '!cs', '!cy', '!da', '!de', '!el', '!en-au',
+    '!en-ca', '!en-gb', '!en-gh', '!en-ie', '!en-in', '!en-ng', '!en-nz', '!en-ph', '!en-tz',
+    '!en-uk', '!en-us', '!en-za', '!en', '!eo', '!es-es', '!es-us', '!es', '!et', '!fi', '!fr-ca',
+    '!fr-fr', '!fr', '!gu', '!hi', '!hr', '!hu', '!hy', '!id', '!is', '!it', '!ja', '!jw',
+    '!km', '!kn', '!ko', '!la', '!lv', '!mk', '!ml', '!mr', '!my', '!ne', '!nl', '!no', '!pl',
+    '!pt-br', '!pt-pt', '!pt', '!ro', '!ru', '!si', '!sk', '!sq', '!sr', '!su', '!sv', '!sw',
+    '!ta', '!te', '!th', '!tl', '!tr', '!uk', '!ur', '!vi', '!zh-cn', '!zh-tw'
+    ])
 def command_gtts(message):
-    if not message.message[3:]:
+    if not message.message[len(message.command):]:
         return
-    meme = gtts.gTTS(message.message[3:103])
-    # TODO: find a way to play this audio from the memory directly.
-    # BUG: Audio will be overwriten and playback will reset.
-    meme.save('tts_temp.mp3')
-    audio = vlc.MediaPlayer('tts_temp.mp3')
-    audio.audio_set_volume(VOLUME)
-    audio.play()
+
+    if message.command == '!s':
+        message.command = '!en'
+    elif message.command == '!br':
+        message.command = '!pt-br'
+    
+    try:
+        meme = gtts.gTTS(message.message[3:103], lang=message.command[1:])
+        audio = vlc.MediaPlayer(meme.get_urls()[0])
+        audio.audio_set_volume(VOLUME)
+        audio.play()
+    except AssertionError:
+        return
 
 print('----------------------------')
 print('Now pooling...')
