@@ -1,2 +1,4 @@
 python-vlc>=3.0.1
 gTTs>=2.1.1
+requests>=2.19.1
+PIL>=6.1.0
