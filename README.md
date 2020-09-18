@@ -1,5 +1,5 @@
-# twitch bot
-![parkchar](https://cdn.frankerfacez.com/emoticon/395559/4)\
+# Parky's (twitch) bot
+![logo](parky_bot/resources/barkychan.gif)\
 This is my cross-platform twitch bot project where I attempt to write as much code by my own as possible, even tho I should use competent 3rd party libraries instead (IRC, Twitch).
 
 ### Features

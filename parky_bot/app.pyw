@@ -167,6 +167,45 @@ sock_thread.start()
 
 import tkinter
 from PIL import Image, ImageTk
+from itertools import count
+
+class ImageLabel(tkinter.Label):
+    #https://stackoverflow.com/a/43770948
+    """a label that displays images, and plays them if they are gifs"""
+    def load(self, im):
+        if isinstance(im, str):
+            im = Image.open(im)
+        self.loc = 0
+        self.frames = []
+
+        try:
+            for i in count(1):
+                frame = ImageTk.PhotoImage(im.copy().convert('RGBA'))
+                self.frames.append(frame)
+                im.seek(i)
+        except EOFError:
+            pass
+
+        try:
+            self.delay = im.info['duration']
+        except:
+            self.delay = 100
+
+        if len(self.frames) == 1:
+            self.config(image=self.frames[0])
+        else:
+            self.next_frame()
+
+    def unload(self):
+        self.config(image="")
+        self.frames = None
+
+    def next_frame(self):
+        if self.frames:
+            self.loc += 1
+            self.loc %= len(self.frames)
+            self.config(image=self.frames[self.loc])
+            self.after(self.delay, self.next_frame)
 
 FG_COLOR = '#D6F0DA'
 BG_COLOR = '#303030'
@@ -180,12 +219,18 @@ def on_closing():
 APP.configure(background=BG_COLOR)
 APP.title('parkybot')
 APP.minsize(250, 200)
+APP.resizable(0, 0)
+"""
 image = Image.open('parky_bot/resources/parkpy2.png')
 image = image.resize((128, 128), resample=3)
 logo_file = ImageTk.PhotoImage(image)
 logo = tkinter.Label(image=logo_file, bg=BG_COLOR)
 logo.image = logo_file
 logo.pack()
+"""
+lbl = ImageLabel(APP, bg=BG_COLOR, pady=20)
+lbl.pack()
+lbl.load('parky_bot/resources/barkychan128.gif')
 tkinter.Label(APP, text='{8d112dc}', font=('helvetica', 15), fg=FG_COLOR, bg=BG_COLOR).pack()
 APP.protocol("WM_DELETE_WINDOW", on_closing)
 APP.mainloop()

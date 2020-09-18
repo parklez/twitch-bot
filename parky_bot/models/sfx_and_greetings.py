@@ -9,13 +9,9 @@ class SFX:
         self.lastplayed = 0
         
     def play_sound(self, message):
-        # FUTURE:
-        # With the Message object, limit or cooldown specific users.
-        print('play_sound.VOLUME', VOLUME)
-        audio = MediaPlayer(self.path)
-        audio.audio_set_volume(VOLUME)
-        audio.play()
-
+        self.audio = MediaPlayer(self.path)
+        self.audio.audio_set_volume(VOLUME)
+        self.audio.play()
 
 class Greeter:
     people = dict()
