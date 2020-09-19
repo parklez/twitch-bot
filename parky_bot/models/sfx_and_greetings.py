@@ -1,17 +1,20 @@
-from parky_bot.settings import VOLUME
-from vlc import MediaPlayer
+import threading
+import vlc
 
 
 class SFX:
     def __init__(self, path, cooldown=False):
         self.path = path
-        self.cooldown = cooldown
-        self.lastplayed = 0
         
     def play_sound(self, message):
-        self.audio = MediaPlayer(self.path)
-        self.audio.audio_set_volume(VOLUME)
-        self.audio.play()
+        threading.Thread(target=SFX._play, args=(vlc.MediaPlayer(self.path),)).start()
+
+    @staticmethod
+    def _play(audio):
+        audio.play()
+        while audio.get_state() != vlc.State.Ended:
+            pass
+        audio.release()
 
 class Greeter:
     people = dict()

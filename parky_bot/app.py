@@ -1,18 +1,40 @@
-from parky_bot.settings import SETTINGS, SOUNDS_PATH
+import os
+
 from parky_bot.twitch.irc import TwitchIRC
 from parky_bot.twitch.api import TwitchAPI
-from parky_bot.models.sfx_and_greetings import SFX, VOLUME
 from parky_bot.bot import ParkyBot
+from parky_bot.models.sfx_and_greetings import SFX
+from parky_bot.models.message import Message
+from parky_bot.utils.file_manager import load_json, create_json, create_settings_json
+
+# TODO: Pyinstaller code
+"""
+import os, sys
+if getattr(sys, 'frozen', False):
+    application_path = os.path.dirname(sys.executable)
+elif __file__:
+    application_path = os.path.dirname(__file__)
+
+SETTINGS = load_json(os.path.join(application_path, 'settings.json'))
+"""
+SETTINGS_PATH = os.path.join('parky_bot', 'settings.json')
+SOUNDS_PATH = os.path.join('parky_bot', 'sounds')
+
+if not os.path.isfile(SETTINGS_PATH):
+    create_settings_json(SETTINGS_PATH)
+    print('You must write all your info under "settings.json" before continuing!')
+    exit()
+
+SETTINGS = load_json(SETTINGS_PATH)
 
 
 IRC = TwitchIRC(SETTINGS['irc']['username'], SETTINGS['irc']['channel'], SETTINGS['irc']['token'])
 API = TwitchAPI(SETTINGS['api']['client_id'], SETTINGS['api']['channel'], SETTINGS['api']['token'])
 BOT = ParkyBot(API, IRC)
-SOUNDS = dict()
+SOUNDS = []
 
 # Adding custom chat functionality
 print('----------------------------')
-import os
 import random
 import gtts
 import vlc
@@ -53,7 +75,6 @@ def command_uptime(message):
 
 @BOT.decorator('!pat')
 def command_pat(message):
-    print(message.targets)
     if not message.targets:
         target = message.message[5:]
         if not target:
@@ -103,11 +124,7 @@ def command_remind(message):
 def command_replysounds(message):
     message = ""
 
-    sounds = list()
-    for key in SOUNDS['global']:
-        sounds.append(key['command'])
-
-    for sound in sorted(sounds):
+    for sound in sorted(SOUNDS):
         message += sound + ', '
         
     message = message[:-2] + ' KappaKappa'
@@ -124,12 +141,13 @@ def load_greeetings():
 
 for file in os.listdir(SOUNDS_PATH):
     if file.endswith(('.wav', '.mp3')):
-        print(file)
+        SOUNDS.append(file[:-4].lower())
         new = {'function': SFX(os.path.join(SOUNDS_PATH, file)).play_sound,
                 'command': '!' + file[:-4].lower(),
                 'regexp': '',
                 'access': 0}
         BOT.handlers.append(new)
+
 print("Sounds loaded!")
 
 
@@ -152,12 +170,13 @@ def command_gtts(message):
         message.command = '!pt-br'
     
     try:
-        meme = gtts.gTTS(message.message[3:103], lang=message.command[1:])
-        audio = vlc.MediaPlayer(meme.get_urls()[0])
-        audio.audio_set_volume(VOLUME)
-        audio.play()
+        meme = gtts.gTTS(
+            message.message[len(message.command):103],
+            lang=message.command[1:])
+
+        SFX(meme.get_urls()[0]).play_sound(message)
     except AssertionError:
-        return
+        pass
 
 print('----------------------------')
 print('Now pooling...')
@@ -167,22 +186,26 @@ sock_thread.start()
 
 import tkinter
 from PIL import Image, ImageTk
-from itertools import count
+
 
 class ImageLabel(tkinter.Label):
     #https://stackoverflow.com/a/43770948
-    """a label that displays images, and plays them if they are gifs"""
+    """
+    a label that displays images, and plays them if they are gifs
+    """
     def load(self, im):
         if isinstance(im, str):
             im = Image.open(im)
-        self.loc = 0
+        self.loc = 0 # Current frame location
         self.frames = []
 
         try:
-            for i in count(1):
+            i = 0
+            while 1:
                 frame = ImageTk.PhotoImage(im.copy().convert('RGBA'))
                 self.frames.append(frame)
                 im.seek(i)
+                i += 1
         except EOFError:
             pass
 
@@ -207,8 +230,9 @@ class ImageLabel(tkinter.Label):
             self.config(image=self.frames[self.loc])
             self.after(self.delay, self.next_frame)
 
+
 FG_COLOR = '#D6F0DA'
-BG_COLOR = '#303030'
+BG_COLOR = '#212121'
 
 APP = tkinter.Tk()
 
@@ -220,17 +244,9 @@ APP.configure(background=BG_COLOR)
 APP.title('parkybot')
 APP.minsize(250, 200)
 APP.resizable(0, 0)
-"""
-image = Image.open('parky_bot/resources/parkpy2.png')
-image = image.resize((128, 128), resample=3)
-logo_file = ImageTk.PhotoImage(image)
-logo = tkinter.Label(image=logo_file, bg=BG_COLOR)
-logo.image = logo_file
-logo.pack()
-"""
-lbl = ImageLabel(APP, bg=BG_COLOR, pady=20)
-lbl.pack()
+lbl = ImageLabel(APP, bg=BG_COLOR)
+lbl.pack(padx=61, pady=25)
 lbl.load('parky_bot/resources/barkychan128.gif')
-tkinter.Label(APP, text='{8d112dc}', font=('helvetica', 15), fg=FG_COLOR, bg=BG_COLOR).pack()
+tkinter.Label(APP, text='{parkybot}', font=('helvetica', 15), fg=FG_COLOR, bg=BG_COLOR).pack()
 APP.protocol("WM_DELETE_WINDOW", on_closing)
 APP.mainloop()
