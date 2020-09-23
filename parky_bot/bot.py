@@ -1,3 +1,4 @@
+import time
 from parky_bot.models.message import Message
 
 
@@ -16,11 +17,15 @@ class ParkyBot:
             return
         
         data = ""
+        self.irc.irc_sock.setblocking(0)
         
         while self.is_pooling:
-            # This socket is blocking
-            data = self.irc.irc_sock.recv(1024).decode('UTF-8')
-            
+            try:
+                data = self.irc.irc_sock.recv(1024).decode('UTF-8')
+            except (ConnectionAbortedError, OSError):
+                time.sleep(0.05)
+                continue
+
             if data == "PING :tmi.twitch.tv\r\n":
                 self.irc.send_pong()
             
@@ -34,6 +39,7 @@ class ParkyBot:
                 self._filter(m)
                 
             data = ""
+        print('Stopped pooling.')
     
     def _filter(self, message: Message):
         'Tests each filter on the Message object'

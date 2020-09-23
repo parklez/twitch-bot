@@ -1,5 +1,5 @@
 import os
-
+import sys
 from parky_bot.twitch.irc import TwitchIRC
 from parky_bot.twitch.api import TwitchAPI
 from parky_bot.bot import ParkyBot
@@ -7,18 +7,16 @@ from parky_bot.models.sfx_and_greetings import SFX
 from parky_bot.models.message import Message
 from parky_bot.utils.file_manager import load_json, create_json, create_settings_json
 
-# TODO: Pyinstaller code
-"""
-import os, sys
-if getattr(sys, 'frozen', False):
-    application_path = os.path.dirname(sys.executable)
-elif __file__:
-    application_path = os.path.dirname(__file__)
 
-SETTINGS = load_json(os.path.join(application_path, 'settings.json'))
-"""
-SETTINGS_PATH = os.path.join('parky_bot', 'settings.json')
-SOUNDS_PATH = os.path.join('parky_bot', 'sounds')
+if getattr(sys, 'frozen', False):
+    APP_PATH = os.path.dirname(sys.executable)
+    RESOURCE_PATH = sys._MEIPASS
+elif __file__:
+    APP_PATH = os.path.join(os.path.dirname(__file__), os.path.pardir)
+    RESOURCE_PATH = os.path.join(os.path.dirname(__file__), 'resources')
+
+SETTINGS_PATH = os.path.join(APP_PATH, 'settings.json')
+SOUNDS_PATH = os.path.join(APP_PATH, 'sounds')
 
 if not os.path.isfile(SETTINGS_PATH):
     create_settings_json(SETTINGS_PATH)
@@ -26,7 +24,6 @@ if not os.path.isfile(SETTINGS_PATH):
     exit()
 
 SETTINGS = load_json(SETTINGS_PATH)
-
 
 IRC = TwitchIRC(SETTINGS['irc']['username'], SETTINGS['irc']['channel'], SETTINGS['irc']['token'])
 API = TwitchAPI(SETTINGS['api']['client_id'], SETTINGS['api']['channel'], SETTINGS['api']['token'])
@@ -238,15 +235,18 @@ APP = tkinter.Tk()
 
 def on_closing():
     APP.destroy()
+    BOT.is_pooling = False
     IRC.disconnect()
+
 
 APP.configure(background=BG_COLOR)
 APP.title('parkybot')
+APP.iconbitmap(os.path.join(RESOURCE_PATH, 'dog_pet_animal_japanese_shiba_inu_japan_icon_127300.ico'))
 APP.minsize(250, 200)
 APP.resizable(0, 0)
 lbl = ImageLabel(APP, bg=BG_COLOR)
 lbl.pack(padx=61, pady=25)
-lbl.load('parky_bot/resources/barkychan128.gif')
+lbl.load(os.path.join(RESOURCE_PATH, 'barkychan128.gif'))
 tkinter.Label(APP, text='{parkybot}', font=('helvetica', 15), fg=FG_COLOR, bg=BG_COLOR).pack()
 APP.protocol("WM_DELETE_WINDOW", on_closing)
 APP.mainloop()
