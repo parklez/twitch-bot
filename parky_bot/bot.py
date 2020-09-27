@@ -8,35 +8,41 @@ class ParkyBot:
         self.irc = irc
         self.handlers = []
         self.chatters = []
-        self.users = []
         self.is_pooling = True
 
     def pooling(self):
         if not self.irc:
-            print("ParkyBot: IRC client not set!")
+            print("IRC client not set, not pooling!")
             return
         
         data = ""
         self.irc.irc_sock.setblocking(0)
+        print("Now pooling...")
         
         while self.is_pooling:
             try:
-                data = self.irc.irc_sock.recv(1024).decode('UTF-8')
+                data = self.irc.irc_sock.recv(4096).decode('UTF-8')
             except (ConnectionAbortedError, OSError):
-                time.sleep(0.05)
+                time.sleep(0.1)
                 continue
+
+            if data == "":
+                print("IRC client received 0 bytes, stopping...")
+                self.is_pooling = False
+                break
 
             if data == "PING :tmi.twitch.tv\r\n":
                 self.irc.send_pong()
             
             else:
-                # BUG: If 'data' contains two or more lines (when people spam), this will crash:
-                m = Message(data)
-                
-                if m.sender not in self.chatters and m.sender:
-                    self.chatters.append(m.sender)
-                
-                self._filter(m)
+                # BUG: If the sender decides to send '\n' midstring, their message will be split.
+                for line in data.splitlines():
+                    m = Message(line)
+                    
+                    if m.sender not in self.chatters and m.sender:
+                        self.chatters.append(m.sender)
+                    
+                    self._filter(m)
                 
             data = ""
         print('Stopped pooling.')
@@ -44,13 +50,13 @@ class ParkyBot:
     def _filter(self, message: Message):
         'Tests each filter on the Message object'
         for decorator in self.handlers:
-            if type(decorator['command']) == str:
+            if isinstance(decorator['command'], str):
                 if message.command == decorator['command']:
                     decorator['function'](message)
-            elif type(decorator['command']) == list:
+            elif isinstance(decorator['command'], list):
                 if message.command in decorator['command']:
                     decorator['function'](message)
-        
+
     def decorator(self, command='', regexp='', access=0):
         def wrapper(function):
             print('Decorating: {}'.format(function.__name__))
@@ -62,7 +68,6 @@ class ParkyBot:
             self.handlers.append(new)
             return function
         return wrapper
-
+    
     def send_message(self, string):
         self.irc.send_message(string)
-        

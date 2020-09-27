@@ -5,12 +5,12 @@ import requests
 
 class TwitchAPI:
     def __init__(self, client_id, channel, token=None):
-        """
-        Basic Twitch API calls using kraken v5
-        
-        client_id = client id from your bot application <string> https://glass.twitch.tv/console/apps
-        channel = username of the channel authorized above <string>
-        token = token for "user_read channel_editor" scopes <string> https://twitchapps.com/tokengen/
+        """Class for interacting with the Twitch API.
+
+        Args:
+            client_id (str): client id from your bot application https://glass.twitch.tv/console/apps
+            channel (str): channel's username
+            token (str, optional): Authorization token for "user_read channel_editor" scopes https://twitchapps.com/tokengen/. Defaults to None.
         """
         self.base_api = "https://api.twitch.tv/kraken/"
         self.client_id = client_id

@@ -33,7 +33,7 @@ class TwitchIRC:
 
     def disconnect(self):
         self.irc_sock.close()
-        
+
     def send(self, data):
         """
         This function converts data into bytes with UTF-8 encoding then socket.send()
@@ -57,7 +57,7 @@ class TwitchIRC:
 
     def send_message(self, message):
         self.send("PRIVMSG {} :{}\r\n".format(self.channel, message))
-    
+
     def request_tags(self):
         #https://discuss.dev.twitch.tv/t/unable-to-register-for-irc-capabilities/27023
         self.send("CAP REQ :twitch.tv/tags\r\n")
