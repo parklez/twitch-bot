@@ -7,7 +7,7 @@ class Message:
         self.string = string
         self.message = ''
         self.sender = ''
-        self.badges = dict()
+        self.badges = {}
         self.targets = []
         self.command = None
         
@@ -25,7 +25,7 @@ class Message:
             item = item.split('=')
             try:
                 self.badges[item[0]] = item[1]
-            except Exception:
+            except IndexError:
                 pass
         
         self.sender = self.badges.get('display-name')

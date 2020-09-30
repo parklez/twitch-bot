@@ -3,10 +3,11 @@ import sys
 import threading
 import random
 import gtts
+from audioplayer import AudioPlayer
+from parky_bot.models.sound import Sound
 from parky_bot.twitch.irc import TwitchIRC
 from parky_bot.twitch.api import TwitchAPI
 from parky_bot.bot import ParkyBot
-from parky_bot.models.sound import Sound
 from parky_bot.models.message import Message
 from parky_bot.utils.file_manager import load_json, create_settings_json
 
@@ -131,9 +132,9 @@ for file in os.listdir(SOUNDS_PATH):
     if file.endswith(('.wav', '.mp3')):
         SOUNDS.append(file[:-4].lower())
         # Sound object is initialized when assigned to 's', avoiding parent variable search.
-        # Don't: lambda m: Sound(os.path.join(SOUNDS_PATH, file)).play_sound(),
+        # Don't: lambda m: Object.method(),
         #pylint: disable=cell-var-from-loop
-        new = {'function': lambda m, s=Sound(os.path.join(SOUNDS_PATH, file)): s.play(),
+        new = {'function': lambda m, s=AudioPlayer(os.path.join(SOUNDS_PATH, file)): s.play(),
                 'command': f'!{file[:-4].lower()}',
                 'regexp': '',
                 'access': 0}
@@ -153,11 +154,11 @@ def command_gtts(message: Message):
             '!fi': 'fi'}
     
     try:
-        meme = gtts.gTTS(
+        result = gtts.gTTS(
             message.message[c:c+100],
             lang=langs[message.command])
 
-        Sound(meme.get_urls()[0]).play()
+        Sound(result.get_urls()[0]).play()
     except AssertionError:
         pass
 
