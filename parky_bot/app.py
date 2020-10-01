@@ -4,6 +4,7 @@ import threading
 import random
 import gtts
 from audioplayer import AudioPlayer
+from parky_bot.gui import Application
 from parky_bot.models.sound import Sound
 from parky_bot.twitch.irc import TwitchIRC
 from parky_bot.twitch.api import TwitchAPI
@@ -163,75 +164,8 @@ def command_gtts(message: Message):
         pass
 
 print('----------------------------')
-sock_thread = threading.Thread(target=BOT.pooling)
-sock_thread.start()
 
-import tkinter
-from PIL import Image, ImageTk
-
-
-class ImageLabel(tkinter.Label):
-    #https://stackoverflow.com/a/43770948
-    """
-    a label that displays images, and plays them if they are gifs
-    """
-    def load(self, im):
-        if isinstance(im, str):
-            im = Image.open(im)
-        self.loc = 0 # Current frame location
-        self.frames = []
-
-        try:
-            i = 0
-            while 1:
-                frame = ImageTk.PhotoImage(im.copy().convert('RGBA'))
-                self.frames.append(frame)
-                im.seek(i)
-                i += 1
-        except EOFError:
-            pass
-
-        try:
-            self.delay = im.info['duration']
-        except:
-            self.delay = 100
-
-        if len(self.frames) == 1:
-            self.config(image=self.frames[0])
-        else:
-            self.next_frame()
-
-    def unload(self):
-        self.config(image="")
-        self.frames = None
-
-    def next_frame(self):
-        if self.frames:
-            self.loc += 1
-            self.loc %= len(self.frames)
-            self.config(image=self.frames[self.loc])
-            self.after(self.delay, self.next_frame)
-
-
-FG_COLOR = '#D6F0DA'
-BG_COLOR = '#212121'
-
-APP = tkinter.Tk()
-
-def on_closing():
-    APP.destroy()
-    BOT.is_pooling = False
-    BOT.irc.disconnect()
-
-
-APP.configure(background=BG_COLOR)
-APP.title('parkybot')
-APP.iconbitmap(os.path.join(RESOURCE_PATH, 'dog_pet_animal_japanese_shiba_inu_japan_icon_127300.ico')) # Bug: This breaks on linux
-APP.minsize(250, 200)
-APP.resizable(0, 0)
-lbl = ImageLabel(APP, bg=BG_COLOR)
-lbl.pack(padx=61, pady=25)
-lbl.load(os.path.join(RESOURCE_PATH, 'YuukaGuitar.gif'))
-tkinter.Label(APP, text='{parkybot}', font=('helvetica', 15), fg=FG_COLOR, bg=BG_COLOR).pack()
-APP.protocol("WM_DELETE_WINDOW", on_closing)
-APP.mainloop()
+if __name__ == "__main__":
+    sock_thread = threading.Thread(target=BOT.pooling)
+    sock_thread.start()
+    Application(BOT)
