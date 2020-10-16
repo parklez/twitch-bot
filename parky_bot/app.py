@@ -123,10 +123,11 @@ def command_replysounds(message: Message):
 @BOT.decorator('!tts')
 def command_replytts(message: Message):
     message = "!br \U0001F1E7\U0001F1F7, !au \U0001F1E6\U0001F1FA, !s !en \U0001F1EC\U0001F1E7, \
-                !de \U0001F1E9\U0001F1EA, !es \U0001F1EA\U0001F1F8, !ja !jp \U0001F1EF\U0001F1F5, \
+                !us \U0001F1FA\U0001F1F8, !de \U0001F1E9\U0001F1EA, !es \U0001F1EA\U0001F1F8, \
                 !it \U0001F1EE\U0001F1F9, !pl \U0001F1F5\U0001F1F1, !pt \U0001F1F5\U0001F1F9, \
                 !ru \U0001F1F7\U0001F1FA, !se \U0001F1F8\U0001F1EA, !uk \U0001F1FA\U0001F1E6, \
-                !cn \U0001F1E8\U0001F1F3. Example: !fi nekubaka Honk"
+                !cn \U0001F1E8\U0001F1F3, !ja !jp \U0001F1EF\U0001F1F5, !fr \U0001F1EB\U0001F1F7. \
+                Example: !fi nekubaka Honk"
     BOT.send_message(message)
 
 for file in os.listdir(SOUNDS_PATH):
@@ -143,7 +144,7 @@ for file in os.listdir(SOUNDS_PATH):
         print(f"Sound: {new['command']} created.")
 
 @BOT.decorator(['!br', '!au', '!s', '!en', '!de', '!es', '!ja', '!jp', '!it', '!pl', '!pt',
-                '!ru', '!se', '!uk', '!cn', '!fi'])
+                '!ru', '!se', '!uk', '!cn', '!fi', '!fr', '!us'])
 def command_gtts(message: Message):
     c = len(message.command)
     if not message.message[c:]:
@@ -152,7 +153,7 @@ def command_gtts(message: Message):
     langs = {'!br': 'pt-br', '!au': 'en-au', '!s': 'en-gb', '!en': 'en-gb', '!de': 'de',
             '!es': 'es-es', '!ja': 'ja', '!jp': 'ja', '!it': 'it', '!pl': 'pl',
             '!pt': 'pt-pt', '!ru': 'ru', '!se': 'sv', '!uk': 'uk', '!cn': 'zh-cn',
-            '!fi': 'fi'}
+            '!fi': 'fi', '!fr': 'fr', '!us': 'en-us'}
     
     try:
         result = gtts.gTTS(
