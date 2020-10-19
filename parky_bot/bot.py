@@ -23,8 +23,15 @@ class ParkyBot:
             try:
                 data = self.irc.irc_sock.recv(4096).decode('UTF-8')
             except (ConnectionAbortedError, OSError):
-                time.sleep(0.1)
+                try:
+                    time.sleep(0.1)
+                except KeyboardInterrupt:
+                    self.is_pooling = False
+                    return
                 continue
+            except KeyboardInterrupt:
+                self.is_pooling = False
+                return
 
             if data == "":
                 print("IRC client received 0 bytes, stopping...")

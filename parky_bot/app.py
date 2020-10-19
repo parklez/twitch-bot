@@ -1,10 +1,8 @@
 import os
 import sys
-import threading
 import random
 import gtts
 from audioplayer import AudioPlayer
-from parky_bot.gui import Application
 from parky_bot.models.sound import Sound
 from parky_bot.twitch.irc import TwitchIRC
 from parky_bot.twitch.api import TwitchAPI
@@ -93,7 +91,7 @@ def command_pat(message: Message):
     "{} tries to pat {} but they move away KannaSpooks")
 
     BOT.send_message(random.choice(responses).format(message.sender, target))
-        
+
 @BOT.decorator('!commands')
 def command_replycommands(message: Message):
     BOT.send_message('!sounds, !uptime, !pat <someone>, !remind, !love <whom> <something> Daijoubu')
@@ -130,19 +128,6 @@ def command_replytts(message: Message):
                 Example: !fi nekubaka Honk"
     BOT.send_message(message)
 
-for file in os.listdir(SOUNDS_PATH):
-    if file.endswith(('.wav', '.mp3')):
-        SOUNDS.append(file[:-4].lower())
-        # Sound object is initialized when assigned to 's', avoiding parent variable search.
-        # Don't: lambda m: Object.method(),
-        #pylint: disable=cell-var-from-loop
-        new = {'function': lambda m, s=AudioPlayer(os.path.join(SOUNDS_PATH, file)): s.play(),
-                'command': f'!{file[:-4].lower()}',
-                'regexp': '',
-                'access': 0}
-        BOT.handlers.append(new)
-        print(f"Sound: {new['command']} created.")
-
 @BOT.decorator(['!br', '!au', '!s', '!en', '!de', '!es', '!ja', '!jp', '!it', '!pl', '!pt',
                 '!ru', '!se', '!uk', '!cn', '!fi', '!fr', '!us'])
 def command_gtts(message: Message):
@@ -164,9 +149,20 @@ def command_gtts(message: Message):
     except AssertionError:
         pass
 
+for file in os.listdir(SOUNDS_PATH):
+    if file.endswith(('.wav', '.mp3')):
+        SOUNDS.append(file[:-4].lower())
+        # Sound object is initialized when assigned to 's', avoiding parent variable search.
+        # Don't: lambda m: Object.method(),
+        #pylint: disable=cell-var-from-loop
+        new = {'function': lambda m, s=AudioPlayer(os.path.join(SOUNDS_PATH, file)): s.play(),
+                'command': f'!{file[:-4].lower()}',
+                'regexp': '',
+                'access': 0}
+        BOT.handlers.append(new)
+        print(f"Sound: {new['command']} created.")
+
 print('----------------------------')
 
 if __name__ == "__main__":
-    sock_thread = threading.Thread(target=BOT.pooling)
-    sock_thread.start()
-    Application(BOT)
+    BOT.pooling()
