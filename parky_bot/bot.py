@@ -1,5 +1,6 @@
 import time
 from parky_bot.models.message import Message
+from parky_bot.utils.logger import get_logger
 
 
 class ParkyBot:
@@ -9,16 +10,17 @@ class ParkyBot:
         self.handlers = []
         self.chatters = []
         self.is_pooling = True
+        self._logger = get_logger()
 
     def pooling(self):
         if not self.irc:
-            print("IRC client not set, not pooling!")
+            self._logger.info("IRC client not set, not pooling!")
             return
-        
+
         data = ""
         self.irc.irc_sock.setblocking(0)
-        print("Now pooling...")
-        
+        self._logger.info("Now pooling...")
+
         while self.is_pooling:
             try:
                 data = self.irc.irc_sock.recv(4096).decode('UTF-8')
@@ -27,11 +29,11 @@ class ParkyBot:
                     time.sleep(0.1)
                 except KeyboardInterrupt:
                     self.is_pooling = False
-                    return
+                    break
                 continue
             except KeyboardInterrupt:
                 self.is_pooling = False
-                return
+                break
 
             if data == "":
                 print("IRC client received 0 bytes, stopping...")
@@ -40,20 +42,25 @@ class ParkyBot:
 
             if data == "PING :tmi.twitch.tv\r\n":
                 self.irc.send_pong()
-            
+                self._logger.debug('PONG')
+
             else:
                 # BUG: If the sender decides to send '\n' midstring, their message will be split.
                 for line in data.splitlines():
                     m = Message(line)
-                    
+                    if m.sender:
+                        self._logger.debug(f'{m.sender}: {m.message}')
+                    else:
+                        self._logger.debug(m.string)
+
                     if m.sender not in self.chatters and m.sender:
                         self.chatters.append(m.sender)
-                    
+
                     self._filter(m)
-                
+
             data = ""
-        print('Stopped pooling.')
-    
+        self._logger.info('Stopped pooling.')
+
     def _filter(self, message: Message):
         'Tests each filter on the Message object'
         for decorator in self.handlers:
@@ -66,8 +73,8 @@ class ParkyBot:
 
     def decorator(self, command='', regexp='', access=0):
         def wrapper(function):
-            print('Decorating: {}'.format(function.__name__))
-            
+            self._logger.info(f'Decorating: {function.__name__}')
+
             new = {'function': function,
                    'command': command,
                    'regexp': regexp,
@@ -75,6 +82,6 @@ class ParkyBot:
             self.handlers.append(new)
             return function
         return wrapper
-    
+
     def send_message(self, string):
         self.irc.send_message(string)

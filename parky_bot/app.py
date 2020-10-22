@@ -9,14 +9,22 @@ from parky_bot.twitch.api import TwitchAPI
 from parky_bot.bot import ParkyBot
 from parky_bot.models.message import Message
 from parky_bot.utils.file_manager import load_json, create_settings_json
+from parky_bot.utils.logger import get_logger
 
 
+logger = get_logger()
+
+# Setting paths
 if getattr(sys, 'frozen', False):
     APP_PATH = os.path.dirname(sys.executable)
+    #pylint: disable=no-member
     RESOURCE_PATH = sys._MEIPASS
 elif __file__:
     APP_PATH = os.path.join(os.path.dirname(__file__), os.path.pardir)
     RESOURCE_PATH = os.path.join(os.path.dirname(__file__), 'resources')
+else:
+    logger.critical('Could not set application path, exiting...')
+    exit()
 
 SETTINGS_PATH = os.path.join(APP_PATH, 'settings.json')
 SOUNDS_PATH = os.path.join(APP_PATH, 'sounds')
@@ -24,6 +32,7 @@ SOUNDS_PATH = os.path.join(APP_PATH, 'sounds')
 if not os.path.isfile(SETTINGS_PATH):
     create_settings_json(SETTINGS_PATH)
     print('You must write all your info under "settings.json" before continuing!')
+    input('press [ENTER] to exit.')
     exit()
 
 SETTINGS = load_json(SETTINGS_PATH)
@@ -31,7 +40,6 @@ SETTINGS = load_json(SETTINGS_PATH)
 IRC = TwitchIRC(SETTINGS['irc']['username'], SETTINGS['irc']['channel'], SETTINGS['irc']['token'])
 API = TwitchAPI(SETTINGS['api']['client_id'], SETTINGS['api']['channel'], SETTINGS['api']['token'])
 BOT = ParkyBot(API, IRC)
-SOUNDS = []
 
 # Adding custom chat functionality
 print('----------------------------')
@@ -81,7 +89,7 @@ def command_pat(message: Message):
         doggos = ('dogeWink', 'dogeKek', 'Wowee', 'WooferWhat')
         BOT.send_message(random.choice(doggos))
         return
-        
+
     responses = ("{} gives {}'s head a soft pat Daijoubu",
     "{} WanISee // pat pat pat {}",
     "{} slowly strokes {}'s hair LoudDoge",
@@ -139,7 +147,7 @@ def command_gtts(message: Message):
             '!es': 'es-es', '!ja': 'ja', '!jp': 'ja', '!it': 'it', '!pl': 'pl',
             '!pt': 'pt-pt', '!ru': 'ru', '!se': 'sv', '!uk': 'uk', '!cn': 'zh-cn',
             '!fi': 'fi', '!fr': 'fr', '!us': 'en-us'}
-    
+
     try:
         result = gtts.gTTS(
             message.message[c:c+100],
@@ -149,6 +157,7 @@ def command_gtts(message: Message):
     except AssertionError:
         pass
 
+SOUNDS = []
 for file in os.listdir(SOUNDS_PATH):
     if file.endswith(('.wav', '.mp3')):
         SOUNDS.append(file[:-4].lower())
@@ -160,7 +169,7 @@ for file in os.listdir(SOUNDS_PATH):
                 'regexp': '',
                 'access': 0}
         BOT.handlers.append(new)
-        print(f"Sound: {new['command']} created.")
+        logger.info(f"Sound: {new['command']} created.")
 
 print('----------------------------')
 

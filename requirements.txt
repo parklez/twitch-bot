@@ -5,3 +5,4 @@ Pillow>=6.1.0
 pafy
 youtube-dl
 audioplayer
+colorlog
