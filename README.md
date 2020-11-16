@@ -1,7 +1,11 @@
-# Parky's (twitch) bot
-An open-souce, minimalistic, cross-platform, easily expandable Twitch IRC/API bot.
+# parky's twitch bot
+
+![logo](https://raw.githubusercontent.com/parklez/twitch-bot/master/parky_bot/resources/banner_new_wide_kitty.png)\
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![GitHub top language](https://img.shields.io/github/languages/top/parklez/twitch-bot)
+![Made with love](https://img.shields.io/badge/made%20with-love-ff69b4)
+![Windows](https://img.shields.io/badge/-windows%20builds-blue) \
+An open-souce, minimalistic, cross-platform, easily expandable Twitch IRC/API bot.
 
 ### Features
 - Connect to Twitch IRC chat.
@@ -9,7 +13,7 @@ An open-souce, minimalistic, cross-platform, easily expandable Twitch IRC/API bo
 - Play media with python-vlc
 - Google's text to speech
 
-### Adding commands should be this simple:
+### Adding a command is this simple:
 Editing `parky_bot/app.py` and adding:
 ```python
 @BOT.decorator('!hello'):
