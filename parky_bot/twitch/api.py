@@ -1,6 +1,7 @@
 import datetime
 import threading
 import requests
+from parky_bot.utils.logger import get_logger
 
 
 class TwitchAPI:
@@ -16,6 +17,7 @@ class TwitchAPI:
         self.client_id = client_id
         self.channel = channel
         self.token = token
+        self._logger = get_logger()
         
         self.headers = {'Client-ID': self.client_id,
                         'Accept': 'application/vnd.twitchtv.v5+json'}
@@ -32,6 +34,12 @@ class TwitchAPI:
         self.connect()
         
     def connect(self):
+        access, access_info = self.validate_token()
+        if access != 200:
+            self._logger.critical(f'Twitch API returned code "{access}": {access_info}')
+            self._logger.critical('Generate a new token at https://twitchapps.com/tokengen/')
+            return
+            
         user = threading.Thread(target=self.get_user)
         info = threading.Thread(target=self.get_channel_by_id)
         
@@ -45,6 +53,13 @@ class TwitchAPI:
         info.join()
         self.status = self.fetch_status()
         self.game = self.fetch_game()
+
+    def validate_token(self):
+        #https://dev.twitch.tv/docs/authentication
+        token = f'OAuth {self.token}'
+        headers = {'Authorization': token}
+        r = requests.get('https://id.twitch.tv/oauth2/validate', headers=headers)
+        return r.status_code, r.json()
 
     def get_user(self):
         #https://dev.twitch.tv/docs/v5/#getting-a-client-id
