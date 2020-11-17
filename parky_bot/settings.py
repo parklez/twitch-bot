@@ -2,7 +2,7 @@ import os
 import sys
 from parky_bot.twitch.irc import TwitchIRC
 from parky_bot.twitch.api import TwitchAPI
-from parky_bot.models.bot import ParkyBot
+from parky_bot.twitch.bot import ParkyBot
 from parky_bot.utils.file_manager import load_json, create_settings_json
 
 

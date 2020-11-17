@@ -4,7 +4,7 @@ from parky_bot.models.message import Message
 
 @BOT.decorator('!commands')
 def command_replycommands(message: Message):
-    BOT.send_message('!sounds, !uptime, !pat <someone>, !remind, !love <whom> <something> Daijoubu')
+    BOT.send_message('!sounds, !uptime, !pat <someone>, !remind <something>, !love <whom> <something> Daijoubu')
 
 
 @BOT.decorator('!remind')
