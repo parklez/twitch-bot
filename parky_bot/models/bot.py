@@ -36,7 +36,7 @@ class ParkyBot:
                 break
 
             if data == "":
-                print("IRC client received 0 bytes, stopping...")
+                self._logger.critical("IRC client received 0 bytes, stopping...")
                 self.is_pooling = False
                 break
 

@@ -1,49 +1,17 @@
 import os
-import sys
 import random
 import gtts
 from audioplayer import AudioPlayer
 from parky_bot.models.sound import Sound
-from parky_bot.twitch.irc import TwitchIRC
-from parky_bot.twitch.api import TwitchAPI
-from parky_bot.bot import ParkyBot
 from parky_bot.models.message import Message
-from parky_bot.utils.file_manager import load_json, create_settings_json
 from parky_bot.utils.logger import get_logger
+from parky_bot.utils.file_manager import make_dir
+from parky_bot.settings import BOT, LOGGING_LEVEL, SOUNDS_PATH
 
 
-logger = get_logger()
-
-# Setting paths
-if getattr(sys, 'frozen', False):
-    APP_PATH = os.path.dirname(sys.executable)
-    #pylint: disable=no-member
-    RESOURCE_PATH = sys._MEIPASS
-elif __file__:
-    APP_PATH = os.path.join(os.path.dirname(__file__), os.path.pardir)
-    RESOURCE_PATH = os.path.join(os.path.dirname(__file__), 'resources')
-else:
-    logger.critical('Could not set application path, exiting...')
-    exit()
-
-SETTINGS_PATH = os.path.join(APP_PATH, 'settings.json')
-SOUNDS_PATH = os.path.join(APP_PATH, 'sounds')
-
-if not os.path.isfile(SETTINGS_PATH):
-    create_settings_json(SETTINGS_PATH)
-    print('You must write all your info under "settings.json" before continuing!')
-    input('press [ENTER] to exit.')
-    exit()
-
-SETTINGS = load_json(SETTINGS_PATH)
-
-IRC = TwitchIRC(SETTINGS['irc']['username'], SETTINGS['irc']['channel'], SETTINGS['irc']['token'])
-API = TwitchAPI(SETTINGS['api']['client_id'], SETTINGS['api']['channel'], SETTINGS['api']['token'])
-BOT = ParkyBot(API, IRC)
+logger = get_logger(LOGGING_LEVEL)
 
 # Adding custom chat functionality
-print('----------------------------')
-
 @BOT.decorator('!game')
 def command_updategame(message: Message):
     if message.message[6:]:
@@ -117,15 +85,6 @@ def command_remind(message: Message):
         _file.write("{}: {}\n".format(message.sender, message.message))
     BOT.send_message("I'll remember to check it out PepoG")
 
-@BOT.decorator('!sounds')
-def command_replysounds(message: Message):
-    message = ""
-
-    for sound in sorted(SOUNDS):
-        message += sound + ', '
-    message = message[:-2] + ' KappaKappa'
-    BOT.send_message(message)
-
 @BOT.decorator('!tts')
 def command_replytts(message: Message):
     message = "!br \U0001F1E7\U0001F1F7, !au \U0001F1E6\U0001F1FA, !s !en \U0001F1EC\U0001F1E7, \
@@ -133,7 +92,7 @@ def command_replytts(message: Message):
                 !it \U0001F1EE\U0001F1F9, !pl \U0001F1F5\U0001F1F1, !pt \U0001F1F5\U0001F1F9, \
                 !ru \U0001F1F7\U0001F1FA, !se \U0001F1F8\U0001F1EA, !uk \U0001F1FA\U0001F1E6, \
                 !cn \U0001F1E8\U0001F1F3, !ja !jp \U0001F1EF\U0001F1F5, !fr \U0001F1EB\U0001F1F7. \
-                Example: !fi nekubaka Honk"
+                Example: !fr animé milkers Honk"
     BOT.send_message(message)
 
 @BOT.decorator(['!br', '!au', '!s', '!en', '!de', '!es', '!ja', '!jp', '!it', '!pl', '!pt',
@@ -156,22 +115,44 @@ def command_gtts(message: Message):
         Sound(result.get_urls()[0]).play()
     except AssertionError:
         pass
+    except Exception as e:
+        logger.error(e, exc_info=True)
 
-SOUNDS = []
-for file in os.listdir(SOUNDS_PATH):
-    if file.endswith(('.wav', '.mp3')):
-        SOUNDS.append(file[:-4].lower())
+def scan_sounds_dir():
+    SOUNDS = []
+    if os.path.isdir(SOUNDS_PATH):
+        for file in os.listdir(SOUNDS_PATH):
+            if file.endswith(('.wav', '.mp3')):
+                SOUNDS.append(file)
+    else:
+        make_dir(SOUNDS_PATH)
+        return scan_sounds_dir()
+    return SOUNDS
+
+SOUNDS = scan_sounds_dir()
+def create_sounds():
+    for sound in SOUNDS:
         # Sound object is initialized when assigned to 's', avoiding parent variable search.
         # Don't: lambda m: Object.method(),
         #pylint: disable=cell-var-from-loop
-        new = {'function': lambda m, s=AudioPlayer(os.path.join(SOUNDS_PATH, file)): s.play(),
-                'command': f'!{file[:-4].lower()}',
+        new = {'function': lambda _, s=AudioPlayer(os.path.join(SOUNDS_PATH, sound)): s.play(),
+                'command': f'!{sound[:-4].lower()}',
                 'regexp': '',
                 'access': 0}
         BOT.handlers.append(new)
         logger.info(f"Sound: {new['command']} created.")
+create_sounds()
 
-print('----------------------------')
+@BOT.decorator('!sounds')
+def command_replysounds(message: Message):
+    message = ""
+
+    for sound in sorted(SOUNDS):
+        sound = sound[:-4].lower()
+        message += sound + ', '
+    message = message[:-2] + ' KappaKappa'
+    BOT.send_message(message)
+
 
 if __name__ == "__main__":
     BOT.pooling()
