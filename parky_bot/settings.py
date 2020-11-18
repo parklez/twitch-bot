@@ -13,9 +13,10 @@ if getattr(sys, 'frozen', False):
     RESOURCE_PATH = sys._MEIPASS
 elif __file__:
     APP_PATH = os.path.join(os.path.dirname(__file__), os.path.pardir)
-    RESOURCE_PATH = os.path.join(os.path.dirname(__file__), 'resources')
+    RESOURCE_PATH = os.path.join(os.path.dirname(__file__))
+
 else:
-    exit()
+    raise NotImplementedError
 
 SETTINGS_PATH = os.path.join(APP_PATH, 'settings.json')
 SOUNDS_PATH = os.path.join(APP_PATH, 'sounds')

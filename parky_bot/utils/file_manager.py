@@ -13,6 +13,9 @@ DEFALT_SETTINGS = {
         'client_id': "client_id https://glass.twitch.tv/console/apps",
         'channel': 'channel',
         'token': "Generate a token with 'user_read channel_editor' scopes at https://twitchapps.com/tokengen/",
+    },
+    'logging': {
+        'level': 20
     }
 }
 
