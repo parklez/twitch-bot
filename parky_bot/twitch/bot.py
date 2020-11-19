@@ -49,7 +49,7 @@ class ParkyBot:
                 for line in data.splitlines():
                     m = Message(line)
                     if m.sender:
-                        self._logger.debug(f'{m.sender}: {m.message}')
+                        self._logger.info(f'{m.sender}: {m.message}')
                     else:
                         self._logger.debug(m.string)
 
@@ -73,7 +73,7 @@ class ParkyBot:
 
     def decorator(self, command='', regexp='', access=0):
         def wrapper(function):
-            self._logger.info(f'Decorating: {function.__name__}')
+            self._logger.debug(f'Decorating: {function.__name__}')
 
             new = {'function': function,
                    'command': command,

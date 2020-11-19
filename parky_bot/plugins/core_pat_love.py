@@ -31,4 +31,5 @@ def command_love(message: Message):
     if message.message:
         target = message.message[6:]
         if target:
-            BOT.send_message("There's {}% of love between {} and {} <3".format(random.randrange(0, 100), message.sender, target))
+            BOT.send_message("There's {}% of love between {} and {} <3".format(
+                random.randrange(0, 100), message.sender, target))

@@ -1,9 +1,7 @@
 import os
 import sys
-from parky_bot.twitch.irc import TwitchIRC
-from parky_bot.twitch.api import TwitchAPI
-from parky_bot.twitch.bot import ParkyBot
 from parky_bot.utils.file_manager import load_json, create_settings_json
+from parky_bot.utils.logger import get_logger
 
 
 # Setting paths
@@ -14,7 +12,6 @@ if getattr(sys, 'frozen', False):
 elif __file__:
     APP_PATH = os.path.join(os.path.dirname(__file__), os.path.pardir)
     RESOURCE_PATH = os.path.join(os.path.dirname(__file__))
-
 else:
     raise NotImplementedError
 
@@ -29,7 +26,18 @@ if not os.path.isfile(SETTINGS_PATH):
 
 SETTINGS = load_json(SETTINGS_PATH)
 LOGGING_LEVEL = int(SETTINGS['logging']['level'])
+logger = get_logger(LOGGING_LEVEL) # Initial configuration
 
-IRC = TwitchIRC(SETTINGS['irc']['username'], SETTINGS['irc']['channel'], SETTINGS['irc']['token'])
-API = TwitchAPI(SETTINGS['api']['client_id'], SETTINGS['api']['channel'], SETTINGS['api']['token'])
+
+from parky_bot.twitch.irc import TwitchIRC
+from parky_bot.twitch.api import TwitchAPI
+from parky_bot.twitch.bot import ParkyBot
+
+# Initilizing bot
+IRC = TwitchIRC(SETTINGS['irc']['username'],
+                SETTINGS['irc']['channel'],
+                SETTINGS['irc']['token'])
+API = TwitchAPI(SETTINGS['api']['client_id'],
+                SETTINGS['api']['channel'],
+                SETTINGS['api']['token'])
 BOT = ParkyBot(API, IRC)

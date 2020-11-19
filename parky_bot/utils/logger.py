@@ -20,8 +20,8 @@ def get_logger(level=logging.DEBUG):
     logger = logging.getLogger('parky_bot')
 
     if not logger.handlers:
-        file_handler = logging.FileHandler(filename='parkylogs.log')
-        stdout_handler = logging.StreamHandler(sys.stdout)
+        file_handler = logging.FileHandler(filename='parky_logs.log')
+        stdout_handler = logging.StreamHandler(sys.stdout) #sys.stdout is not necessary over stderr
         #stderr_handler = logging.StreamHandler()
 
         log_colors={
@@ -41,6 +41,7 @@ def get_logger(level=logging.DEBUG):
         #logger.addHandler(stderr_handler)
 
         file_handler.setLevel(logging.WARN)
-        logger.setLevel(level)
+        stdout_handler.setLevel(level)
+        logger.setLevel(level) # Without this line, console log is ignored for some reason.
 
     return logger

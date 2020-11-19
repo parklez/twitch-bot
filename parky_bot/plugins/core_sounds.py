@@ -30,7 +30,7 @@ def create_sounds():
                 'regexp': '',
                 'access': 0}
         BOT.handlers.append(new)
-        logger.info(f"Sound: {new['command']} created.")
+        logger.debug(f"Sound: {new['command']} created.")
 create_sounds()
 
 @BOT.decorator('!sounds')
