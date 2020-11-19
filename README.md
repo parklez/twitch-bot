@@ -1,6 +1,6 @@
 # parky's twitch bot
 
-![logo](https://raw.githubusercontent.com/parklez/twitch-bot/master/parky_bot/resources/banner_new_wide_kitty.png)\
+![logo](https://raw.githubusercontent.com/parklez/twitch-bot/master/art/banner_new_wide_kitty.png)\
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![GitHub top language](https://img.shields.io/github/languages/top/parklez/twitch-bot)
 ![Made with love](https://img.shields.io/badge/made%20with-love-ff69b4)
@@ -48,10 +48,10 @@ This project is under heavy development and subject to refactoring and code smel
 
 ### Contributors
 - Energia (Artist) [Twitter](https://twitter.com/JiXiStigma) [Twitch](https://www.twitch.tv/energiaaurea)
-<img src="https://raw.githubusercontent.com/parklez/twitch-bot/master/parky_bot/resources/parkchar.png" width="200" height="180">
+<img src="https://raw.githubusercontent.com/parklez/twitch-bot/master/art/parkchar.png" width="200" height="180">
 
 - xKittieKat (Artist)
-<img src="https://raw.githubusercontent.com/parklez/twitch-bot/master/parky_bot/resources/barky_chan.png" width="200" height="200">
+<img src="https://raw.githubusercontent.com/parklez/twitch-bot/master/art/barky_chan.png" width="200" height="200">
 
 ### 3rd party resources
 - Shiba icon [icon-icons.com](https://icon-icons.com/icon/dog-pet-animal-japanese-shiba-inu-japan/127300)
