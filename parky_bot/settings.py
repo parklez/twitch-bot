@@ -1,7 +1,10 @@
 import os
 import sys
 from parky_bot.utils.file_manager import load_json, create_settings_json
-from parky_bot.utils.logger import get_logger
+from parky_bot.twitch.irc import TwitchIRC
+from parky_bot.twitch.api import TwitchAPI
+from parky_bot.twitch.bot import ParkyBot
+from parky_bot.utils.logger import get_logger, configure_logger
 
 
 # Setting paths
@@ -26,12 +29,8 @@ if not os.path.isfile(SETTINGS_PATH):
 
 SETTINGS = load_json(SETTINGS_PATH)
 LOGGING_LEVEL = int(SETTINGS['logging']['level'])
-logger = get_logger(LOGGING_LEVEL) # Initial configuration
-
-
-from parky_bot.twitch.irc import TwitchIRC
-from parky_bot.twitch.api import TwitchAPI
-from parky_bot.twitch.bot import ParkyBot
+LOGGER = get_logger()
+configure_logger(LOGGER, LOGGING_LEVEL)
 
 # Initilizing bot
 IRC = TwitchIRC(SETTINGS['irc']['username'],

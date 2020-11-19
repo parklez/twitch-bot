@@ -6,18 +6,13 @@ from colorlog import ColoredFormatter
 LOG_FORMAT = '%(levelname)-8s | {%(filename)s:%(funcName)s:%(lineno)d} | %(message)s'
 LOG_FORMAT_COLORED = '%(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s'
 
-
-def get_logger(level=logging.DEBUG):
-    """This function returns a single logging object.
+def configure_logger(logger: logging.Logger, level):
+    """Configures a particular logging.Logger object with handlers.
 
     Args:
-        level (int, optional): Logging level. Defaults to logging.DEBUG.
-
-    Returns:
-        Logger: logger object.
+        logger (logging.Logger): logging object.
+        level (int): logging level, eg logging.DEBUG
     """
-
-    logger = logging.getLogger('parky_bot')
 
     if not logger.handlers:
         file_handler = logging.FileHandler(filename='parky_logs.log')
@@ -43,5 +38,15 @@ def get_logger(level=logging.DEBUG):
         file_handler.setLevel(logging.WARN)
         stdout_handler.setLevel(level)
         logger.setLevel(level) # Without this line, console log is ignored for some reason.
+
+
+def get_logger():
+    """This function returns a single logging object.
+
+    Returns:
+        Logger: logger object.
+    """
+
+    logger = logging.getLogger('parky_bot')
 
     return logger
