@@ -2,11 +2,15 @@ import socket
 
 
 class TwitchIRC:
-    def __init__(self, username, channel, token):
+    def __init__(self, username: str, channel: str, token: str):
+        """Class to interact with Twitch's IRC using a socket.
+
+        Args:
+            username (str): Username to join a channel as
+            channel (str): Channel to join
+            token (str): Token for chat access (generated at www.twitchapps.com/tmi/)
         """
-        IRC client with Twitch specific methods.
-        Get your access token at www.twitchapps.com/tmi/
-        """
+
         self.username = username
         self.token = token
         self.channel = '#' + channel
@@ -16,8 +20,7 @@ class TwitchIRC:
         self.welcome()
 
     def welcome(self):
-        """
-        This function connects to twitch IRC in few steps:
+        """Connects to twitch IRC in few steps:
 
         1. Connects to the server
         2. Sends a token
@@ -25,6 +28,7 @@ class TwitchIRC:
         4. Joins a channel
         5. Requests extra tags (badges, emotes, etc)
         """
+
         self.irc_sock.connect((self.host, self.port))
         self.send_token()
         self.send_nick()
@@ -34,10 +38,8 @@ class TwitchIRC:
     def disconnect(self):
         self.irc_sock.close()
 
-    def send(self, data):
-        """
-        This function converts data into bytes with UTF-8 encoding then socket.send()
-        """
+    def send(self, data: str):
+        """Converts data into bytes with UTF-8 encoding then socket.send()"""
         self.irc_sock.send(bytes(data, 'UTF-8'))
 
     def send_pong(self):
