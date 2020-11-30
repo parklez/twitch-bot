@@ -62,24 +62,33 @@ class ParkyBot:
         self._logger.info('Stopped pooling.')
 
     def _filter(self, message: Message):
-        'Tests each filter on the Message object'
+        """This method filters through the handlers, and calls its respective function.
+
+        Args:
+            message (Message): Message object.
+        """
+
         for decorator in self.handlers:
             if isinstance(decorator['command'], str):
-                if message.command == decorator['command']:
+                if message.command == decorator['command'] and decorator['active']:
                     decorator['function'](message)
             elif isinstance(decorator['command'], list):
-                if message.command in decorator['command']:
+                if message.command in decorator['command'] and decorator['active']:
                     decorator['function'](message)
 
     def decorator(self, command='', regexp='', access=0):
         def wrapper(function):
             self._logger.debug(f'Decorating: {function.__name__}')
 
-            new = {'function': function,
-                   'command': command,
-                   'regexp': regexp,
-                   'access': access}
-            self.handlers.append(new)
+            func = {
+                'active': True,
+                'function': function,
+                'command': command,
+                'regexp': regexp,
+                'access': access
+                }
+
+            self.handlers.append(func)
             return function
         return wrapper
 

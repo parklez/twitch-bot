@@ -22,15 +22,18 @@ def scan_sounds_dir():
 SOUNDS = scan_sounds_dir()
 def create_sounds():
     for sound in SOUNDS:
+        # NOTE: It's not possible to decorate a lambda function with arguments, so this approach is used.
         # Sound object is initialized when assigned to 's', avoiding parent variable search.
-        # Don't: lambda m: Object.method(),
+        # Don't -> lambda m: Class.method()
+        # Do -> lambda m, o=Class(): o.method()
         #pylint: disable=cell-var-from-loop
-        new = {'function': lambda _, s=AudioPlayer(os.path.join(SOUNDS_PATH, sound)): s.play(),
+        func = {'active': True,
+                'function': lambda _, s=AudioPlayer(os.path.join(SOUNDS_PATH, sound)): s.play(),
                 'command': f'!{sound[:-4].lower()}',
                 'regexp': '',
                 'access': 0}
-        BOT.handlers.append(new)
-        logger.debug(f"Sound: {new['command']} created.")
+        BOT.handlers.append(func)
+        logger.debug(f"Sound: {func['command']} created.")
 create_sounds()
 
 @BOT.decorator('!sounds')
