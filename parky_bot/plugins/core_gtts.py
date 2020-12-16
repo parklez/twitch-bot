@@ -1,11 +1,21 @@
+from datetime import datetime
+import os
+import queue
+import time
+import threading
+from audioplayer import AudioPlayer
 import gtts
-from parky_bot.models.sound import Sound
-from parky_bot.settings import BOT
+from parky_bot.settings import BOT, APP_PATH
 from parky_bot.models.message import Message
 from parky_bot.utils.logger import get_logger
+from parky_bot.utils.file_manager import make_dir 
 
 
 logger = get_logger()
+TEMP_DIR = os.path.join(APP_PATH, 'sounds', 'gtts')
+QUEUE = queue.Queue()
+make_dir(TEMP_DIR)
+
 
 @BOT.decorator('!tts')
 def command_replytts(message: Message):
@@ -29,13 +39,26 @@ def command_gtts(message: Message):
             '!pt': 'pt-pt', '!ru': 'ru', '!se': 'sv', '!uk': 'uk', '!cn': 'zh-cn',
             '!fi': 'fi', '!fr': 'fr', '!us': 'en-us'}
 
-    try:
-        result = gtts.gTTS(
-            message.message[c:c+100],
-            lang=langs[message.command])
+    result = gtts.gTTS(
+        message.message[c:c+100],
+        lang=langs[message.command])
 
-        Sound(result.get_urls()[0]).play()
-    except AssertionError:
-        pass
-    except Exception as e:
-        logger.error(e, exc_info=True)
+    QUEUE.put(result)
+
+def gtts_daemon():
+    while BOT.is_pooling:
+        try:
+            sound = QUEUE.get(block=False) # This blocks and hangs the program entirely
+            file_name = os.path.join(TEMP_DIR, f'gtts_{datetime.now().microsecond}.mp3')
+            sound.save(file_name)
+            a = AudioPlayer(file_name)
+            a.play(block=True)
+            os.remove(file_name)
+            QUEUE.task_done()
+        except queue.Empty:
+            pass # Ignore and try again later
+        except Exception as e:
+            logger.error(e, exc_info=True)
+        time.sleep(1) # Lessen the CPU impact.
+
+threading.Thread(target=gtts_daemon).start()
