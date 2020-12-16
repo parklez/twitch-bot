@@ -11,11 +11,19 @@ An open-source, minimalistic, cross-platform, easily expandable with plugins "Tw
 ### Features
 - 🔌 Connect to Twitch IRC chat!
 - 🔌 Connect to Twitch API! (change game, title)
-- 🔊 Play custom sounds/media using VLC!
+- 🔊 Play custom sounds/media using VLC!*
 - 🔊 Google's text to speech!
 - ⚡ Load your custom made plugins!
 
-### Making a plugin is this easy!
+*VLC support is coming later.
+
+### Download for Windows
+Get @ [Releases page](https://github.com/parklez/twitch-bot/releases)
+
+### Download for all platforms
+Download the repo by clicking [here](https://github.com/parklez/twitch-bot/archive/master.zip) (or using git)
+
+### Making a plugin is this easy:
 Copy the template below:
 ```python
 from parky_bot.settings import BOT
@@ -28,7 +36,6 @@ def my_custom_command(message):
 Save your `my_custom_plugin.py` under `/plugins` folder and you're ready to go!
 
 ### Dependencies
-- VLC (64-bit version) [download](https://www.videolan.org/vlc/)
 - Python 3.7 or above
 - Few python dependencies:
 ```sh
