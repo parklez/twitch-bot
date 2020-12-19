@@ -11,11 +11,9 @@ An open-source, minimalistic, cross-platform, easily expandable with plugins "Tw
 ### Features
 - 🔌 Connect to Twitch IRC chat!
 - 🔌 Connect to Twitch API! (change game, title)
-- 🔊 Play custom sounds/media using VLC!*
+- 🔊 Play custom sounds!
 - 🔊 Google's text to speech!
 - ⚡ Load your custom made plugins!
-
-*VLC support is coming later.
 
 ### Download for Windows
 Get @ [Releases page](https://github.com/parklez/twitch-bot/releases)
@@ -29,7 +27,7 @@ Copy the template below:
 from parky_bot.settings import BOT
 from parky_bot.models.message import Message
 
-@BOT.decorator('!hello'):
+@BOT.decorator(commands=['!hello', '!hi']):
 def my_custom_command(message): 
     BOT.send_message(f'Howdy {message.sender}!')
  ```

@@ -8,6 +8,7 @@ import parky_bot.plugins.core_pat_love
 import parky_bot.plugins.core_gtts
 import parky_bot.plugins.core_sounds
 import parky_bot.plugins.core_misc
+import parky_bot.plugins.core_plugin_management
 
 # Third party plugins
 load_plugins(RESOURCE_PATH, 'parky_bot')

@@ -17,7 +17,7 @@ QUEUE = queue.Queue()
 make_dir(TEMP_DIR)
 
 
-@BOT.decorator('!tts')
+@BOT.decorator(['!tts'])
 def command_replytts(message: Message):
     message = "!br \U0001F1E7\U0001F1F7, !au \U0001F1E6\U0001F1FA, !s !en \U0001F1EC\U0001F1E7, \
                 !us \U0001F1FA\U0001F1F8, !de \U0001F1E9\U0001F1EA, !es \U0001F1EA\U0001F1F8, \

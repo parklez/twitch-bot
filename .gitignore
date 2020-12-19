@@ -1,1 +1,3 @@
 *.pyc
+settings.json
+parky_logs.log

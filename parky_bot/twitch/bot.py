@@ -69,21 +69,17 @@ class ParkyBot:
         """
 
         for decorator in self.handlers:
-            if isinstance(decorator['command'], str):
-                if message.command == decorator['command'] and decorator['active']:
-                    decorator['function'](message)
-            elif isinstance(decorator['command'], list):
-                if message.command in decorator['command'] and decorator['active']:
-                    decorator['function'](message)
+            if message.command in decorator['commands'] and decorator['active']:
+                decorator['function'](message)
 
-    def decorator(self, command='', regexp='', access=0):
+    def decorator(self, commands='', regexp='', access=0):
         def wrapper(function):
             self._logger.debug(f'Decorating: {function.__name__}')
 
             func = {
                 'active': True,
                 'function': function,
-                'command': command,
+                'commands': commands,
                 'regexp': regexp,
                 'access': access
                 }

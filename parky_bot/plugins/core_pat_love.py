@@ -3,7 +3,7 @@ from parky_bot.settings import BOT
 from parky_bot.models.message import Message
 
 
-@BOT.decorator('!pat')
+@BOT.decorator(['!pat'])
 def command_pat(message: Message):
     if not message.targets:
         target = message.message[5:]
@@ -26,7 +26,7 @@ def command_pat(message: Message):
 
     BOT.send_message(random.choice(responses).format(message.sender, target))
 
-@BOT.decorator('!love')
+@BOT.decorator(['!love'])
 def command_love(message: Message):
     if message.message:
         target = message.message[6:]

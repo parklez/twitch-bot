@@ -2,7 +2,7 @@ from parky_bot.settings import BOT
 from parky_bot.models.message import Message
 
 
-@BOT.decorator('!game')
+@BOT.decorator(['!game'])
 def command_updategame(message: Message):
     if message.message[6:]:
         if 'broadcaster' in message.badges.get('badges'):
@@ -14,7 +14,7 @@ def command_updategame(message: Message):
     else:
         BOT.send_message(f'Currently playing: "{BOT.twitch.game}"')
 
-@BOT.decorator('!status')
+@BOT.decorator(['!status'])
 def command_updatestatus(message: Message):
     if message.message[8:]:
         if 'broadcaster' in message.badges.get('badges'):
@@ -26,7 +26,7 @@ def command_updatestatus(message: Message):
     else:
         BOT.send_message(f'Status: "{BOT.twitch.status}"')
 
-@BOT.decorator('!uptime')
+@BOT.decorator(['!uptime'])
 def command_uptime(message: Message):
     time = BOT.twitch.get_uptime()
     if time:

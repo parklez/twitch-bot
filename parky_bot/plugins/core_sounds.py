@@ -29,14 +29,14 @@ def create_sounds():
         #pylint: disable=cell-var-from-loop
         func = {'active': True,
                 'function': lambda _, s=AudioPlayer(os.path.join(SOUNDS_PATH, sound)): s.play(),
-                'command': f'!{sound[:-4].lower()}',
+                'commands': [f'!{sound[:-4].lower()}'],
                 'regexp': '',
                 'access': 0}
         BOT.handlers.append(func)
-        logger.debug(f"Sound: {func['command']} created.")
+        logger.debug(f"Sound: {func['commands']} created.")
 create_sounds()
 
-@BOT.decorator('!sounds')
+@BOT.decorator(['!sounds'])
 def command_replysounds(message: Message):
     message = ""
 
