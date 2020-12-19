@@ -55,9 +55,6 @@ python3 -m parky_bot.app
 This project is under heavy development and subject to refactoring and code smells.
 
 ### Contributors
-- Energia (Artist) [Twitter](https://twitter.com/JiXiStigma) [Twitch](https://www.twitch.tv/energiaaurea)
-<img src="https://raw.githubusercontent.com/parklez/twitch-bot/master/art/parkchar.png" width="200" height="180">
-
 - xKittieKat (Artist)
 <img src="https://raw.githubusercontent.com/parklez/twitch-bot/master/art/barky_chan.png" width="200" height="200">
 
