@@ -1,5 +1,7 @@
 import os
 import sys
+import threading
+from parky_bot.gui.window import Application
 from parky_bot.utils.file_manager import load_json, create_settings_json
 from parky_bot.twitch.irc import TwitchIRC
 from parky_bot.twitch.api import TwitchAPI
@@ -40,3 +42,4 @@ API = TwitchAPI(SETTINGS['api']['client_id'],
                 SETTINGS['api']['channel'],
                 SETTINGS['api']['token'])
 BOT = ParkyBot(API, IRC)
+APP = threading.Thread(target=Application, args=(BOT,))
