@@ -1,0 +1,29 @@
+# https://ruszkow.ski/posts/2019-10-21-travis-+-pyinstaller-+-github-releases/
+# https://docs.travis-ci.com/user/reference/windows
+# https://chocolatey.org/packages/python
+
+os: windows
+language: shell
+
+before_install:
+  - choco install python --version=3.7
+  - python -m pip install --upgrade pip
+
+env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+
+install:
+  - pip install -r requirements.txt
+
+before_deploy:
+  - python3.7 build.py
+
+deploy:
+  provider: releases
+  api_key: $RELEASE_TOKEN
+  file_glob: true
+  file: dist/app.zip
+  skip_cleanup: true
+  draft: true
+  on:
+    tags: true
+  name: $TRAVIS_TAG
