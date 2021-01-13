@@ -4,7 +4,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![GitHub top language](https://img.shields.io/github/languages/top/parklez/twitch-bot)
 ![Made with love](https://img.shields.io/badge/made%20with-love-ff69b4)
-[![Build Status](https://travis-ci.org/parklez/twitch-bot.svg?branch=master)](https://travis-ci.org/parklez/twitch-bot)
+[![Build Status](https://www.travis-ci.com/parklez/twitch-bot.svg?branch=master)](https://www.travis-ci.com/parklez/twitch-bot)
 ![Downloads](https://img.shields.io/github/downloads/parklez/twitch-bot/total) \
 An open-source, minimalistic, cross-platform, easily expandable with plugins "Twitch IRC/API" bot.
 

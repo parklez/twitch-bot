@@ -13,15 +13,16 @@ env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
 
 install:
   - pip install -r requirements.txt
+  - pip install pyinstaller
 
 before_deploy:
-  - python3.7 build.py
+  - python build.py
 
 deploy:
   provider: releases
   api_key: $RELEASE_TOKEN
   file_glob: true
-  file: dist/app.zip
+  file: parkybot.zip
   skip_cleanup: true
   draft: true
   on:
