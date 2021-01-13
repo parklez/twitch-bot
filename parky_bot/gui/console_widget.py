@@ -1,6 +1,5 @@
 import queue
 import tkinter
-import logging
 from tkinter.scrolledtext import ScrolledText
 from parky_bot.utils.logger import get_console_queue, get_logger
 from parky_bot.gui.themes.default import Theme
@@ -25,13 +24,6 @@ class Console:
                           fill=tkinter.BOTH,
                           expand=True)
 
-        # Queue mechanism
-        #self.queue = queue.Queue()
-        #self.queue_handler = ConsoleQueue(self.queue)
-        #self.format = logging.Formatter(LOG_FORMAT)
-        #self.queue_handler.setFormatter(self.format)
-        #logger.addHandler(self.queue_handler)
-
         # Logging colors
         self.console.tag_config('INFO', foreground=Theme.LOG_INFO)
         self.console.tag_config('DEBUG', foreground=Theme.LOG_DEBUG)
@@ -53,6 +45,9 @@ class Console:
     def insert(self, text):
         message = LOGGER.handlers[2].format(text) # This is not a good way to access this
         self.console.configure(state='normal')
-        self.console.insert(tkinter.END, f'{message}\n', text.levelname)
+        try: # Tcl can't render some characters
+            self.console.insert(tkinter.END, f'{message}\n', text.levelname)
+        except tkinter.TclError as e:
+            self.console.insert(tkinter.END, f'{e}\n', 'ERROR')
         self.console.configure(state='disabled')
         self.console.yview(tkinter.END)
