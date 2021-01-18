@@ -14,7 +14,7 @@ def command_updategame(message: Message):
     else:
         BOT.send_message(f'Currently playing: "{BOT.twitch.game}"')
 
-@BOT.decorator(['!status'])
+@BOT.decorator(['!status', '!title'])
 def command_updatestatus(message: Message):
     if message.message[8:]:
         if 'broadcaster' in message.badges.get('badges'):
