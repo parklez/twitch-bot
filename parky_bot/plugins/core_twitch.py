@@ -4,9 +4,10 @@ from parky_bot.models.message import Message
 
 @BOT.decorator(['!game'])
 def command_updategame(message: Message):
-    if message.message[6:]:
+    prefix = len(message.command) + 1
+    if message.message[prefix:]:
         if 'broadcaster' in message.badges.get('badges'):
-            result = BOT.twitch.update_game(message.message[6:])
+            result = BOT.twitch.update_game(message.message[prefix:])
             if result.ok:
                 BOT.send_message(f'Game set to: "{BOT.twitch.game}"')
             else:
@@ -14,11 +15,12 @@ def command_updategame(message: Message):
     else:
         BOT.send_message(f'Currently playing: "{BOT.twitch.game}"')
 
-@BOT.decorator(['!status'])
+@BOT.decorator(['!status', '!title'])
 def command_updatestatus(message: Message):
-    if message.message[8:]:
+    prefix = len(message.command) + 1
+    if message.message[prefix:]:
         if 'broadcaster' in message.badges.get('badges'):
-            result = BOT.twitch.update_status(message.message[8:])
+            result = BOT.twitch.update_status(message.message[prefix:])
             if result.ok:
                 BOT.send_message(f'Status set to: "{BOT.twitch.status}"')
             else:
