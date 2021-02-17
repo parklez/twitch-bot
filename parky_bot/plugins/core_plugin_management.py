@@ -2,11 +2,8 @@ from parky_bot.settings import BOT
 from parky_bot.models.message import Message
 
 
-@BOT.decorator(['!plugin'])
+@BOT.decorator(['!plugin'], access=3)
 def command_toggle_plugin(message: Message):
-    if 'broadcaster' not in message.badges.get('badges', ''):
-        return
-
     command = message.message.split()
     found = False
 

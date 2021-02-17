@@ -6,7 +6,7 @@ from parky_bot.models.message import Message
 def command_updategame(message: Message):
     prefix = len(message.command) + 1
     if message.message[prefix:]:
-        if 'broadcaster' in message.badges.get('badges'):
+        if 'broadcaster' in message.badges:
             result = BOT.twitch.update_game(message.message[prefix:])
             if result.ok:
                 BOT.send_message(f'Game set to: "{BOT.twitch.game}"')
@@ -19,7 +19,7 @@ def command_updategame(message: Message):
 def command_updatestatus(message: Message):
     prefix = len(message.command) + 1
     if message.message[prefix:]:
-        if 'broadcaster' in message.badges.get('badges'):
+        if 'broadcaster' in message.badges:
             result = BOT.twitch.update_status(message.message[prefix:])
             if result.ok:
                 BOT.send_message(f'Status set to: "{BOT.twitch.status}"')

@@ -10,7 +10,8 @@ class Message:
             * message (str): Sender's message.
             * sender (str): Sender's username.
             * channel (str): Channel.
-            * badges (dict): dict of available user badges (if tags are enabled).
+            * tags (dict): dict of available user tags (if tags are enabled).
+            * badges (dict): dict of available badges like broadcaster, vip (if tags are enabled).
                 To learn more: https://dev.twitch.tv/docs/irc/tags#privmsg-twitch-tags
             * targets (list): list of tagged usernames in the message starting with "@".
             * command (str): First word of the message.
@@ -22,6 +23,7 @@ class Message:
         self.message = ''
         self.sender = ''
         self.channel = ''
+        self.tags = {}
         self.badges = {}
         self.targets = []
         self.command = ''
@@ -34,24 +36,25 @@ class Message:
 
         if self.string.startswith('@'):
             regex = r'@(.*) :(.*)\!.*@.*\.tmi\.twitch\.tv PRIVMSG #(.*) :(.*)'
-            (badges,
+            (tags,
             self.sender,
             self.channel,
             self.message) = re.search(regex, self.string).groups()
 
-            for item in badges.split(';'):
-                item = item.split('=')
-                try:
-                    self.badges[item[0]] = item[1]
-                except IndexError:
-                    pass
+            tags = tags.split(';')
+            self.tags = dict([tag.split('=') for tag in tags])
+
+            badges = self.tags.get('badges')
+            if badges:
+                self.badges = dict([badge.split('/') for badge in badges.split(',')])
+
         else:
             regex = r':(.*)\!.*@.*\.tmi\.twitch\.tv PRIVMSG #(.*) :(.*)'
             (self.sender,
             self.channel,
             self.message) = re.search(regex, self.string).groups()
 
-        self.sender = self.badges.get('display-name', self.sender)
+        self.sender = self.tags.get('display-name', self.sender)
 
         words = self.message.split()
 

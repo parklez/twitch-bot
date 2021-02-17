@@ -67,12 +67,41 @@ class ParkyBot:
         Args:
             message (Message): Message object.
         """
-
         for decorator in self.handlers:
-            if message.command in decorator['commands'] and decorator['active']:
+            if (message.command in decorator['commands'] and decorator['active']
+            and self.has_permission(decorator['access'], message)):
                 decorator['function'](message)
 
-    def decorator(self, commands='', regexp='', access=0):
+    def has_permission(self, func_perm_level: int, message: Message) -> bool:
+        """
+        Checks permission based on hierarchy level
+
+        0 - Viewer
+        1 - Vip
+        2 - Moderator
+        3 - Broadcaster
+        """
+        if not func_perm_level:
+            return True
+
+        perms = {
+            'broadcaster': 3,
+            'moderator': 2,
+            'vip': 1,
+            '': 0
+        }
+
+        # Finding out the numerical equivalent for the permission
+        user_perm = 0
+        for perm in perms:
+            if perm in message.badges:
+                user_perm = perms[perm]
+                break
+        print('user_perm:', user_perm, perm, 'func_perm:', func_perm_level)
+
+        return user_perm >= func_perm_level
+
+    def decorator(self, commands=[], regexp='', access=0):
         def wrapper(function):
             self._logger.debug(f'Decorating: {function.__name__}')
 
