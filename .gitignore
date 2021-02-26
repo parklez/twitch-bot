@@ -1,3 +1,11 @@
+# Python VENV
+my_env/
 *.pyc
+
+# Distributable
+dist/
+app.spec
+
+# Application
 settings.json
 parky_logs.log
