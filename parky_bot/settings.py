@@ -42,4 +42,8 @@ API = TwitchAPI(SETTINGS['api']['client_id'],
                 SETTINGS['api']['channel'],
                 SETTINGS['api']['token'])
 BOT = ParkyBot(API, IRC)
-APP = threading.Thread(target=Application, args=(BOT,))
+
+def start():
+    if '--console' not in sys.argv:
+        threading.Thread(target=Application, args=(BOT,)).start()
+    BOT.pooling()
