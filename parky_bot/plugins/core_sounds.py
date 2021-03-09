@@ -28,7 +28,7 @@ def create_sounds():
         # Do -> lambda m, o=Class(): o.method()
         #pylint: disable=cell-var-from-loop
         func = {'active': True,
-                'function': lambda _, s=AudioPlayer(os.path.join(SOUNDS_PATH, sound)): s.play(),
+                'function': lambda _, s=AudioPlayer(os.path.join(SOUNDS_PATH, sound)): play_sound(s),
                 'commands': [f'!{sound[:-4].lower()}'],
                 'regexp': '',
                 'access': 0}
@@ -45,3 +45,10 @@ def command_replysounds(message: Message):
         message += sound + ', '
     message = message[:-2] + ' KappaKappa'
     BOT.send_message(message)
+
+def play_sound(sound: AudioPlayer) -> None:
+    try:
+        print(sound.volume)
+        sound.play()
+    except Exception as e:
+        logger.error(e, exc_info=True)
