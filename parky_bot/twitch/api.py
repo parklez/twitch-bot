@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timezone
 import requests
 from parky_bot.utils.logger import get_logger
 
@@ -143,21 +143,20 @@ class TwitchAPI:
         response = requests.get(self.base_api + 'streams/' + self.channel_id, headers=self.headers)
         return response.json()
 
-    def get_current_stream_startup_time(self):
+    def get_current_stream_startup_time(self)-> str, None:
         json = self.get_stream_by_user()
         if json.get('stream'):
             return json.get('stream').get('created_at')
 
     def get_uptime(self):
-        #json format "2016-12-14T22:49:56Z"
+        #json format: "2016-12-14T22:49:56Z" - UTC 0
         string = self.get_current_stream_startup_time()
 
         if string:
-            then = datetime.datetime.strptime(string, '%Y-%m-%dT%H:%M:%SZ')
-            now = datetime.datetime.now()
-            diff = now - then
-
-            return diff
+            then = datetime.strptime(string, '%Y-%m-%dT%H:%M:%SZ')
+            # timezone.utc sets zone to 0 utc, replace turns this object naive.
+            now = datetime.now(timezone.utc).replace(tzinfo=None)
+            return now - then
 
     def get_users(self, username):
         #https://dev.twitch.tv/docs/v5/reference/users/#get-users

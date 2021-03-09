@@ -31,8 +31,13 @@ def command_updatestatus(message: Message):
 @BOT.decorator(['!uptime'])
 def command_uptime(message: Message):
     time = BOT.twitch.get_uptime()
-    if time:
-        time = str(time)
-        BOT.send_message(f'Stream has been live for: {time.split(".")[0]}')
+    if not time:
+        time = str(time).split('.')[0]
+        time = time.replace(':', ' hours, ')
+        time = time.replace(':', ' minutes, ')
+        time += ' seconds.'
+        time = time.replace('0 hour(s), ', '') # Removing this case.
+
+        BOT.send_message(f'{BOT.twitch.channel} has been live for {time}')
     else:
-        BOT.send_message('Stream is offline.')
+        BOT.send_message(f'{BOT.twitch.channel} is offline.')
