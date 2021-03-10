@@ -143,7 +143,7 @@ class TwitchAPI:
         response = requests.get(self.base_api + 'streams/' + self.channel_id, headers=self.headers)
         return response.json()
 
-    def get_current_stream_startup_time(self)-> str, None:
+    def get_current_stream_startup_time(self):
         json = self.get_stream_by_user()
         if json.get('stream'):
             return json.get('stream').get('created_at')
