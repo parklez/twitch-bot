@@ -48,7 +48,6 @@ def command_replysounds(message: Message):
 
 def play_sound(sound: AudioPlayer) -> None:
     try:
-        print(sound.volume)
         sound.play()
     except Exception as e:
         logger.error(e, exc_info=True)

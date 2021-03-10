@@ -97,7 +97,6 @@ class ParkyBot:
             if perm in message.badges:
                 user_perm = perms[perm]
                 break
-        print('user_perm:', user_perm, perm, 'func_perm:', func_perm_level)
 
         return user_perm >= func_perm_level
 
