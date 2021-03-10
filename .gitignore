@@ -1,5 +1,5 @@
 # Python VENV
-my_env/
+.venv/
 *.pyc
 
 # Distributable

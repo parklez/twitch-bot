@@ -19,9 +19,9 @@ An open-source, minimalistic, cross-platform, easily expandable with plugins "Tw
 Get @ [Releases page](https://github.com/parklez/twitch-bot/releases)
 
 ### Download for all platforms
-Download the repo [Here](https://github.com/parklez/twitch-bot/archive/master.zip) (or using git)
+Download the repo [Here](https://github.com/parklez/twitch-bot/archive/master.zip) (or using git) and [run it locally.](#running-locally)
 
-### Making a plugin is this easy:
+### 💡 Creating your own plugin is this easy
 Copy the template below:
 ```python
 from parky_bot.settings import BOT
@@ -33,20 +33,26 @@ def my_custom_command(message):
  ```
 Save your `my_custom_plugin.py` under `/plugins` folder and you're ready to go!
 
-### Dependencies
-- Python 3.7 or above
-- Few python dependencies:
+### Running locally
+- Install Python 3.7 or newer
+- Set up a virtual env (optional):
 ```sh
-pip3 install -r requirements.txt
-```
+python -m venv .venv
+# Unix
+source .venv/bin/activate
 
-### Running
-- Download this repository & unzip
-- Navigate to the extracted folder
-- Install dependencies if you haven't already
-- Using your favorite terminal, type the code below:
+# Windows
+.venv/Scripts/Activate.ps1
+```
+- Install dependencies:
+```sh
+pip install -r requirements.txt
+```
+- Start the application:
 ```sh
 python3 -m parky_bot.app
+# Console only/No tkinter:
+python -m parky_bot.app --console
 ```
 
 ### Disclaimer
