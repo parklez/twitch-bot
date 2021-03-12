@@ -1,4 +1,8 @@
 import socket
+from parky_bot.utils.logger import get_logger
+
+
+logger = get_logger()
 
 
 class TwitchIRC:
@@ -40,7 +44,10 @@ class TwitchIRC:
 
     def send(self, data: str):
         """Converts data into bytes with UTF-8 encoding then socket.send()"""
-        self.irc_sock.send(bytes(data, 'UTF-8'))
+        try:
+            self.irc_sock.send(bytes(data, 'UTF-8'))
+        except ConnectionResetError as e:
+            logger.critical(f'{e}')
 
     def send_pong(self):
         self.send("PONG :tmi.twitch.tv\r\n")
