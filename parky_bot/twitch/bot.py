@@ -57,7 +57,6 @@ class ParkyBot:
 
                     if m.sender not in self.chatters and m.sender:
                         self.chatters.append(m.sender)
-
                     self._filter(m)
 
             data = ""
@@ -74,7 +73,8 @@ class ParkyBot:
             and self.has_permission(decorator['access'], message)):
                 decorator['function'](message)
 
-    def has_permission(self, func_perm_level: int, message: Message) -> bool:
+    @staticmethod
+    def has_permission(func_perm_level: int, message: Message) -> bool:
         """
         Checks permission based on hierarchy level
 
@@ -120,3 +120,7 @@ class ParkyBot:
 
     def send_message(self, string):
         self.irc.send_message(string)
+        m = Message('')
+        m.message = string
+        m.sender = self.irc.username
+        self.console.put_nowait(m)

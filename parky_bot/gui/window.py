@@ -1,6 +1,10 @@
+from parky_bot.gui.input_widget import InputBar
 import tkinter
+import gc
 from parky_bot.gui.themes.default import Theme
 from parky_bot.gui.console_widget import Console
+from parky_bot.gui.buttons_widget import ButtonBar
+
 
 try: # This allows Windows 10 to scale the window for high DPI monitors.
     from ctypes import windll
@@ -9,35 +13,28 @@ except:
     pass
 
 
-class AppFrame(tkinter.Frame):
-    #http://effbot.org/tkinterbook/tkinter-hello-again.htm
-    #https://stackoverflow.com/questions/17466561/best-way-to-structure-a-tkinter-application
-    def __init__(self, app):
-        super().__init__(app, bg=Theme.BG_COLOR)
-        self.app = app
-        """
-        self.text = tkinter.Label(self.app,
-                                  text='{parkybot}',
-                                  font=('helvetica', 15),
-                                  fg=Theme.FG_COLOR,
-                                  bg=Theme.BG_COLOR)
-        self.text.pack()
-        """
-        self.console = Console(self.app)
-
-
 class Application:
 
     def __init__(self, bot):
         self.app = tkinter.Tk()
 
         self.app.configure(background=Theme.BG_COLOR)
-        self.app.title('parkybot')
-        self.app.minsize(600, 400)
+        self.app.title('parky\'s twitch bot ~')
+        self.app.minsize(300, 400)
+        self.app.geometry("600x400")
         #self.app.resizable(0, 0)
 
-        self.content = AppFrame(self.app)
-        #self.content.pack()
+        self.button_bar = ButtonBar(self.app, bg=Theme.BAR_BG)
+        self.button_bar.pack(fill=tkinter.X)
+
+        self.console = Console(self.app)
+        self.console.pack(fill=tkinter.BOTH,
+                          pady=10,
+                          padx=10,
+                          expand=True)
+
+        self.send = InputBar(self.app, bot, bg=Theme.BAR_BG)
+        self.send.pack(fill=tkinter.X, side=tkinter.BOTTOM)
 
         self.app.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.bot = bot
@@ -45,5 +42,11 @@ class Application:
 
     def on_closing(self):
         self.app.destroy()
+        #https://pysimplegui.readthedocs.io/en/latest/#multiple-threads
+        self.button_bar = None
+        self.console = None
+        self.send = None
+        gc.collect()
+
         self.bot.irc.disconnect()
         self.bot.is_pooling = False

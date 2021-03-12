@@ -2,6 +2,7 @@ import queue
 import tkinter
 from tkinter.scrolledtext import ScrolledText
 from parky_bot.utils.logger import get_console_queue, get_logger
+from parky_bot.models.message import Message
 from parky_bot.gui.themes.default import Theme
 
 
@@ -9,29 +10,34 @@ LOGGER = get_logger()
 QUEUE = get_console_queue()
 
 
-class Console:
-    def __init__(self, app):
-        self.app = app
-        self.console = ScrolledText(self.app,
-                                    bg=Theme.BG_COLOR,
-                                    wrap=tkinter.WORD,
+class Console(tkinter.Frame):
+
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent, **kwargs)
+
+        self.console = ScrolledText(self,
+                                    bg=Theme.CONSOLE_BG,
+                                    wrap=tkinter.CHAR,
                                     width=40,
                                     height=10,
                                     state='disabled')
 
-        self.console.pack(pady=10,
-                          padx=10,
-                          fill=tkinter.BOTH,
+        # Despite setting height above, this widget gets expanded fully,
+        # if the canvas is smaller than the height, will look odd.
+        self.console.pack(fill=tkinter.BOTH,
                           expand=True)
+
+        # Text color
+        self.console.tag_config('TEXT', foreground=Theme.HL)
 
         # Logging colors
         self.console.tag_config('INFO', foreground=Theme.LOG_INFO)
         self.console.tag_config('DEBUG', foreground=Theme.LOG_DEBUG)
         self.console.tag_config('ERROR', foreground=Theme.LOG_ERROR)
         self.console.tag_config('WARNING', foreground=Theme.LOG_WARNING)
-        self.console.tag_config('CRITICAL', foreground=Theme.LOG_CRITICAL, background='white')
+        self.console.tag_config('CRITICAL', foreground=Theme.LOG_CRITICAL, background=Theme.BG_COLOR)
         self.console.focus()
-        self.app.after(100, self.pooling)
+        self.after(100, self.pooling)
 
     def pooling(self):
         while 1:
@@ -40,14 +46,31 @@ class Console:
                 self.insert(message)
             except queue.Empty:
                 break
-        self.app.after(100, self.pooling)
+        self.after(100, self.pooling)
 
     def insert(self, text):
-        message = LOGGER.handlers[2].format(text) # This is not a good way to access this
-        self.console.configure(state='normal')
+        self.console.configure(state='normal') # Allow writing
         try: # Tcl can't render some characters
-            self.console.insert(tkinter.END, f'{message}\n', text.levelname)
+            if isinstance(text, Message):
+                self.console.tag_config(text.sender,
+                                        foreground=text.tags.get('color', 'lightblue1'))
+                self.console.insert(tkinter.END, text.sender, text.sender)
+                self.console.insert(tkinter.END, f': {text.message}\n', 'TEXT')
+            else:
+                message = LOGGER.handlers[2].format(text) # This is not a good way to access this
+                self.console.insert(tkinter.END, f'{message}\n', text.levelname)
+
         except tkinter.TclError as e:
-            self.console.insert(tkinter.END, f'{e}\n', 'ERROR')
-        self.console.configure(state='disabled')
+            if isinstance(text, Message):
+                # My personal fix for Tkinter's limitation -
+                # Convert the message from UTC-8 to bytes,
+                # then decode the bytes to ASCII. EZ
+                workaround = text.message.encode('utf-8', errors='ignore')
+                text.message = workaround.decode('ascii', errors='replace')
+                self.console.insert(tkinter.END, f': {text.message}\n', 'TEXT')
+
+            else:
+                self.console.insert(tkinter.END, f'{e}\n', 'ERROR')
+
+        self.console.configure(state='disabled') # Disallow writing
         self.console.yview(tkinter.END)
