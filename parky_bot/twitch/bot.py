@@ -1,6 +1,6 @@
 import time
 from parky_bot.models.message import Message
-from parky_bot.utils.logger import get_logger
+from parky_bot.utils.logger import get_logger, get_console_queue
 
 
 class ParkyBot:
@@ -11,6 +11,7 @@ class ParkyBot:
         self.chatters = []
         self.is_pooling = True
         self._logger = get_logger()
+        self.console = get_console_queue()
 
     def pooling(self):
         if not self.irc:
@@ -49,7 +50,8 @@ class ParkyBot:
                 for line in data.splitlines():
                     m = Message(line)
                     if m.sender:
-                        self._logger.info(f'{m.sender}: {m.message}')
+                        self._logger.debug(f'{m.sender}: {m.message}')
+                        self.console.put_nowait(m)
                     else:
                         self._logger.debug(m.string)
 
