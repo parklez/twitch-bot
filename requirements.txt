@@ -1,4 +1,3 @@
 gTTs
 requests
 audioplayer
-colorlog

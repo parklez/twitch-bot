@@ -57,7 +57,7 @@ class Console(tkinter.Frame):
                 self.console.insert(tkinter.END, text.sender, text.sender)
                 self.console.insert(tkinter.END, f': {text.message}\n', 'TEXT')
             else:
-                message = LOGGER.handlers[2].format(text) # This is not a good way to access this
+                message = LOGGER.handlers[1].format(text) # This is not a good way to access this
                 self.console.insert(tkinter.END, f'{message}\n', text.levelname)
 
         except tkinter.TclError as e:
