@@ -65,12 +65,20 @@ class TwitchAPI:
     def get_user(self):
         #https://dev.twitch.tv/docs/v5/#getting-a-client-id
         r = requests.get(self.base_api + 'user', headers=self.headers)
-        return r.json()
+        if r.ok:
+            return r.json()
+        else:
+            self._logger.warn(f'get_user: {r.status_code}')
+            return {}
 
     def get_channel_by_id(self):
         #https://dev.twitch.tv/docs/v5/reference/channels/#get-channel-by-id
         r = requests.get(self.base_api + "channels/" + self.channel_id, headers=self.headers)
-        return r.json()
+        if r.ok:
+            return r.json()
+        else:
+            self._logger.warn(f'get_channel_by_id: {r.status_code}')
+            return {}
 
     def fetch_status(self):
         return self.channel_info.get('status')
@@ -88,8 +96,10 @@ class TwitchAPI:
         response = requests.put(
             self.base_api + 'channels/' + self.channel_id, json=post_data, headers=self.headers)
 
-        if response.status_code == 200:
+        if response.ok:
             self.game = game_title
+        else:
+            self._logger.warn(f'update_game: {response.status_code}')
         return response
 
     def update_status(self, stream_title):
@@ -102,8 +112,10 @@ class TwitchAPI:
         response = requests.put(
             self.base_api + 'channels/' + self.channel_id, json=post_data, headers=self.headers)
 
-        if response.status_code == 200:
+        if response.ok:
             self.status = stream_title
+        else:
+            self._logger.warn(f'update_status: {response.status_code}')
         return response
 
     def retrieve_followers(self, count=5):
@@ -141,7 +153,11 @@ class TwitchAPI:
     def get_stream_by_user(self):
         #https://dev.twitch.tv/docs/v5/reference/streams/#get-stream-by-user
         response = requests.get(self.base_api + 'streams/' + self.channel_id, headers=self.headers)
-        return response.json()
+        if response.ok:
+            return response.json()
+        else:
+            self._logger.warn(f'get_stream_by_user: {response.status_code}')
+            return {}
 
     def get_current_stream_startup_time(self):
         json = self.get_stream_by_user()

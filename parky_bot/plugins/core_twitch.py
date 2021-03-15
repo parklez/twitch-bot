@@ -11,7 +11,7 @@ def command_updategame(message: Message):
             if result.ok:
                 BOT.send_message(f'Game set to: "{BOT.twitch.game}"')
             else:
-                BOT.send_message(f'{result.text}')
+                BOT.send_message(f'Could not update game! API returned {result.status_code}')
     else:
         BOT.send_message(f'Currently playing: "{BOT.twitch.game}"')
 
@@ -24,7 +24,7 @@ def command_updatestatus(message: Message):
             if result.ok:
                 BOT.send_message(f'Status set to: "{BOT.twitch.status}"')
             else:
-                BOT.send_message(f'{result.text}')
+                BOT.send_message(f'Could not update title! API returned {result.status_code}')
     else:
         BOT.send_message(f'Status: "{BOT.twitch.status}"')
 

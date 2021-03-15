@@ -62,11 +62,8 @@ class Console(tkinter.Frame):
 
         except tkinter.TclError as e:
             if isinstance(text, Message):
-                # My personal fix for Tkinter's limitation -
-                # Convert the message from UTC-8 to bytes,
-                # then decode the bytes to ASCII. EZ
-                workaround = text.message.encode('utf-8', errors='ignore')
-                text.message = workaround.decode('ascii', errors='replace')
+                # Replace every char outside of Tcl's allowed range with the ? char.
+                text.message = ''.join((ch if ord(ch) <= 0xFFFF else '\uFFFD') for ch in text.message)
                 self.console.insert(tkinter.END, f': {text.message}\n', 'TEXT')
 
             else:

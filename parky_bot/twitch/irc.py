@@ -46,8 +46,8 @@ class TwitchIRC:
         """Converts data into bytes with UTF-8 encoding then socket.send()"""
         try:
             self.irc_sock.send(bytes(data, 'UTF-8'))
-        except ConnectionResetError as e:
-            logger.critical(f'{e}')
+        except Exception as e:
+            logger.critical(e)
 
     def send_pong(self):
         self.send("PONG :tmi.twitch.tv\r\n")
