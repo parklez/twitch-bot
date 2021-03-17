@@ -5,7 +5,7 @@ import time
 import threading
 from audioplayer import AudioPlayer
 import gtts
-from parky_bot.settings import BOT, APP_PATH
+from parky_bot.settings import BOT, APP_PATH, SETTINGS
 from parky_bot.models.message import Message
 from parky_bot.utils.logger import get_logger
 from parky_bot.utils.file_manager import make_dir 
@@ -15,7 +15,6 @@ logger = get_logger()
 TEMP_DIR = os.path.join(APP_PATH, 'sounds', 'gtts')
 QUEUE = queue.Queue()
 make_dir(TEMP_DIR)
-
 
 @BOT.decorator(['!tts'])
 def command_replytts(message: Message):
@@ -52,6 +51,7 @@ def gtts_daemon():
             file_name = os.path.join(TEMP_DIR, f'gtts_{datetime.now().microsecond}.mp3')
             sound.save(file_name)
             a = AudioPlayer(file_name)
+            a.volume = SETTINGS.get('volume', 100)
             a.play(block=True)
             os.remove(file_name)
             QUEUE.task_done()

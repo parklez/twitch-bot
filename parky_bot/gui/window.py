@@ -1,9 +1,9 @@
-from parky_bot.gui.input_widget import InputBar
 import tkinter
 import gc
 from parky_bot.gui.themes.default import Theme
 from parky_bot.gui.console_widget import Console
 from parky_bot.gui.buttons_widget import ButtonBar
+from parky_bot.gui.input_widget import InputBar
 
 
 try: # This allows Windows 10 to scale the window for high DPI monitors.
@@ -15,8 +15,9 @@ except:
 
 class Application:
 
-    def __init__(self, bot):
+    def __init__(self, bot, settings):
         self.app = tkinter.Tk()
+        self.settings = settings
 
         self.app.configure(background=Theme.BG_COLOR)
         self.app.title('parky\'s twitch bot ~')
@@ -24,7 +25,7 @@ class Application:
         self.app.geometry("600x400")
         #self.app.resizable(0, 0)
 
-        self.button_bar = ButtonBar(self.app, bg=Theme.BAR_BG)
+        self.button_bar = ButtonBar(self.app, self.settings, bg=Theme.BAR_BG)
         self.button_bar.pack(fill=tkinter.X)
 
         self.console = Console(self.app)

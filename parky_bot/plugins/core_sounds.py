@@ -1,7 +1,7 @@
 import os
 from audioplayer import AudioPlayer
 from parky_bot.utils.file_manager import make_dir
-from parky_bot.settings import BOT, SOUNDS_PATH
+from parky_bot.settings import BOT, SOUNDS_PATH, SETTINGS
 from parky_bot.models.message import Message
 from parky_bot.utils.logger import get_logger
 
@@ -48,6 +48,7 @@ def command_replysounds(message: Message):
 
 def play_sound(sound: AudioPlayer) -> None:
     try:
+        sound.volume = SETTINGS.get('volume', 100)
         sound.play()
     except Exception as e:
         logger.error(e, exc_info=True)

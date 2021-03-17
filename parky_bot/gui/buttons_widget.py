@@ -11,8 +11,10 @@ from parky_bot.gui.themes.default import Theme
 
 
 class ButtonBar(tkinter.Frame):
-    def __init__(self, parent, **kwargs):
+    def __init__(self, parent, settings, **kwargs):
         super().__init__(parent, **kwargs)
+
+        self.vol = settings
 
         self.button1 = tkinter.Button(self, text='Account', bg=Theme.BUTTON_BG, fg=Theme.HL)
         self.button1.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
@@ -54,7 +56,9 @@ class ButtonBar(tkinter.Frame):
                                        fg=Theme.HL,
                                        activebackground=Theme.SLIDER_ACTIVE_BG,
                                        troughcolor=Theme.SLIDER_SLIDE_BG,
-                                       highlightbackground=Theme.SLIDER_HL_BG)
+                                       highlightbackground=Theme.SLIDER_HL_BG,
+                                       command=lambda vol: self.vol.update({'volume': int(vol)}))
+        self.vol_meter.set(self.vol.get('volume', 100))
         self.vol_meter.grid(row=0, column=4, padx=10, sticky='EW')
 
         self.columnconfigure(4, weight=1)
