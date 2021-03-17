@@ -1,20 +1,20 @@
-from datetime import datetime
 import os
 import queue
 import time
+from datetime import datetime
 import threading
 from audioplayer import AudioPlayer
 import gtts
 from parky_bot.settings import BOT, APP_PATH, SETTINGS
 from parky_bot.models.message import Message
 from parky_bot.utils.logger import get_logger
-from parky_bot.utils.file_manager import make_dir 
+from parky_bot.utils.file_manager import make_dir
 
 
-logger = get_logger()
+LOGGER = get_logger()
 TEMP_DIR = os.path.join(APP_PATH, 'sounds', 'gtts')
 QUEUE = queue.Queue()
-make_dir(TEMP_DIR)
+
 
 @BOT.decorator(['!tts'])
 def command_replytts(message: Message):
@@ -29,8 +29,8 @@ def command_replytts(message: Message):
 @BOT.decorator(['!br', '!au', '!s', '!en', '!de', '!es', '!ja', '!jp', '!it', '!pl', '!pt',
                 '!ru', '!se', '!uk', '!cn', '!fi', '!fr', '!us'])
 def command_gtts(message: Message):
-    c = len(message.command)
-    if not message.message[c:]:
+    size = len(message.command)
+    if not message.message[size:]:
         return
 
     langs = {'!br': 'pt-br', '!au': 'en-au', '!s': 'en-gb', '!en': 'en-gb', '!de': 'de',
@@ -39,26 +39,28 @@ def command_gtts(message: Message):
             '!fi': 'fi', '!fr': 'fr', '!us': 'en-us'}
 
     result = gtts.gTTS(
-        message.message[c:c+100],
+        message.message[size:size+100],
         lang=langs[message.command])
 
-    QUEUE.put(result)
+    QUEUE.put_nowait(result)
 
 def gtts_daemon():
     while BOT.is_pooling:
         try:
-            sound = QUEUE.get(block=False) # This blocks and hangs the program entirely
+            response = QUEUE.get(block=False) # This blocks and hangs the program entirely
             file_name = os.path.join(TEMP_DIR, f'gtts_{datetime.now().microsecond}.mp3')
-            sound.save(file_name)
-            a = AudioPlayer(file_name)
-            a.volume = SETTINGS.get('volume', 100)
-            a.play(block=True)
+            response.save(file_name)
+            sound = AudioPlayer(file_name)
+            sound.volume = SETTINGS.get('volume', 100)
+            sound.play(block=True)
             os.remove(file_name)
             QUEUE.task_done()
         except queue.Empty:
             pass # Ignore and try again later
-        except Exception as e:
-            logger.error(e, exc_info=True)
+        except Exception as err:
+            os.remove(file_name)
+            LOGGER.error(err, exc_info=True)
         time.sleep(1) # Lessen the CPU impact.
 
+make_dir(TEMP_DIR)
 threading.Thread(target=gtts_daemon).start()

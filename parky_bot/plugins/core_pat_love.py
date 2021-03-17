@@ -3,6 +3,15 @@ from parky_bot.settings import BOT
 from parky_bot.models.message import Message
 
 
+RESPONSES  = ('{} gives {}\'s head a soft pat Daijoubu',
+              '{} WanISee // pat pat pat {}',
+              '{} slowly strokes {}\'s hair LoudDoge',
+              '{} messes with {}\'s hair PillowYes',
+              '{} pats {}\'s head and they blush LewdChamp',
+              '{} pats {} NepComfy',
+              '{} tries to pat {} but they move away KannaSpooks')
+
+
 @BOT.decorator(['!pat'])
 def command_pat(message: Message):
     if not message.targets:
@@ -16,20 +25,12 @@ def command_pat(message: Message):
         BOT.send_message(random.choice(doggos))
         return
 
-    responses = ("{} gives {}'s head a soft pat Daijoubu",
-    "{} WanISee // pat pat pat {}",
-    "{} slowly strokes {}'s hair LoudDoge",
-    "{} messes with {}'s hair PillowYes",
-    "{} pats {}'s head and they blush LewdChamp",
-    "{} pats {} NepComfy",
-    "{} tries to pat {} but they move away KannaSpooks")
-
-    BOT.send_message(random.choice(responses).format(message.sender, target))
+    BOT.send_message(random.choice(RESPONSES).format(message.sender, target))
 
 @BOT.decorator(['!love'])
 def command_love(message: Message):
     if message.message:
         target = message.message[6:]
         if target:
-            BOT.send_message("There's {}% of love between {} and {} <3".format(
-                random.randrange(0, 100), message.sender, target))
+            BOT.send_message(f'There\'s {random.randrange(0, 100)}% of love between ' +
+                             f'{message.sender} and {target} <3')

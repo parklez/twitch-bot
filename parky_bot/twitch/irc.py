@@ -2,7 +2,7 @@ import socket
 from parky_bot.utils.logger import get_logger
 
 
-logger = get_logger()
+LOGGER = get_logger()
 
 
 class TwitchIRC:
@@ -49,8 +49,8 @@ class TwitchIRC:
         try:
             self.irc_sock.send(bytes(data, 'UTF-8'))
             return True
-        except Exception as e:
-            logger.error(e)
+        except Exception as err:
+            LOGGER.error(err)
             return False
 
     def send_pong(self):

@@ -57,7 +57,7 @@ class Message:
         self.sender = self.tags.get('display-name', self.sender)
 
         words = self.message.split()
-        self.command = words[0].lower() if len(words) else ''
+        self.command = words[0].lower() if words else ''
 
         for word in words:
             if word.startswith("@"):

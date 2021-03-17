@@ -22,9 +22,9 @@ SOUNDS_PATH = os.path.join(APP_PATH, 'sounds')
 
 # Loading settings
 SETTINGS = get_settings(SETTINGS_PATH)
-LOGGING_LEVEL = int(SETTINGS['logging']['level'])
-LOGGER = get_logger()
-configure_logger(LOGGER, LOGGING_LEVEL)
+
+# Configure logger
+configure_logger(get_logger(), int(SETTINGS['logging']['level']))
 
 # Initilizing bot
 IRC = TwitchIRC(SETTINGS['irc']['username'],

@@ -1,11 +1,6 @@
 import tkinter
-from parky_bot.utils.logger import get_logger, get_console_queue
 from parky_bot.gui.themes.default import Theme
 from parky_bot.models.message import Message
-
-
-logger = get_logger()
-console = get_console_queue()
 
 
 class InputBar(tkinter.Frame):
@@ -19,7 +14,10 @@ class InputBar(tkinter.Frame):
         self.input_field.grid(column=0, row=0, padx=10, pady=20, sticky=tkinter.EW)
         self.input_field.bind('<Return>', lambda _: self.send_msg())
 
-        self.send_button = tkinter.Button(self, text='  Send  ', command=self.send_msg, bg=Theme.BUTTON_BG, fg=Theme.HL)
+        self.send_button = tkinter.Button(self, text='  Send  ',
+                                          command=self.send_msg,
+                                          bg=Theme.BUTTON_BG,
+                                          fg=Theme.HL)
         self.send_button.grid(column=1, row=0, padx=10, sticky=tkinter.W)
 
         self.columnconfigure(0, weight=1)
@@ -32,5 +30,5 @@ class InputBar(tkinter.Frame):
         m.command = m.message.split()[0] if m.message else m.message
         if self.bot and m.message:
             self.bot.send_message(m.message)
-            self.bot._filter(m)
+            self.bot.filter(m)
         self.text.set('')

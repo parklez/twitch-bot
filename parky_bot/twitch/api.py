@@ -3,6 +3,9 @@ import requests
 from parky_bot.utils.logger import get_logger
 
 
+LOGGER = get_logger()
+
+
 class TwitchAPI:
     def __init__(self, client_id, channel, token=None):
         """Class for interacting with the Twitch API v5 Kraken.
@@ -14,11 +17,10 @@ class TwitchAPI:
                 Generate at https://twitchapps.com/tokengen/. Defaults to None.
         """
 
-        self.base_api = "https://api.twitch.tv/kraken/"
+        self.base_api = 'https://api.twitch.tv/kraken/'
         self.client_id = client_id
         self.channel = channel
         self.token = token
-        self._logger = get_logger()
 
         self.headers = {'Client-ID': self.client_id,
                         'Accept': 'application/vnd.twitchtv.v5+json'}
@@ -42,10 +44,7 @@ class TwitchAPI:
         3. Fetches current channel state and save its title/game.
         """
 
-        access, access_info = self.validate_token()
-        if access != 200:
-            self._logger.critical(f'Twitch API returned code "{access}": {access_info}')
-            self._logger.critical('Generate a new token at https://twitchapps.com/tokengen/')
+        if not self.validate_token():
             return
 
         self.user = self.get_user()
@@ -60,25 +59,27 @@ class TwitchAPI:
         token = f'OAuth {self.token}'
         headers = {'Authorization': token}
         r = requests.get('https://id.twitch.tv/oauth2/validate', headers=headers)
-        return r.status_code, r.json()
+        if r.ok:
+            return True
+        LOGGER.critical(f'Twitch oauth2 returned {r.status_code}: {r.text}')
+        LOGGER.critical('Generate a new token at https://twitchapps.com/tokengen/')
+        return False
 
     def get_user(self):
         #https://dev.twitch.tv/docs/v5/#getting-a-client-id
         r = requests.get(self.base_api + 'user', headers=self.headers)
         if r.ok:
             return r.json()
-        else:
-            self._logger.warn(f'get_user: {r.status_code}')
-            return {}
+        LOGGER.warning(f'get_user: {r.status_code}')
+        return {}
 
     def get_channel_by_id(self):
         #https://dev.twitch.tv/docs/v5/reference/channels/#get-channel-by-id
         r = requests.get(self.base_api + "channels/" + self.channel_id, headers=self.headers)
         if r.ok:
             return r.json()
-        else:
-            self._logger.warn(f'get_channel_by_id: {r.status_code}')
-            return {}
+        LOGGER.warn(f'get_channel_by_id: {r.status_code}')
+        return {}
 
     def fetch_status(self):
         return self.channel_info.get('status')
@@ -99,7 +100,7 @@ class TwitchAPI:
         if response.ok:
             self.game = game_title
         else:
-            self._logger.warn(f'update_game: {response.status_code}')
+            LOGGER.warning(f'update_game: {response.status_code}')
         return response
 
     def update_status(self, stream_title):
@@ -115,7 +116,7 @@ class TwitchAPI:
         if response.ok:
             self.status = stream_title
         else:
-            self._logger.warn(f'update_status: {response.status_code}')
+            LOGGER.warning(f'update_status: {response.status_code}')
         return response
 
     def retrieve_followers(self, count=5):
@@ -126,14 +127,14 @@ class TwitchAPI:
                 f'{self.base_api}channels/{self.channel_id}/follows?limit={str(count)}',
                  headers=self.headers)
         else:
-            self._logger.warning('Can not retrieve followers without channel "_id"')
+            LOGGER.warning('Can not retrieve followers without channel "_id"')
             return followers
 
-        if response.status_code == 200:
+        if response.ok:
             for block in response.json()["follows"]:
                 followers.append(block["user"]["display_name"])
         else:
-            self._logger.error('Bad response "{response.status_code}" :{response.text}')
+            LOGGER.error(f'retrieve_followers: {response.status_code}')
 
         self.recent_followers = followers
         return followers
@@ -155,14 +156,14 @@ class TwitchAPI:
         response = requests.get(self.base_api + 'streams/' + self.channel_id, headers=self.headers)
         if response.ok:
             return response.json()
-        else:
-            self._logger.warn(f'get_stream_by_user: {response.status_code}')
-            return {}
+        LOGGER.warning(f'get_stream_by_user: {response.status_code}')
+        return {}
 
     def get_current_stream_startup_time(self):
         json = self.get_stream_by_user()
         if json.get('stream'):
-            return json.get('stream').get('created_at')
+            return json['stream']['created_at']
+        return ''
 
     def get_uptime(self):
         #json format: "2016-12-14T22:49:56Z" - UTC 0
@@ -177,4 +178,7 @@ class TwitchAPI:
     def get_users(self, username):
         #https://dev.twitch.tv/docs/v5/reference/users/#get-users
         r = requests.get(self.base_api + 'users?login=' + username, headers=self.headers)
-        return r.json()
+        if r.ok:
+            return r.json()
+        LOGGER.warning(f'get_users: {r.status_code}')
+        return {}
