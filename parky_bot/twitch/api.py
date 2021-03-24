@@ -35,7 +35,7 @@ class TwitchAPI:
         self.channel_info = {}
         self.recent_followers = []
 
-        self.connect()
+        #self.connect()
 
     def connect(self):
         """Connects to Twitch API in few steps:

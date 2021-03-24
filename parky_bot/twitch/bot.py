@@ -14,11 +14,21 @@ class ParkyBot:
         self.handlers = []
         self.chatters = []
         self.is_pooling = True
+        self.twitch_init = False
+        self.irc_init = False
 
     def pooling(self):
         if not self.irc:
             LOGGER.info("IRC client not set, not pooling!")
             return
+
+        if not self.twitch_init and self.twitch:
+            self.twitch_init = True
+            self.twitch.connect()
+
+        if not self.irc_init:
+            self.irc_init = True
+            self.irc.welcome()
 
         data = ""
         self.irc.irc_sock.setblocking(0)

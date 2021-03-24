@@ -21,7 +21,8 @@ class TwitchIRC:
         self.host = 'irc.twitch.tv'
         self.port = 6667
         self.irc_sock = socket.socket()
-        self.welcome()
+
+        #self.welcome()
 
     def welcome(self):
         """Connects to twitch IRC in few steps:
