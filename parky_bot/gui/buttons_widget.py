@@ -1,11 +1,3 @@
-"""
-TODO
-- (Maybe some information about being live or not)
-- Accounts Button
-- Settings Button
-- Plugins Button
-- Volume Slider
-"""
 import tkinter
 from parky_bot.gui.themes.default import Theme
 
@@ -16,14 +8,8 @@ class ButtonBar(tkinter.Frame):
 
         self.vol = settings
 
-        self.button1 = tkinter.Button(self, text='Account', bg=Theme.BUTTON_BG, fg=Theme.HL)
-        self.button1.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-
-        self.button2 = tkinter.Button(self, text='Settings', bg=Theme.BUTTON_BG, fg=Theme.HL)
-        self.button2.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
-
-        self.button3 = tkinter.Button(self, text='Plugins', bg=Theme.BUTTON_BG, fg=Theme.HL)
-        self.button3.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+        self.button1 = tkinter.Button(self, text='Menu', bg=Theme.BUTTON_BG, fg=Theme.HL)
+        self.button1.grid(row=0, column=0, padx=10, pady=10)
 
         #https://pt.stackoverflow.com/questions/343574/como-inicializar-essa-fun%C3%A7%C3%A3o-de-photoimage-do-tkinter
         self.vol_emote = "iVBORw0KGgoAAAANSUhEUgAAACQAAAAfCAYAAACPvW/2AAAABGdBTUEAALGPC/xhBQAA\
@@ -49,7 +35,7 @@ class ButtonBar(tkinter.Frame):
             tGaMN0wPIh1xApYSSpkDmQ9T+RwWlXgHWgoAAAAABJRU5ErkJggg=="
         self.vol_img = tkinter.PhotoImage(data=self.vol_emote)
         self.vol_img_label = tkinter.Label(self, image=self.vol_img, bg=Theme.BAR_BG)
-        self.vol_img_label.grid(row=0, column=3, padx=(10, 0), sticky='EW')
+        self.vol_img_label.grid(row=0, column=1, padx=(10, 0), sticky='e')
 
         self.vol_meter = tkinter.Scale(self, orient=tkinter.HORIZONTAL,
                                        bg=Theme.SLIDER_BG,
@@ -59,6 +45,6 @@ class ButtonBar(tkinter.Frame):
                                        highlightbackground=Theme.SLIDER_HL_BG,
                                        command=lambda vol: self.vol.update({'volume': int(vol)}))
         self.vol_meter.set(self.vol.get('volume', 100))
-        self.vol_meter.grid(row=0, column=4, padx=10, sticky='EW')
+        self.vol_meter.grid(row=0, column=2, padx=10, sticky='e')
 
-        self.columnconfigure(4, weight=1)
+        self.columnconfigure(1, weight=1)
