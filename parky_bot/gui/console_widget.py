@@ -28,14 +28,14 @@ class Console(tkinter.Frame):
                           expand=True)
 
         # Text color
-        self.console.tag_config('TEXT', foreground=Theme.HL)
+        self.console.tag_config('TEXT', foreground=Theme.HL, font='bold')
 
         # Logging colors
         self.console.tag_config('INFO', foreground=Theme.LOG_INFO)
         self.console.tag_config('DEBUG', foreground=Theme.LOG_DEBUG)
         self.console.tag_config('ERROR', foreground=Theme.LOG_ERROR)
         self.console.tag_config('WARNING', foreground=Theme.LOG_WARNING)
-        self.console.tag_config('CRITICAL', foreground=Theme.LOG_CRITICAL, background=Theme.BG_COLOR)
+        self.console.tag_config('CRITICAL', foreground=Theme.LOG_CRITICAL)
         self.console.focus()
         self.after(100, self.pooling)
 
@@ -53,6 +53,7 @@ class Console(tkinter.Frame):
         try: # Tcl can't render some characters
             if isinstance(text, Message):
                 self.console.tag_config(text.sender,
+                                        font='bold',
                                         foreground=text.tags.get('color', 'lightblue1'))
                 self.console.insert(tkinter.END, text.sender, text.sender)
                 self.console.insert(tkinter.END, f': {text.message}\n', 'TEXT')
