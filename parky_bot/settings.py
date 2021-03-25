@@ -1,7 +1,7 @@
 import os
 import sys
 import threading
-from parky_bot.gui.window import Application
+from parky_bot.gui.main_window import Application
 from parky_bot.utils.file_manager import get_settings, save_settings
 from parky_bot.twitch.irc import TwitchIRC
 from parky_bot.twitch.api import TwitchAPI

@@ -1,5 +1,6 @@
 import tkinter
 from parky_bot.gui.themes.default import Theme
+from parky_bot.gui.settings_window import SettingsWindow
 
 
 class ButtonBar(tkinter.Frame):
@@ -8,8 +9,13 @@ class ButtonBar(tkinter.Frame):
 
         self.vol = settings
 
-        self.button1 = tkinter.Button(self, text='Menu', bg=Theme.BUTTON_BG, fg=Theme.HL)
-        self.button1.grid(row=0, column=0, padx=10, pady=10)
+        self.settings_button = tkinter.Button(self,
+                                              text='Settings',
+                                              padx=10,
+                                              bg=Theme.BUTTON_BG,
+                                              fg=Theme.HL,
+                                              command=self.open_settings)
+        self.settings_button.grid(row=0, column=0, padx=10, pady=10)
 
         #https://pt.stackoverflow.com/questions/343574/como-inicializar-essa-fun%C3%A7%C3%A3o-de-photoimage-do-tkinter
         self.vol_emote = "iVBORw0KGgoAAAANSUhEUgAAACQAAAAfCAYAAACPvW/2AAAABGdBTUEAALGPC/xhBQAA\
@@ -40,6 +46,7 @@ class ButtonBar(tkinter.Frame):
         self.vol_meter = tkinter.Scale(self, orient=tkinter.HORIZONTAL,
                                        bg=Theme.SLIDER_BG,
                                        fg=Theme.HL,
+                                       length=130,
                                        activebackground=Theme.SLIDER_ACTIVE_BG,
                                        troughcolor=Theme.SLIDER_SLIDE_BG,
                                        highlightbackground=Theme.SLIDER_HL_BG,
@@ -48,3 +55,6 @@ class ButtonBar(tkinter.Frame):
         self.vol_meter.grid(row=0, column=2, padx=10, sticky='e')
 
         self.columnconfigure(1, weight=1)
+
+    def open_settings(self):
+        SettingsWindow(self.vol)
