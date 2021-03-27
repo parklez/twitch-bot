@@ -19,11 +19,10 @@ class Application:
         self.app = tkinter.Tk()
         self.settings = settings
 
-        self.app.configure(background=Theme.BG_COLOR)
+        self.app.configure(background=Theme.BG)
         self.app.title('parky\'s twitch bot ~')
         self.app.minsize(300, 400)
-        self.app.geometry("600x400")
-        #self.app.resizable(0, 0)
+        self.app.geometry("400x500")
 
         self.button_bar = ButtonBar(self.app, self.settings, bg=Theme.BAR_BG)
         self.button_bar.pack(fill=tkinter.X)

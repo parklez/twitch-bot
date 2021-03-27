@@ -28,7 +28,7 @@ class Console(tkinter.Frame):
                           expand=True)
 
         # Text color
-        self.console.tag_config('TEXT', foreground=Theme.HL, font='bold')
+        self.console.tag_config('TEXT', foreground=Theme.CONSOLE_TEXT, font='bold')
 
         # Logging colors
         self.console.tag_config('INFO', foreground=Theme.LOG_INFO)

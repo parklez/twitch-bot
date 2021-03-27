@@ -13,7 +13,7 @@ class SettingsWindow(tkinter.Toplevel):
 
         self.minsize(500, 400)
         self.resizable(1, 0)
-        self.configure(background=Theme.BG_COLOR)
+        self.configure(background=Theme.BG)
 
         self.api_frame = APILabel(self, self.settings, text='Twitch API', padx=10, pady=10)
         self.api_frame.pack(fill=tkinter.X, padx=10, pady=10)
@@ -27,8 +27,8 @@ class SettingsWindow(tkinter.Toplevel):
         self.save_button = tkinter.Button(self,
                                           text='Save',
                                           padx=10,
-                                          bg=Theme.BG_COLOR,
-                                          fg=Theme.HL,
+                                          bg=Theme.BG,
+                                          fg=Theme.FG,
                                           command=self.save_fields)
         self.save_button.pack(anchor='se', expand=True, pady=10, padx=10)
 
@@ -44,28 +44,28 @@ class APILabel(tkinter.LabelFrame):
     def __init__(self, parent, settings, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.configure({'background': Theme.BG_COLOR,
-                        'fg': Theme.HL})
+        self.configure({'background': Theme.BG,
+                        'fg': Theme.FG})
 
         # Channel
-        self.channel_label = tkinter.Label(self, text='Channel: ', bg=Theme.BG_COLOR, fg=Theme.HL)
+        self.channel_label = tkinter.Label(self, text='Channel: ', bg=Theme.BG, fg=Theme.FG)
         self.channel_label.grid(row=0, column=0, sticky='e', pady=(0, 10))
         self.channel_text = tkinter.StringVar()
-        self.channel_entry = tkinter.Entry(self, textvariable=self.channel_text, bg=Theme.BAR_BG, fg=Theme.HL)
+        self.channel_entry = tkinter.Entry(self, textvariable=self.channel_text, bg=Theme.BAR_BG, fg=Theme.FG)
         self.channel_entry.grid(row=0, column=1, sticky='we', pady=(0, 10))
 
         # Client ID
-        self.client_id_label = tkinter.Label(self, text='Client ID: ', bg=Theme.BG_COLOR, fg=Theme.HL)
+        self.client_id_label = tkinter.Label(self, text='Client ID: ', bg=Theme.BG, fg=Theme.FG)
         self.client_id_label.grid(row=1, column=0, sticky='e', pady=(0, 10))
         self.client_text = tkinter.StringVar()
-        self.client_id_entry = tkinter.Entry(self, textvariable=self.client_text, bg=Theme.BAR_BG, fg=Theme.HL)
+        self.client_id_entry = tkinter.Entry(self, textvariable=self.client_text, bg=Theme.BAR_BG, fg=Theme.FG)
         self.client_id_entry.grid(row=1, column=1, sticky='we', pady=(0, 10))
 
         # Token
-        self.token_label = tkinter.Label(self, text='Token: ', bg=Theme.BG_COLOR, fg=Theme.HL)
+        self.token_label = tkinter.Label(self, text='Token: ', bg=Theme.BG, fg=Theme.FG)
         self.token_label.grid(row=2, column=0, sticky='e')
         self.token_text = tkinter.StringVar()
-        self.token_entry = tkinter.Entry(self, textvariable=self.token_text, bg=Theme.BAR_BG, fg=Theme.HL)
+        self.token_entry = tkinter.Entry(self, textvariable=self.token_text, bg=Theme.BAR_BG, fg=Theme.FG)
         self.token_entry.grid(row=2, column=1, sticky='we')
 
         self.columnconfigure(1, weight=1)
@@ -91,28 +91,28 @@ class IRCLabel(tkinter.LabelFrame):
     def __init__(self, parent, settings, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.configure({'background': Theme.BG_COLOR,
-                        'fg': Theme.HL})
+        self.configure({'background': Theme.BG,
+                        'fg': Theme.FG})
 
         # Username
-        self.username_label = tkinter.Label(self, text='Username: ', bg=Theme.BG_COLOR, fg=Theme.HL)
+        self.username_label = tkinter.Label(self, text='Username: ', bg=Theme.BG, fg=Theme.FG)
         self.username_label.grid(row=0, column=0, sticky='e', pady=(0, 10))
         self.username_text = tkinter.StringVar()
-        self.username_entry = tkinter.Entry(self, textvariable=self.username_text, bg=Theme.BAR_BG, fg=Theme.HL)
+        self.username_entry = tkinter.Entry(self, textvariable=self.username_text, bg=Theme.BAR_BG, fg=Theme.FG)
         self.username_entry.grid(row=0, column=1, sticky='we', pady=(0, 10))
 
         # Channel
-        self.channel_label = tkinter.Label(self, text='Channel: ', bg=Theme.BG_COLOR, fg=Theme.HL)
+        self.channel_label = tkinter.Label(self, text='Channel: ', bg=Theme.BG, fg=Theme.FG)
         self.channel_label.grid(row=1, column=0, sticky='e', pady=(0, 10))
         self.channel_text = tkinter.StringVar()
-        self.channel_entry = tkinter.Entry(self, textvariable=self.channel_text, bg=Theme.BAR_BG, fg=Theme.HL)
+        self.channel_entry = tkinter.Entry(self, textvariable=self.channel_text, bg=Theme.BAR_BG, fg=Theme.FG)
         self.channel_entry.grid(row=1, column=1, sticky='we', pady=(0, 10))
 
         # Token
-        self.token_label = tkinter.Label(self, text='Token: ', bg=Theme.BG_COLOR, fg=Theme.HL)
+        self.token_label = tkinter.Label(self, text='Token: ', bg=Theme.BG, fg=Theme.FG)
         self.token_label.grid(row=2, column=0, sticky='e')
         self.token_text = tkinter.StringVar()
-        self.token_entry = tkinter.Entry(self, textvariable=self.token_text, bg=Theme.BAR_BG, fg=Theme.HL)
+        self.token_entry = tkinter.Entry(self, textvariable=self.token_text, bg=Theme.BAR_BG, fg=Theme.FG)
         self.token_entry.grid(row=2, column=1, sticky='we')
 
         self.columnconfigure(1, weight=1)
@@ -138,14 +138,14 @@ class OtherLabel(tkinter.LabelFrame):
     def __init__(self, parent, settings, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.configure({'background': Theme.BG_COLOR,
-                        'fg': Theme.HL})
+        self.configure({'background': Theme.BG,
+                        'fg': Theme.FG})
 
         # Logging
-        self.log_label = tkinter.Label(self, text='Logging level: ', bg=Theme.BG_COLOR, fg=Theme.HL)
+        self.log_label = tkinter.Label(self, text='Logging level: ', bg=Theme.BG, fg=Theme.FG)
         self.log_label.grid(row=0, column=0, sticky='e')
         self.log_text = tkinter.StringVar()
-        self.log_entry = tkinter.Entry(self, textvariable=self.log_text,bg=Theme.BAR_BG, fg=Theme.HL)
+        self.log_entry = tkinter.Entry(self, textvariable=self.log_text,bg=Theme.BAR_BG, fg=Theme.FG)
         self.log_entry.grid(row=0, column=1, sticky='we')
 
         self.columnconfigure(1, weight=1)

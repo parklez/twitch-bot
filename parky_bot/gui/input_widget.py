@@ -17,7 +17,7 @@ class InputBar(tkinter.Frame):
         self.send_button = tkinter.Button(self, text='  Send  ',
                                           command=self.send_msg,
                                           bg=Theme.BUTTON_BG,
-                                          fg=Theme.HL)
+                                          fg=Theme.BUTTON_FG)
         self.send_button.grid(column=1, row=0, padx=10, sticky=tkinter.W)
 
         self.columnconfigure(0, weight=1)
