@@ -8,9 +8,9 @@ CONSOLE = get_console_queue()
 
 
 class ParkyBot:
-    def __init__(self, twitch=None, irc=None):
-        self.twitch = twitch
+    def __init__(self, irc, twitch=None):
         self.irc = irc
+        self.twitch = twitch
         self.handlers = []
         self.chatters = []
         self.is_pooling = True
@@ -18,11 +18,11 @@ class ParkyBot:
         self.irc_init = False
 
     def pooling(self):
-        if not self.irc:
-            LOGGER.info("IRC client not set, not pooling!")
+        if not self.irc.username:
+            LOGGER.info('IRC username not set, stopping...')
             return
 
-        if not self.twitch_init and self.twitch:
+        if not self.twitch_init and self.twitch and self.twitch.channel:
             self.twitch_init = True
             self.twitch.connect()
 
@@ -30,9 +30,9 @@ class ParkyBot:
             self.irc_init = True
             self.irc.welcome()
 
-        data = ""
+        data = ''
         self.irc.irc_sock.setblocking(0)
-        LOGGER.info("Now pooling...")
+        LOGGER.info('Now pooling...')
 
         while self.is_pooling:
             try:
@@ -48,12 +48,12 @@ class ParkyBot:
                 self.is_pooling = False
                 break
 
-            if data == "":
-                LOGGER.critical("IRC client received 0 bytes, stopping...")
+            if data == '':
+                LOGGER.critical('IRC client received 0 bytes, stopping...')
                 self.is_pooling = False
                 break
 
-            if data == "PING :tmi.twitch.tv\r\n":
+            if data == 'PING :tmi.twitch.tv\r\n':
                 self.irc.send_pong()
                 LOGGER.debug('PONG')
 
@@ -71,7 +71,7 @@ class ParkyBot:
                         self.chatters.append(m.sender)
                     self.filter(m)
 
-            data = ""
+            data = ''
         LOGGER.info('Stopped pooling.')
 
     def filter(self, message: Message):

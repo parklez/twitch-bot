@@ -33,7 +33,7 @@ IRC = TwitchIRC(SETTINGS['irc']['username'],
 API = TwitchAPI(SETTINGS['api']['client_id'],
                 SETTINGS['api']['channel'],
                 SETTINGS['api']['token'])
-BOT = ParkyBot(API, IRC)
+BOT = ParkyBot(IRC, API)
 
 def start():
     if '--console' not in sys.argv:
