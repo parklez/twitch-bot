@@ -36,7 +36,9 @@ API = TwitchAPI(SETTINGS['api']['client_id'],
 BOT = ParkyBot(IRC, API)
 
 def start():
-    if '--console' not in sys.argv:
-        threading.Thread(target=Application, args=(BOT, SETTINGS)).start()
-    BOT.pooling()
+    if '--console' in sys.argv:
+            BOT.pooling()
+    else:
+        threading.Thread(target=BOT.pooling).start()
+        Application(BOT, SETTINGS)
     save_settings(SETTINGS, SETTINGS_PATH)
