@@ -12,8 +12,10 @@ QUEUE = get_console_queue()
 
 class Console(tkinter.Frame):
 
-    def __init__(self, parent, **kwargs):
+    def __init__(self, parent, settings, **kwargs):
         super().__init__(parent, **kwargs)
+
+        self.settings = settings
 
         self.console = ScrolledText(self,
                                     bg=Theme.CONSOLE_BG,
@@ -27,8 +29,10 @@ class Console(tkinter.Frame):
         self.console.pack(fill=tkinter.BOTH,
                           expand=True)
 
+        self.font = ('Helvetica', 10, 'bold')
+
         # Text color
-        self.console.tag_config('TEXT', foreground=Theme.CONSOLE_TEXT, font='bold')
+        self.console.tag_config('TEXT', foreground=Theme.CONSOLE_TEXT, font=('Helvetica', 10))
 
         # Logging colors
         self.console.tag_config('INFO', foreground=Theme.LOG_INFO)
@@ -37,7 +41,11 @@ class Console(tkinter.Frame):
         self.console.tag_config('WARNING', foreground=Theme.LOG_WARNING)
         self.console.tag_config('CRITICAL', foreground=Theme.LOG_CRITICAL)
         self.console.focus()
-        self.after(100, self.pooling)
+
+        if not self.settings['irc']['username']:
+            self.welcome()
+        else:
+            self.after(100, self.pooling)
 
     def pooling(self):
         while 1:
@@ -52,9 +60,10 @@ class Console(tkinter.Frame):
         self.console.configure(state='normal') # Allow writing
         try: # Tcl can't render some characters
             if isinstance(text, Message):
+                user_color = 'lightblue1' if not text.tags.get('color') else text.tags.get('color')
                 self.console.tag_config(text.sender,
-                                        font='bold',
-                                        foreground=text.tags.get('color', 'lightblue1'))
+                                        font=self.font,
+                                        foreground=user_color)
                 self.console.insert(tkinter.END, text.sender, text.sender)
                 self.console.insert(tkinter.END, f': {text.message}\n', 'TEXT')
             else:
@@ -72,3 +81,30 @@ class Console(tkinter.Frame):
 
         self.console.configure(state='disabled') # Disallow writing
         self.console.yview(tkinter.END)
+
+    def welcome(self):
+        self.font = ('TkDefaultFont', 11, 'bold')
+        self.console.tag_configure('lightblue', foreground='lightblue1', font=self.font, justify='center')
+        self.console.tag_configure('white', foreground='white', font=self.font)
+        self.console.tag_configure('orange', foreground='orange', font=self.font)
+        self.console.tag_configure('pink', foreground='#FFC8D7', font=self.font)
+        self.console.tag_configure('red', foreground='red', font=self.font)
+        self.console.tag_config('grey', foreground='grey', font=('TkDefaultFont', 8, 'bold'))
+
+        self.console.configure(state='normal')
+        self.console.insert(tkinter.END, 'Welcome to parky\'s twitch bot!\n\n', 'lightblue')
+        self.console.insert(tkinter.END, '\n', 'white')
+        self.console.insert(tkinter.END, 'Here\'s some quick steps:\n', 'orange')
+        self.console.insert(tkinter.END, '\n', 'white')
+        self.console.insert(tkinter.END, '1', 'red')
+        self.console.insert(tkinter.END, '. Click on the "Settings" button.\n', 'white')
+        self.console.insert(tkinter.END, '2', 'red')
+        self.console.insert(tkinter.END, '. Fill in IRC fields to gain chat access!\n', 'white')
+        self.console.insert(tkinter.END, '3', 'red')
+        self.console.insert(tkinter.END, '. ', 'white')
+        self.console.insert(tkinter.END, 'Fill in Twitch API to gain access to channel metadata, such as current title, game, uptime, followers... ', 'white')
+        self.console.insert(tkinter.END, '(optional)\n', 'grey')
+        self.console.insert(tkinter.END, '\n', 'TEXT')
+        self.console.insert(tkinter.END, 'Restart the application for changes to apply!', 'pink')
+
+        self.console.configure(state='disabled')

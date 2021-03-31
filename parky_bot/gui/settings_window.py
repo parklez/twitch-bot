@@ -15,11 +15,11 @@ class SettingsWindow(tkinter.Toplevel):
         self.resizable(1, 0)
         self.configure(background=Theme.BG)
 
-        self.api_frame = APILabel(self, self.settings, text='Twitch API', padx=10, pady=10)
-        self.api_frame.pack(fill=tkinter.X, padx=10, pady=10)
-
         self.irc_frame = IRCLabel(self, self.settings, text='IRC Chat', padx=10, pady=10)
-        self.irc_frame.pack(fill=tkinter.X, padx=10, pady=(0, 10))
+        self.irc_frame.pack(fill=tkinter.X, padx=10, pady=10)
+
+        self.api_frame = APILabel(self, self.settings, text='Twitch API', padx=10, pady=10)
+        self.api_frame.pack(fill=tkinter.X, padx=10, pady=(0, 10))
 
         self.other_frame = OtherLabel(self, self.settings, text='Other', padx=10, pady=10)
         self.other_frame.pack(fill=tkinter.X, padx=10)
