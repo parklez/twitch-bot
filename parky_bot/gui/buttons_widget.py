@@ -30,11 +30,17 @@ class ButtonBar(tkinter.Frame):
                                        activebackground=Theme.SLIDER_ACTIVE_BG,
                                        troughcolor=Theme.SLIDER_SLIDE_BG,
                                        highlightbackground=Theme.SLIDER_HL_BG,
-                                       command=lambda vol: self.vol.update({'volume': int(vol)}))
-        self.vol_meter.set(self.vol.get('volume', 100))
+                                       command=lambda vol: self.set_vol(vol))
+        self.vol_meter.set(self.get_vol())
         self.vol_meter.grid(row=0, column=2, padx=10, sticky='e')
 
         self.columnconfigure(1, weight=1)
 
     def open_settings(self):
         SettingsWindow(self.vol)
+
+    def set_vol(self, vol: int) -> None:
+        self.vol['settings']['volume'] = int(vol)
+
+    def get_vol(self) -> int:
+        return self.vol['settings'].get('volume', 100)
