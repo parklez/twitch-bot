@@ -36,7 +36,7 @@ class ParkyBot:
 
         while self.is_pooling:
             try:
-                data = self.irc.irc_sock.recv(4096).decode('UTF-8')
+                data = self.irc.irc_sock.recv(6144).decode('UTF-8')
             except (ConnectionAbortedError, OSError):
                 try:
                     time.sleep(0.1)
