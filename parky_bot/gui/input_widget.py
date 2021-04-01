@@ -10,7 +10,7 @@ class InputBar(tkinter.Frame):
         self.bot = bot
 
         self.text = tkinter.StringVar()
-        self.input_field = tkinter.Entry(self, textvariable=self.text, font='bold')
+        self.input_field = tkinter.Entry(self, textvariable=self.text)
         self.input_field.grid(column=0, row=0, padx=10, pady=20, sticky=tkinter.EW)
         self.input_field.bind('<Return>', lambda _: self.send_msg())
 

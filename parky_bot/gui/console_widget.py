@@ -29,10 +29,10 @@ class Console(tkinter.Frame):
         self.console.pack(fill=tkinter.BOTH,
                           expand=True)
 
-        self.font = ('Helvetica', 10, 'bold')
+        self.font = ('Helvetica', 11, 'bold')
 
         # Text color
-        self.console.tag_config('TEXT', foreground=Theme.CONSOLE_TEXT, font=('Helvetica', 10))
+        self.console.tag_config('TEXT', foreground=Theme.CONSOLE_TEXT, font=('Helvetica', 11))
 
         # Logging colors
         self.console.tag_config('INFO', foreground=Theme.LOG_INFO)
