@@ -22,7 +22,8 @@ class Console(tkinter.Frame):
                                     wrap=tkinter.CHAR,
                                     width=40,
                                     height=10,
-                                    state='disabled')
+                                    state='disabled',
+                                    relief='flat')
 
         # Despite setting height above, this widget gets expanded fully,
         # if the canvas is smaller than the height, will look odd.
@@ -32,7 +33,11 @@ class Console(tkinter.Frame):
         self.font = ('Helvetica', 11, 'bold')
 
         # Text color
-        self.console.tag_config('TEXT', foreground=Theme.CONSOLE_TEXT, font=('Helvetica', 11))
+        self.console.tag_config('TEXT',
+                                foreground=Theme.CONSOLE_TEXT,
+                                font=('Helvetica', 11),
+                                spacing1=5,
+                                spacing3=5)
 
         # Logging colors
         self.console.tag_config('INFO', foreground=Theme.LOG_INFO)
@@ -63,7 +68,9 @@ class Console(tkinter.Frame):
                 user_color = 'lightblue1' if not text.tags.get('color') else text.tags.get('color')
                 self.console.tag_config(text.sender,
                                         font=self.font,
-                                        foreground=user_color)
+                                        foreground=user_color,
+                                        spacing1=5,
+                                        spacing3=5)
                 self.console.insert(tkinter.END, text.sender, text.sender)
                 self.console.insert(tkinter.END, f': {text.message}\n', 'TEXT')
             else:
