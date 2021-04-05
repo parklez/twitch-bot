@@ -9,17 +9,24 @@ class ButtonBar(tkinter.Frame):
 
         self.vol = settings
 
+        #self.settings_img = tkinter.PhotoImage(data=Theme.SETTINGS_ICON)
         self.settings_button = tkinter.Button(self,
+                                              #image=self.settings_img,
+                                              #compound=tkinter.CENTER,
                                               text='Settings',
                                               padx=10,
+                                              #pady=0,
+                                              #height=28,
                                               bg=Theme.BUTTON_BG,
                                               fg=Theme.BUTTON_FG,
+                                              highlightbackground=Theme.BAR_BG,
+                                              #relif='flat',
+                                              #activebackground=Theme.BUTTON_BG,
                                               command=self.open_settings)
-        self.settings_button.grid(row=0, column=0, padx=10, pady=10)
+        self.settings_button.grid(row=0, column=0, padx=10)
 
-        #https://pt.stackoverflow.com/questions/343574/como-inicializar-essa-fun%C3%A7%C3%A3o-de-photoimage-do-tkinter
-        self.vol_emote = Theme.VOL_ICON
-        self.vol_img = tkinter.PhotoImage(data=self.vol_emote)
+        #https://stackoverflow.com/questions/42174987/how-do-i-use-the-base64-encoded-image-string-in-tkinter-label/42175482
+        self.vol_img = tkinter.PhotoImage(data=Theme.VOL_ICON)
         self.vol_img_label = tkinter.Label(self, image=self.vol_img, bg=Theme.BAR_BG)
         self.vol_img_label.grid(row=0, column=1, padx=(10, 0), sticky='e')
 

@@ -22,7 +22,7 @@ class Application:
         self.app.configure(background=Theme.BG)
         self.app.title('parky\'s twitch bot ~')
         self.app.minsize(300, 400)
-        self.app.geometry("600x500")
+        self.app.geometry("500x400")
 
         self.button_bar = ButtonBar(self.app, self.settings, bg=Theme.BAR_BG)
         self.button_bar.pack(fill=tkinter.X)

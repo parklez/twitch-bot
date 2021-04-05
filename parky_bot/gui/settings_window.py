@@ -51,21 +51,21 @@ class APILabel(tkinter.LabelFrame):
         self.channel_label = tkinter.Label(self, text='Channel: ', bg=Theme.BG, fg=Theme.FG)
         self.channel_label.grid(row=0, column=0, sticky='e', pady=(0, 10))
         self.channel_text = tkinter.StringVar()
-        self.channel_entry = tkinter.Entry(self, textvariable=self.channel_text, bg=Theme.BAR_BG, fg=Theme.FG)
+        self.channel_entry = tkinter.Entry(self, textvariable=self.channel_text, bg=Theme.BAR_BG, fg=Theme.FG, insertbackground=Theme.FG)
         self.channel_entry.grid(row=0, column=1, sticky='we', pady=(0, 10))
 
         # Client ID
         self.client_id_label = tkinter.Label(self, text='Client ID: ', bg=Theme.BG, fg=Theme.FG)
         self.client_id_label.grid(row=1, column=0, sticky='e', pady=(0, 10))
         self.client_text = tkinter.StringVar()
-        self.client_id_entry = tkinter.Entry(self, textvariable=self.client_text, bg=Theme.BAR_BG, fg=Theme.FG)
+        self.client_id_entry = tkinter.Entry(self, textvariable=self.client_text, bg=Theme.BAR_BG, fg=Theme.FG, insertbackground=Theme.FG)
         self.client_id_entry.grid(row=1, column=1, sticky='we', pady=(0, 10))
 
         # Token
         self.token_label = tkinter.Label(self, text='Token: ', bg=Theme.BG, fg=Theme.FG)
         self.token_label.grid(row=2, column=0, sticky='e')
         self.token_text = tkinter.StringVar()
-        self.token_entry = tkinter.Entry(self, textvariable=self.token_text, bg=Theme.BAR_BG, fg=Theme.FG)
+        self.token_entry = tkinter.Entry(self, textvariable=self.token_text, bg=Theme.BAR_BG, fg=Theme.FG, insertbackground=Theme.FG)
         self.token_entry.grid(row=2, column=1, sticky='we')
 
         self.columnconfigure(1, weight=1)
@@ -98,21 +98,21 @@ class IRCLabel(tkinter.LabelFrame):
         self.username_label = tkinter.Label(self, text='Username: ', bg=Theme.BG, fg=Theme.FG)
         self.username_label.grid(row=0, column=0, sticky='e', pady=(0, 10))
         self.username_text = tkinter.StringVar()
-        self.username_entry = tkinter.Entry(self, textvariable=self.username_text, bg=Theme.BAR_BG, fg=Theme.FG)
+        self.username_entry = tkinter.Entry(self, textvariable=self.username_text, bg=Theme.BAR_BG, fg=Theme.FG, insertbackground=Theme.FG)
         self.username_entry.grid(row=0, column=1, sticky='we', pady=(0, 10))
 
         # Channel
         self.channel_label = tkinter.Label(self, text='Channel: ', bg=Theme.BG, fg=Theme.FG)
         self.channel_label.grid(row=1, column=0, sticky='e', pady=(0, 10))
         self.channel_text = tkinter.StringVar()
-        self.channel_entry = tkinter.Entry(self, textvariable=self.channel_text, bg=Theme.BAR_BG, fg=Theme.FG)
+        self.channel_entry = tkinter.Entry(self, textvariable=self.channel_text, bg=Theme.BAR_BG, fg=Theme.FG, insertbackground=Theme.FG)
         self.channel_entry.grid(row=1, column=1, sticky='we', pady=(0, 10))
 
         # Token
         self.token_label = tkinter.Label(self, text='Token: ', bg=Theme.BG, fg=Theme.FG)
         self.token_label.grid(row=2, column=0, sticky='e')
         self.token_text = tkinter.StringVar()
-        self.token_entry = tkinter.Entry(self, textvariable=self.token_text, bg=Theme.BAR_BG, fg=Theme.FG)
+        self.token_entry = tkinter.Entry(self, textvariable=self.token_text, bg=Theme.BAR_BG, fg=Theme.FG, insertbackground=Theme.FG)
         self.token_entry.grid(row=2, column=1, sticky='we')
 
         self.columnconfigure(1, weight=1)
@@ -145,7 +145,7 @@ class OtherLabel(tkinter.LabelFrame):
         self.log_label = tkinter.Label(self, text='Logging level: ', bg=Theme.BG, fg=Theme.FG)
         self.log_label.grid(row=0, column=0, sticky='e')
         self.log_text = tkinter.StringVar()
-        self.log_entry = tkinter.Entry(self, textvariable=self.log_text,bg=Theme.BAR_BG, fg=Theme.FG)
+        self.log_entry = tkinter.Entry(self, textvariable=self.log_text,bg=Theme.BAR_BG, fg=Theme.FG, insertbackground=Theme.FG)
         self.log_entry.grid(row=0, column=1, sticky='we')
 
         self.columnconfigure(1, weight=1)

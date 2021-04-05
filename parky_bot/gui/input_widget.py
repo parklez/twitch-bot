@@ -10,15 +10,18 @@ class InputBar(tkinter.Frame):
         self.bot = bot
 
         self.text = tkinter.StringVar()
-        self.input_field = tkinter.Entry(self, textvariable=self.text)
-        self.input_field.grid(column=0, row=0, padx=10, pady=20, sticky=tkinter.EW)
+        self.input_field = tkinter.Entry(self, textvariable=self.text,
+                                         highlightbackground=Theme.BG)
+        self.input_field.grid(column=0, row=0, padx=10, pady=15, sticky=tkinter.EW)
         self.input_field.bind('<Return>', lambda _: self.send_msg())
 
-        self.send_button = tkinter.Button(self, text='  Send  ',
+        self.send_button = tkinter.Button(self, text='Send',
                                           command=self.send_msg,
+                                          padx=10,
                                           bg=Theme.BUTTON_BG,
-                                          fg=Theme.BUTTON_FG)
-        self.send_button.grid(column=1, row=0, padx=10, sticky=tkinter.W)
+                                          fg=Theme.BUTTON_FG,
+                                          highlightbackground=Theme.BG)
+        self.send_button.grid(column=1, row=0, padx=(0, 10), sticky=tkinter.W)
 
         self.columnconfigure(0, weight=1)
 

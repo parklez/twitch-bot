@@ -19,6 +19,8 @@ class Console(tkinter.Frame):
 
         self.console = ScrolledText(self,
                                     bg=Theme.CONSOLE_BG,
+                                    highlightbackground=Theme.BG,
+                                    highlightcolor=Theme.BG,
                                     wrap=tkinter.CHAR,
                                     width=40,
                                     height=10,
@@ -95,7 +97,7 @@ class Console(tkinter.Frame):
         self.console.tag_configure('white', foreground='white', font=self.font)
         self.console.tag_configure('orange', foreground='orange', font=self.font)
         self.console.tag_configure('pink', foreground='#FFC8D7', font=self.font)
-        self.console.tag_configure('red', foreground='red', font=self.font)
+        self.console.tag_configure('red', foreground='red', font=self.font, spacing1=2, spacing3=2)
         self.console.tag_config('grey', foreground='grey', font=('TkDefaultFont', 8, 'bold'))
 
         self.console.configure(state='normal')
@@ -104,7 +106,12 @@ class Console(tkinter.Frame):
         self.console.insert(tkinter.END, 'Here\'s some quick steps:\n', 'orange')
         self.console.insert(tkinter.END, '\n', 'white')
         self.console.insert(tkinter.END, '1', 'red')
-        self.console.insert(tkinter.END, '. Click on the "Settings" button.\n', 'white')
+        self.console.insert(tkinter.END, '. Click on the "Settings', 'white')
+
+        #self.settings_img = tkinter.PhotoImage(data=Theme.SETTINGS_ICON)
+        #self.console.image_create(tkinter.END, image=self.settings_img)
+
+        self.console.insert(tkinter.END, '" button.\n', 'white')
         self.console.insert(tkinter.END, '2', 'red')
         self.console.insert(tkinter.END, '. Fill in IRC fields to gain chat access!\n', 'white')
         self.console.insert(tkinter.END, '3', 'red')
