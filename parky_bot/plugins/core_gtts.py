@@ -59,7 +59,7 @@ def gtts_daemon():
             pass # Ignore and try again later
         except Exception as err:
             os.remove(file_name)
-            LOGGER.error(err, exc_info=True)
+            LOGGER.error(err) #, exc_info=True
         time.sleep(1) # Lessen the CPU impact.
 
 make_dir(TEMP_DIR)
