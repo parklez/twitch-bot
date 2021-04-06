@@ -1,6 +1,6 @@
 # parky's twitch bot
 
-![logo](https://raw.githubusercontent.com/parklez/twitch-bot/master/art/banner_new_wide_kitty.png)\
+![screenshot](/art/windows10.png)\
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![GitHub top language](https://img.shields.io/github/languages/top/parklez/twitch-bot)
 ![Made with love](https://img.shields.io/badge/made%20with-love-ff69b4)
@@ -15,13 +15,13 @@ An open-source, minimalistic, cross-platform, easily expandable with plugins "Tw
 - 🔊 Google's text to speech!
 - ⚡ Load your custom made plugins!
 
-### Download for Windows
+### Download for Windows (8, 8.1, 10)
 Get @ [Releases page](https://github.com/parklez/twitch-bot/releases)
 
 ### Download for all platforms
 Download the repo [Here](https://github.com/parklez/twitch-bot/archive/master.zip) (or using git) and [run it locally.](#running-locally)
 
-### 💡 Creating your own plugin is this easy
+### 💡 Simple plugin example
 Copy the template below:
 ```python
 from parky_bot.settings import BOT
@@ -50,7 +50,7 @@ pip install -r requirements.txt
 ```
 - Start the application:
 ```sh
-python3 -m parky_bot.app
+python -m parky_bot.app
 # Console only/No tkinter:
 python -m parky_bot.app --console
 ```
@@ -63,5 +63,6 @@ This project is under heavy development and subject to refactoring and code smel
 <img src="https://raw.githubusercontent.com/parklez/twitch-bot/master/art/barky_chan.png" width="200" height="200">
 
 ### 3rd party resources
+- Volume icon [icon-icons.com](https://icon-icons.com/icon/volume-up-interface-symbol/73337)
 - Shiba icon [icon-icons.com](https://icon-icons.com/icon/dog-pet-animal-japanese-shiba-inu-japan/127300)
 - Banner [github.com/liyasthomas](https://github.com/liyasthomas/banner)
