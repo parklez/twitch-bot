@@ -28,7 +28,10 @@ class Message:
         self.targets = []
         self.command = ''
 
-        self.parse()
+        try:
+            self.parse()
+        except:
+            pass
 
     def parse(self):
 
