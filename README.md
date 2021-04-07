@@ -6,20 +6,33 @@
 ![Made with love](https://img.shields.io/badge/made%20with-love-ff69b4)
 [![Build Status](https://www.travis-ci.com/parklez/twitch-bot.svg?branch=master)](https://www.travis-ci.com/parklez/twitch-bot)
 ![Downloads](https://img.shields.io/github/downloads/parklez/twitch-bot/total) \
-An open-source, minimalistic, cross-platform, easily expandable with plugins "Twitch IRC/API" bot.
+An open-source, minimalistic, lightweight, cross-platform, easily expandable with plugins Twitch IRC/API bot.
 
 ### Features
 - 🔌 Connect to Twitch IRC chat!
 - 🔌 Connect to Twitch API! (change game, title)
+- 📝 Read chat
 - 🔊 Play custom sounds!
-- 🔊 Google's text to speech!
-- ⚡ Load your custom made plugins!
+- ⚡ Make your own plugins with 5 lines of code!
 
 ### Download for Windows (8, 8.1, 10)
 Get @ [Releases page](https://github.com/parklez/twitch-bot/releases)
 
 ### Download for all platforms
 Download the repo [Here](https://github.com/parklez/twitch-bot/archive/master.zip) (or using git) and [run it locally.](#running-locally)
+
+### ⚡ Included plugins
+|Plugin       |Commands            |
+|-------------|--------------------|
+|Google's TTS | !tts, !< language >|
+|Misc         | !commands, !remind < something >|
+|Pat & Love   | !pat, !love < someone >|
+|Plugin toggle| !plugin < disable/enable > <!command>|
+|Sounds¹      | !< file_name >|
+|Twitch API²  | !uptime, !game < optional >, !title/!status < optional >|
+
+[1]: Custom sounds go inside `/sounds` in mp3/wav formats.\
+[2]: One must fulfill API credentials inside the application settings. 
 
 ### 💡 Simple plugin example
 Copy the template below:
