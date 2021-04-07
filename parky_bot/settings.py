@@ -12,11 +12,8 @@ from parky_bot.utils.logger import get_logger, configure_logger
 # Setting paths
 if getattr(sys, 'frozen', False):
     APP_PATH = os.path.dirname(sys.executable)
-    #pylint: disable=no-member
-    RESOURCE_PATH = sys._MEIPASS
 else:
     APP_PATH = os.path.join(os.path.dirname(__file__), os.path.pardir)
-    RESOURCE_PATH = os.path.join(os.path.dirname(__file__))
 SETTINGS_PATH = os.path.join(APP_PATH, 'settings.json')
 SOUNDS_PATH = os.path.join(APP_PATH, 'sounds')
 
