@@ -1,6 +1,6 @@
 # parky's twitch bot
 
-![screenshot](/art/windows10.png)\
+![Screenshot](/art/windows10.png)\
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![Made with love](https://img.shields.io/badge/made%20with-love-ff69b4)
 ![Downloads](https://img.shields.io/github/downloads/parklez/twitch-bot/total) \
@@ -9,15 +9,25 @@ An open-source, minimalistic, lightweight, cross-platform, easily expandable wit
 ### Features
 - 🔌 Connect to Twitch IRC chat!
 - 🔌 Connect to Twitch API! (change game, title)
-- 📝 Read chat
 - 🔊 Play custom sounds!
-- ⚡ Make your own plugins with 5 lines of code!
+- ⚡ Make your own plugins with 5 lines of code! (Python)
+
 
 ### Download for Windows (8, 8.1, 10)
 Get @ [Releases page](https://github.com/parklez/twitch-bot/releases)
 
-### Download for all platforms
-Download the repo [Here](https://github.com/parklez/twitch-bot/archive/master.zip) (or using git) and [run it locally.](#running-locally)
+### Installation script for Linux
+I made a small script to clone, setup & make shortcuts for convenience.\
+Open a terminal and choose your favourite method below to install:
+```sh
+# Using wget
+sh -c "$(wget https://raw.githubusercontent.com/parklez/twitch-bot/master/scripts/install.sh -O -)"
+
+# Or usig curl
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/parklez/twitch-bot/master/scripts/install.sh)"
+```
+### MacOS
+See [running locally](#running-locally) below.
 
 ### ⚡ Included plugins
 |Plugin       |Commands            |
