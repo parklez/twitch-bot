@@ -20,7 +20,8 @@ class Application:
         self.settings = settings
 
         self.app.configure(background=Theme.BG)
-        self.app.title('parky\'s twitch bot ~')
+        self.app.iconphoto(True, tkinter.PhotoImage(data=Theme.WM_ICON))
+        self.app.title('parky\'s twitch-bot')
         self.app.minsize(300, 400)
         self.app.geometry("500x400")
 
