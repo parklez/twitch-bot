@@ -1,29 +1,31 @@
 # parky's twitch bot
 
-![Screenshot](/art/windows10.png)\
+<p align="center">
+  <img src="https://raw.githubusercontent.com/parklez/twitch-bot/master/img/win10.png">
+</p>
+A free, minimal, lightweight, cross-platform, easily expandable Twitch IRC/API bot.
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![Made with love](https://img.shields.io/badge/made%20with-love-ff69b4)
-![Downloads](https://img.shields.io/github/downloads/parklez/twitch-bot/total) \
-An open-source, minimalistic, lightweight, cross-platform, easily expandable with plugins Twitch IRC/API bot.
+![Downloads](https://img.shields.io/github/downloads/parklez/twitch-bot/total)
 
 ### Features
 - 🔌 Connect to Twitch IRC chat!
 - 🔌 Connect to Twitch API! (change game, title)
 - 🔊 Play custom sounds!
-- ⚡ Make your own plugins with 5 lines of code! (Python)
+- ⚡ Make your own plugins with 5 lines of Python code! 🐍
 
-
-### Download for Windows (8, 8.1, 10)
+### Windows (8, 8.1, 10) download
 Get @ [Releases page](https://github.com/parklez/twitch-bot/releases)
 
-### Installation script for Linux
-I made a small script to clone, setup & make shortcuts for convenience.\
+## Linux installation
+A script to clone, setup & make shortcuts.\
 Open a terminal and choose your favourite method below to install:
 ```sh
-# Using wget
+# wget
 sh -c "$(wget https://raw.githubusercontent.com/parklez/twitch-bot/master/scripts/install.sh -O -)"
 
-# Or usig curl
+# curl
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/parklez/twitch-bot/master/scripts/install.sh)"
 ```
 ### MacOS
@@ -81,7 +83,7 @@ This project is under heavy development and subject to refactoring and code smel
 
 ### Contributors
 - xKittieKat (Artist)
-<img src="https://raw.githubusercontent.com/parklez/twitch-bot/master/art/barky_chan.png" width="200" height="200">
+<img src="https://raw.githubusercontent.com/parklez/twitch-bot/master/img/banner_new_wide_kitty.png" width="452" height="128">
 
 ### 3rd party resources
 - Volume icon [icon-icons.com](https://icon-icons.com/icon/volume-up-interface-symbol/73337)
