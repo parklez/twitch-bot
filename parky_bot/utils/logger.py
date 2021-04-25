@@ -45,6 +45,7 @@ def configure_logger(logger: logging.Logger, level: int):
         stdout_handler.setLevel(logging.DEBUG) # Hardcoded
         console_handler.setLevel(level)
         logger.setLevel(logging.DEBUG) # Minimal global logging level.
+        logger.propagate = False # Stops duplicated logging in virtual envs
 
 def get_logger():
     """This function returns a single logging object.
