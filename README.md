@@ -1,5 +1,4 @@
 # parky's twitch bot
-
 <p align="center">
   <img src="https://raw.githubusercontent.com/parklez/twitch-bot/master/img/win10.png">
 </p>
@@ -9,29 +8,30 @@ A free, minimal, lightweight, cross-platform, easily expandable Twitch IRC/API b
 ![Made with love](https://img.shields.io/badge/made%20with-love-ff69b4)
 ![Downloads](https://img.shields.io/github/downloads/parklez/twitch-bot/total)
 
-### Features
+## Features
 - 🔌 Connect to Twitch IRC chat!
 - 🔌 Connect to Twitch API! (change game, title)
 - 🔊 Play custom sounds!
 - ⚡ Make your own plugins with 5 lines of Python code! 🐍
 
-### Windows (8, 8.1, 10) download
+## Windows (8, 8.1, 10) 💾
 Get @ [Releases page](https://github.com/parklez/twitch-bot/releases)
 
-## Linux installation
-A script to clone, setup & make shortcuts.\
+## Linux 🐧
+You may use the following live script to install this app on your machine.\
 Open a terminal and choose your favourite method below to install:
+#### Using "wget"
 ```sh
-# wget
 sh -c "$(wget https://raw.githubusercontent.com/parklez/twitch-bot/master/scripts/install.sh -O -)"
-
-# curl
+```
+#### Using "curl"
+```sh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/parklez/twitch-bot/master/scripts/install.sh)"
 ```
-### MacOS
+## MacOS 🍎
 See [running locally](#running-locally) below.
 
-### ⚡ Included plugins
+## ⚡ Included plugins
 |Plugin       |Commands            |
 |-------------|--------------------|
 |Google's TTS | !tts, !< language >|
@@ -44,7 +44,7 @@ See [running locally](#running-locally) below.
 [1]: Custom sounds go inside `/sounds` in mp3/wav formats.\
 [2]: One must fulfill API credentials inside the application settings. 
 
-### 💡 Simple plugin example
+## 💡 Simple plugin example
 Copy the template below:
 ```python
 from parky_bot.settings import BOT
@@ -56,7 +56,7 @@ def my_custom_command(message):
  ```
 Save your `my_custom_plugin.py` under `/plugins` folder and you're ready to go!
 
-### Running locally
+## Running locally
 - Install Python 3.7 or newer
 - Set up a virtual env (optional):
 ```sh
@@ -78,14 +78,13 @@ python -m parky_bot.app
 python -m parky_bot.app --console
 ```
 
-### Disclaimer
+## Disclaimer
 This project is under heavy development and subject to refactoring and code smells.
 
-### Contributors
-- xKittieKat (Artist)
-<img src="https://raw.githubusercontent.com/parklez/twitch-bot/master/img/banner_new_wide_kitty.png" width="452" height="128">
+## Contributors
+- xKittieKat (Artist) [deviantart.com](https://www.deviantart.com/xkittiekat/art/barky-chan-v-1-856512308)
 
-### 3rd party resources
+## 3rd party resources
 - Volume icon [icon-icons.com](https://icon-icons.com/icon/volume-up-interface-symbol/73337)
 - Shiba icon [icon-icons.com](https://icon-icons.com/icon/dog-pet-animal-japanese-shiba-inu-japan/127300)
 - Banner [github.com/liyasthomas](https://github.com/liyasthomas/banner)
