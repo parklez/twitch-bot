@@ -20,7 +20,7 @@ class InputBar(tkinter.Frame):
                                           padx=10,
                                           bg=Theme.BUTTON_BG,
                                           fg=Theme.BUTTON_FG,
-                                          highlightbackground=Theme.BG)
+                                          highlightbackground=Theme.BAR_BG)
         self.send_button.grid(column=1, row=0, padx=(0, 10), sticky=tkinter.W)
 
         self.columnconfigure(0, weight=1)

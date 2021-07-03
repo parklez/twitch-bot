@@ -9,19 +9,19 @@ class ButtonBar(tkinter.Frame):
 
         self.vol = settings
 
-        #self.settings_img = tkinter.PhotoImage(data=Theme.SETTINGS_ICON)
+        self.settings_img = tkinter.PhotoImage(data=Theme.SETTINGS_ICON)
         self.settings_button = tkinter.Button(self,
-                                              #image=self.settings_img,
-                                              #compound=tkinter.CENTER,
-                                              text='Settings',
-                                              padx=10,
+                                              image=self.settings_img,
+                                              compound=tkinter.CENTER,
+                                              #text='Settings',
+                                              #padx=10,
                                               #pady=0,
                                               #height=28,
                                               bg=Theme.BUTTON_BG,
                                               fg=Theme.BUTTON_FG,
                                               highlightbackground=Theme.BAR_BG,
-                                              #relif='flat',
-                                              #activebackground=Theme.BUTTON_BG,
+                                              #relief='flat',
+                                              activebackground=Theme.BUTTON_BG,
                                               command=self.open_settings)
         self.settings_button.grid(row=0, column=0, padx=10)
 

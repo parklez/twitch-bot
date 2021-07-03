@@ -29,6 +29,7 @@ class SettingsWindow(tkinter.Toplevel):
                                           padx=10,
                                           bg=Theme.BG,
                                           fg=Theme.FG,
+                                          highlightbackground=Theme.BG,
                                           command=self.save_fields)
         self.save_button.pack(anchor='se', expand=True, pady=10, padx=10)
 

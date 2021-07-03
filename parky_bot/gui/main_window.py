@@ -1,5 +1,4 @@
 import tkinter
-import gc
 from parky_bot.gui.themes.default import Theme
 from parky_bot.gui.console_widget import Console
 from parky_bot.gui.buttons_widget import ButtonBar
@@ -46,11 +45,12 @@ class Application:
 
     def on_closing(self):
         self.app.destroy()
+        #import gc
         #https://pysimplegui.readthedocs.io/en/latest/#multiple-threads
-        self.button_bar = None
-        self.console = None
-        self.send = None
-        gc.collect()
+        # self.button_bar = None
+        # self.console = None
+        # self.send = None
+        # gc.collect()
 
         self.bot.irc.disconnect()
         self.bot.is_pooling = False

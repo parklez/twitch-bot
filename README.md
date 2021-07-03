@@ -88,4 +88,5 @@ This project is under heavy development and subject to refactoring and code smel
 ## 3rd party resources
 - Volume icon [icon-icons.com](https://icon-icons.com/icon/volume-up-interface-symbol/73337)
 - Shiba icon [icon-icons.com](https://icon-icons.com/icon/dog-pet-animal-japanese-shiba-inu-japan/127300)
+- Menu icon [icons-icons.com](https://icon-icons.com/icon/menu/71858)
 - Banner [github.com/liyasthomas](https://github.com/liyasthomas/banner)

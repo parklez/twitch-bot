@@ -103,13 +103,13 @@ class Console(tkinter.Frame):
         self.console.configure(state='normal')
         self.console.insert(tkinter.END, 'Welcome to parky\'s twitch bot!\n\n', 'lightblue')
         self.console.insert(tkinter.END, '\n', 'white')
-        self.console.insert(tkinter.END, 'Here\'s some quick steps:\n', 'orange')
+        self.console.insert(tkinter.END, 'Quick setup:\n', 'orange')
         self.console.insert(tkinter.END, '\n', 'white')
         self.console.insert(tkinter.END, '1', 'red')
-        self.console.insert(tkinter.END, '. Click on the "Settings', 'white')
+        self.console.insert(tkinter.END, '. Click on the "', 'white')
 
-        #self.settings_img = tkinter.PhotoImage(data=Theme.SETTINGS_ICON)
-        #self.console.image_create(tkinter.END, image=self.settings_img)
+        self.settings_img = tkinter.PhotoImage(data=Theme.SETTINGS_ICON)
+        self.console.image_create(tkinter.END, image=self.settings_img)
 
         self.console.insert(tkinter.END, '" button.\n', 'white')
         self.console.insert(tkinter.END, '2', 'red')
