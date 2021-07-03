@@ -32,14 +32,15 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/parklez/twitch-bot/master/
 See [running locally](#running-locally) below.
 
 ## ⚡ Included plugins
-|Plugin       |Commands            |
-|-------------|--------------------|
-|Google's TTS | !tts, !< language >|
-|Misc         | !commands, !remind < something >|
-|Pat & Love   | !pat, !love < someone >|
-|Plugin toggle| !plugin < disable/enable > <!command>|
-|Sounds¹      | !< file_name >|
-|Twitch API²  | !uptime, !game < optional >, !title/!status < optional >|
+|Plugin           |Commands            |
+|-----------------|--------------------|
+|Custom commands  | !add <!command> < response >|
+|Google's TTS     | !tts, !< language >|
+|Misc             | !commands, !remind < something >|
+|Pat & Love       | !pat, !love < someone >|
+|Plugin toggle    | !plugin < disable/enable > <!command>|
+|Sounds¹          | !< file_name >|
+|Twitch API²      | !uptime, !game < optional >, !title/!status < optional >|
 
 [1]: Custom sounds go inside `/sounds` in mp3/wav formats.\
 [2]: One must fulfill API credentials inside the application settings. 
