@@ -7,7 +7,7 @@ def command_toggle_plugin(message: Message):
     command = message.message.split()
     found = False
 
-    if len(command) < 2:
+    if len(command) < 3:
         BOT.send_message('Syntax: !plugin <disable/enable> <!command>')
         return
 
