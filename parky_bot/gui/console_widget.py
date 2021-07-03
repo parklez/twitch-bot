@@ -12,11 +12,11 @@ QUEUE = get_console_queue()
 
 class Console(tkinter.Frame):
 
-    def __init__(self, parent, settings, **kwargs):
+    def __init__(self, parent, settings, max_lines=200, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.settings = settings
-
+        self.max_lines = max_lines
         self.console = ScrolledText(self,
                                     bg=Theme.CONSOLE_BG,
                                     highlightbackground=Theme.BG,
@@ -40,6 +40,17 @@ class Console(tkinter.Frame):
                                 font=('Helvetica', 11),
                                 spacing1=5,
                                 spacing3=5)
+
+        self.console.tag_config('TEXT_ALT',
+                                foreground=Theme.CONSOLE_TEXT,
+                                background=Theme.CONSOLE_BG_ALT,
+                                selectbackground='SystemHighlight',
+                                font=('Helvetica', 11),
+                                spacing1=5,
+                                spacing3=5)
+        # Why does setting 'background' causes highlighted text color to be transparent?
+        # https://web.archive.org/web/20201112014139id_/https://effbot.org/tkinterbook/tkinter-widget-styling.htm
+        self.alt_bg = False
 
         # Logging colors
         self.console.tag_config('INFO', foreground=Theme.LOG_INFO)
@@ -67,14 +78,18 @@ class Console(tkinter.Frame):
         self.console.configure(state='normal') # Allow writing
         try: # Tcl can't render some characters
             if isinstance(text, Message):
+                self.alt_bg = not self.alt_bg
                 user_color = 'lightblue1' if not text.tags.get('color') else text.tags.get('color')
-                self.console.tag_config(text.sender,
+                username_tag = f'{text.sender}{"alt_bg" if self.alt_bg else ""}'
+                self.console.tag_config(username_tag,
                                         font=self.font,
                                         foreground=user_color,
+                                        background=Theme.CONSOLE_BG_ALT if self.alt_bg else Theme.CONSOLE_BG,
+                                        selectbackground='SystemHighlight',
                                         spacing1=5,
                                         spacing3=5)
-                self.console.insert(tkinter.END, text.sender, text.sender)
-                self.console.insert(tkinter.END, f': {text.message}\n', 'TEXT')
+                self.console.insert(tkinter.END, text.sender, username_tag)
+                self.console.insert(tkinter.END, f': {text.message}\n', 'TEXT_ALT' if self.alt_bg else 'TEXT')
             else:
                 message = LOGGER.handlers[1].format(text) # This is not a good way to access this
                 self.console.insert(tkinter.END, f'{message}\n', text.levelname)
@@ -87,6 +102,11 @@ class Console(tkinter.Frame):
 
             else:
                 self.console.insert(tkinter.END, f'{e}\n', 'ERROR')
+
+        #https://stackoverflow.com/questions/4609382/getting-the-total-number-of-lines-in-a-tkinter-text-widget
+        self.line_count = int(self.console.index('end-2c').split('.')[0])
+        if self.line_count > self.max_lines:
+            self.console.delete(1.0, 2.0)
 
         self.console.configure(state='disabled') # Disallow writing
         self.console.yview(tkinter.END)

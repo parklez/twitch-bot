@@ -18,6 +18,7 @@ class Theme:
 
     # Console
     CONSOLE_BG = '#1F1E1F'
+    CONSOLE_BG_ALT = '#2B2A2B'
     CONSOLE_TEXT = '#E5E5E5'
 
     # Log colors
