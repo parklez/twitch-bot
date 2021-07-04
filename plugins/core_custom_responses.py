@@ -94,6 +94,11 @@ def command_remove_custom_responses(message: Message):
         BOT.send_message('Syntax: !remove <!command>')
         return
     result = erase_response_from_file(commands[1])
+
+    for handler in BOT.handlers:
+        if commands[1] in handler['commands']:
+            BOT.handlers.remove(handler)
+
     BOT.send_message(f'{commands[1]} {"deleted!" if result else "not found!"}')
 
 create_responses_from_file()
