@@ -16,42 +16,54 @@ class ParkyBot:
         self.is_pooling = True
         self.twitch_init = False
         self.irc_init = False
+        self.irc_connected_successfully = False
 
-    def pooling(self):
+    def connect_to_twitch(self):
+        if not self.twitch_init and self.twitch and self.twitch.channel:
+            LOGGER.debug('Initializing Twitch API connection...')
+            self.twitch_init = True
+            self.twitch.connect()
+
+    def connect_to_chat(self):
         if not self.irc.username:
             LOGGER.info('IRC username not set, stopping...')
             return
 
-        if not self.twitch_init and self.twitch and self.twitch.channel:
-            self.twitch_init = True
-            self.twitch.connect()
-
         if not self.irc_init:
+            LOGGER.debug('Initializing chat connection...')
             self.irc_init = True
             self.irc.welcome()
 
+    def pooling(self):
+        self.connect_to_twitch()
+        self.connect_to_chat()
         data = ''
-        self.irc.irc_sock.setblocking(0)
-        LOGGER.info('Now pooling...')
+        LOGGER.debug('Attemping to receive message from chat...')
 
         while self.is_pooling:
             try:
                 data = self.irc.irc_sock.recv(6144).decode('UTF-8')
+                if not self.irc_connected_successfully:
+                    self.irc_connected_successfully = True
+                    LOGGER.info('Connected to chat - GLHF!')
             except (ConnectionAbortedError, OSError):
-                try:
-                    time.sleep(0.1)
-                except KeyboardInterrupt:
-                    self.is_pooling = False
+                if not self.is_pooling:
                     break
+                LOGGER.error('Connection aborted... re-connecting in 3 seconds...')
+                time.sleep(3)
+                self.irc_connected_successfully = False
+                self.irc.reconnect()
                 continue
             except KeyboardInterrupt:
                 self.is_pooling = False
-                break
+                return
 
             if data == '':
-                LOGGER.critical('IRC client received 0 bytes, stopping...')
-                self.is_pooling = False
-                break
+                LOGGER.error('Received 0 bytes from chat, re-connecting in 3 seconds...')
+                time.sleep(3)
+                self.irc_connected_successfully = False
+                self.irc.reconnect()
+                continue
 
             if data == 'PING :tmi.twitch.tv\r\n':
                 self.irc.send_pong()
@@ -72,6 +84,8 @@ class ParkyBot:
                     self.filter(m)
 
             data = ''
+            time.sleep(0.1)
+
         LOGGER.info('Stopped pooling.')
 
     def filter(self, message: Message):

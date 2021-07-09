@@ -24,6 +24,11 @@ class TwitchIRC:
 
         #self.welcome()
 
+    def reconnect(self):
+        self.disconnect()
+        self.irc_sock = socket.socket()
+        self.welcome()
+
     def welcome(self):
         """Connects to twitch IRC in few steps:
 

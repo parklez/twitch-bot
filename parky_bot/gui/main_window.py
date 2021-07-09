@@ -52,5 +52,5 @@ class Application:
         # self.send = None
         # gc.collect()
 
-        self.bot.irc.disconnect()
         self.bot.is_pooling = False
+        self.bot.irc.disconnect()
