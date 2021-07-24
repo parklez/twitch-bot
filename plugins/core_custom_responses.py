@@ -74,7 +74,7 @@ def command_add_custom_responses(message: Message):
         BOT.send_message('Syntax: !add <command> <text response>')
         return
 
-    command = commands[1]
+    command = commands[1].lower()
     response = m[len(commands[0])+len(commands[1])+2:]
 
     #https://www.codementor.io/@arpitbhayani/overload-functions-in-python-13e32ahzqt
