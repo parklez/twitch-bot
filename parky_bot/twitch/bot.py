@@ -27,6 +27,7 @@ class ParkyBot:
     def connect_to_chat(self):
         if not self.irc.username:
             LOGGER.info('IRC username not set, stopping...')
+            self.is_pooling = False
             return
 
         if not self.irc_init:
