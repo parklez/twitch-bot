@@ -4,10 +4,11 @@ from parky_bot.gui.settings_window import SettingsWindow
 
 
 class ButtonBar(tkinter.Frame):
-    def __init__(self, parent, settings, **kwargs):
+    def __init__(self, parent, bot, settings, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.vol = settings
+        self.bot = bot
 
         self.settings_img = tkinter.PhotoImage(data=Theme.SETTINGS_ICON)
         self.settings_button = tkinter.Button(self,
@@ -44,7 +45,7 @@ class ButtonBar(tkinter.Frame):
         self.columnconfigure(1, weight=1)
 
     def open_settings(self):
-        SettingsWindow(self.vol)
+        SettingsWindow(self.bot, self.vol)
 
     def set_vol(self, vol: int) -> None:
         self.vol['settings']['volume'] = int(vol)

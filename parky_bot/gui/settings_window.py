@@ -1,12 +1,14 @@
 import tkinter
+import threading
 from parky_bot.gui.themes.default import Theme
 
 
 class SettingsWindow(tkinter.Toplevel):
-    def __init__(self, settings):
+    def __init__(self, bot, settings):
         super().__init__()
 
         self.settings = settings
+        self.bot = bot
 
         self.wm_title('Settings')
         self.grab_set()
@@ -38,7 +40,25 @@ class SettingsWindow(tkinter.Toplevel):
         self.settings.update(self.irc_frame.get_fields())
         self.settings.update(self.other_frame.get_fields())
 
+        self.restart_bot()
+
         self.destroy()
+
+    def restart_bot(self):
+        irc = self.irc_frame.get_fields()['irc']
+        api = self.api_frame.get_fields()['api']
+
+        self.bot.irc.username = irc['username']
+        self.bot.irc.channel = '#' + irc['channel']
+        self.bot.irc.token = irc['token']
+
+        self.bot.twitch.channel = api['channel']
+        self.bot.twitch.client_id = api['client_id']
+        self.bot.twitch.token = api['token']
+
+        self.bot.disconnect()
+
+        threading.Thread(target=self.bot.pooling).start()
 
 
 class APILabel(tkinter.LabelFrame):

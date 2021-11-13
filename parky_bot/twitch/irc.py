@@ -26,7 +26,6 @@ class TwitchIRC:
 
     def reconnect(self):
         self.disconnect()
-        self.irc_sock = socket.socket()
         self.welcome()
 
     def welcome(self):
@@ -39,6 +38,7 @@ class TwitchIRC:
         5. Joins a channel
         """
 
+        self.irc_sock = socket.socket()
         self.irc_sock.connect((self.host, self.port))
         self.request_tags()
         #self.request_membership()

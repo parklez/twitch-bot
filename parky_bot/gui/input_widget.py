@@ -31,7 +31,7 @@ class InputBar(tkinter.Frame):
         m.sender = self.bot.irc.username
         m.badges = {'broadcaster': 1} # Assumes owner is running it
         m.command = m.message.split()[0] if m.message else m.message
-        if self.bot and m.message:
+        if self.bot and self.bot.irc.username and m.message:
             self.bot.send_message(m.message)
             self.bot.filter(m)
         self.text.set('')

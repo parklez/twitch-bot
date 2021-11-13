@@ -19,6 +19,10 @@ SOUNDS_PATH = os.path.join(APP_PATH, 'sounds')
 
 # Loading settings
 SETTINGS = get_settings(SETTINGS_PATH)
+def get_running():
+    return get_running.state
+
+get_running.state = True
 
 # Configure logger
 configure_logger(get_logger(), int(SETTINGS['logging']['level']))
@@ -39,3 +43,4 @@ def start():
         threading.Thread(target=BOT.pooling).start()
         Application(BOT, SETTINGS)
     save_settings(SETTINGS, SETTINGS_PATH)
+    get_running.state = False

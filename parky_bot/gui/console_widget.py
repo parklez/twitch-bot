@@ -62,8 +62,7 @@ class Console(tkinter.Frame):
 
         if not self.settings['irc']['username']:
             self.welcome()
-        else:
-            self.after(100, self.pooling)
+        self.after(100, self.pooling)
 
     def pooling(self):
         while 1:
@@ -121,7 +120,7 @@ class Console(tkinter.Frame):
         self.console.tag_config('grey', foreground='grey', font=('TkDefaultFont', 8, 'bold'))
 
         self.console.configure(state='normal')
-        self.console.insert(tkinter.END, 'Welcome to parky\'s twitch bot!\n\n', 'lightblue')
+        self.console.insert(tkinter.END, '~ Welcome to parky\'s twitch bot! ~\n\n', 'lightblue')
         self.console.insert(tkinter.END, '\n', 'white')
         self.console.insert(tkinter.END, 'Quick setup:\n', 'orange')
         self.console.insert(tkinter.END, '\n', 'white')
@@ -139,6 +138,5 @@ class Console(tkinter.Frame):
         self.console.insert(tkinter.END, 'Fill in Twitch API to gain access to channel metadata, such as current title, game, uptime, followers... ', 'white')
         self.console.insert(tkinter.END, '(optional)\n', 'grey')
         self.console.insert(tkinter.END, '\n', 'TEXT')
-        self.console.insert(tkinter.END, 'Restart the application for changes to apply!', 'pink')
 
         self.console.configure(state='disabled')

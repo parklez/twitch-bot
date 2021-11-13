@@ -24,7 +24,7 @@ class Application:
         self.app.minsize(300, 400)
         self.app.geometry("500x400")
 
-        self.button_bar = ButtonBar(self.app, self.settings, bg=Theme.BAR_BG)
+        self.button_bar = ButtonBar(self.app, bot, self.settings, bg=Theme.BAR_BG)
         self.button_bar.pack(fill=tkinter.X)
 
         self.console = Console(self.app, self.settings)
@@ -52,5 +52,4 @@ class Application:
         # self.send = None
         # gc.collect()
 
-        self.bot.is_pooling = False
-        self.bot.irc.disconnect()
+        self.bot.disconnect()

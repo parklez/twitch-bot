@@ -5,7 +5,7 @@ from datetime import datetime
 import threading
 from audioplayer import AudioPlayer
 import gtts
-from parky_bot.settings import BOT, APP_PATH, SETTINGS
+from parky_bot.settings import BOT, APP_PATH, SETTINGS, get_running
 from parky_bot.models.message import Message
 from parky_bot.utils.logger import get_logger
 from parky_bot.utils.file_manager import make_dir
@@ -45,7 +45,7 @@ def command_gtts(message: Message):
     QUEUE.put_nowait(result)
 
 def gtts_daemon():
-    while BOT.is_pooling:
+    while get_running.state:
         try:
             response = QUEUE.get(block=False) # This blocks and hangs the program entirely
             file_name = os.path.join(TEMP_DIR, f'gtts_{datetime.now().microsecond}.mp3')
