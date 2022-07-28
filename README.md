@@ -71,6 +71,9 @@ source .venv/bin/activate
 - Install dependencies:
 ```sh
 pip install -r requirements.txt
+
+# MacOS Only:
+pip install pyobjc tkmacosx
 ```
 - Start the application:
 ```sh
