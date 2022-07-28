@@ -11,6 +11,22 @@ try: # This allows Windows 10 to scale the window for high DPI monitors.
 except:
     pass
 
+try: # For MacOS users :)
+    """
+    Python only imports modules once in this fashion,
+    and since the code below only calls the subsequent
+    tkinter.Button methods on init, it's possible to
+    swap the original class with tkmacosx version here.
+
+    I might change this in the future if I judge the
+    design to be better repeating this code for each
+    class that needs this swap.
+    """
+    import tkmacosx
+    tkinter.Button = tkmacosx.Button
+except:
+    pass
+
 
 class Application:
 

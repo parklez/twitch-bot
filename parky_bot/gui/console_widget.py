@@ -16,6 +16,7 @@ class Console(tkinter.Frame):
         super().__init__(parent, **kwargs)
 
         self.settings = settings
+        self.f_size = settings.get('settings', {}).get('font-size')
         self.max_lines = max_lines
         self.console = ScrolledText(self,
                                     bg=Theme.CONSOLE_BG,
@@ -32,12 +33,12 @@ class Console(tkinter.Frame):
         self.console.pack(fill=tkinter.BOTH,
                           expand=True)
 
-        self.font = ('Helvetica', 11, 'bold')
+        self.font = ('Helvetica', self.f_size, 'bold')
 
         # Text color
         self.console.tag_config('TEXT',
                                 foreground=Theme.CONSOLE_TEXT,
-                                font=('Helvetica', 11),
+                                font=('Helvetica', self.f_size),
                                 spacing1=5,
                                 spacing3=5)
 
@@ -45,7 +46,7 @@ class Console(tkinter.Frame):
                                 foreground=Theme.CONSOLE_TEXT,
                                 background=Theme.CONSOLE_BG_ALT,
                                 selectbackground='SystemHighlight',
-                                font=('Helvetica', 11),
+                                font=('Helvetica', self.f_size),
                                 spacing1=5,
                                 spacing3=5)
         # Why does setting 'background' causes highlighted text color to be transparent?

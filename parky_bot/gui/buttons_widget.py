@@ -40,7 +40,7 @@ class ButtonBar(tkinter.Frame):
                                        highlightbackground=Theme.SLIDER_HL_BG,
                                        command=lambda vol: self.set_vol(vol))
         self.vol_meter.set(self.get_vol())
-        self.vol_meter.grid(row=0, column=2, padx=10, sticky='e')
+        self.vol_meter.grid(row=0, column=2, padx=10, pady=5, sticky='e')
 
         self.columnconfigure(1, weight=1)
 
