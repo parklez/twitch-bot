@@ -169,17 +169,28 @@ class OtherLabel(tkinter.LabelFrame):
         self.log_entry = tkinter.Entry(self, textvariable=self.log_text,bg=Theme.BAR_BG, fg=Theme.FG, insertbackground=Theme.FG)
         self.log_entry.grid(row=0, column=1, sticky='we')
 
+        # Font size
+        self.size_label = tkinter.Label(self, text='Font size: ', bg=Theme.BG, fg=Theme.FG)
+        self.size_label.grid(row=1, column=0, sticky='e')
+        self.size_text = tkinter.StringVar()
+        self.size_entry = tkinter.Entry(self, textvariable=self.size_text,bg=Theme.BAR_BG, fg=Theme.FG, insertbackground=Theme.FG)
+        self.size_entry.grid(row=1, column=1, sticky='we')
+
         self.columnconfigure(1, weight=1)
 
-        self.set_fields(settings['logging'])
+        self.set_fields(settings)
 
     def get_fields(self) -> dict:
         return {
             'logging': {
-                'level': self.log_text.get().lower(),
+                'level': self.log_text.get().lower()
+            },
+            'settings': {
+                'font-size': int(self.size_text.get()),
             }
         }
 
     def set_fields(self, settings):
-        self.log_text.set(settings['level'])
+        self.log_text.set(settings['logging']['level'])
+        self.size_text.set(settings['settings']['font-size'])
 

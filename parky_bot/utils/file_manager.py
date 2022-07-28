@@ -18,6 +18,7 @@ DEFALT_SETTINGS = {
     },
     'settings':{
         'volume': 80,
+        'font-size': 11
     }
 }
 
