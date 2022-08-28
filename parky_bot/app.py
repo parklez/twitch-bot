@@ -5,5 +5,5 @@ from parky_bot.utils.plugin_loader import load_plugins
 # Load plugins
 load_plugins(APP_PATH)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     start()

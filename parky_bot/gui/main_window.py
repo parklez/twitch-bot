@@ -3,6 +3,7 @@ from parky_bot.gui.themes.default import Theme
 from parky_bot.gui.console_widget import Console
 from parky_bot.gui.buttons_widget import ButtonBar
 from parky_bot.gui.input_widget import InputBar
+from parky_bot.twitch.oauth_implicit_flow import stop_auth
 
 
 try: # This allows Windows 10 to scale the window for high DPI monitors.
@@ -38,7 +39,7 @@ class Application:
         self.app.iconphoto(True, tkinter.PhotoImage(data=Theme.WM_ICON))
         self.app.title('parky\'s twitch-bot')
         self.app.minsize(300, 400)
-        self.app.geometry("500x400")
+        self.app.geometry('500x400')
 
         self.button_bar = ButtonBar(self.app, bot, self.settings, bg=Theme.BAR_BG)
         self.button_bar.pack(fill=tkinter.X)
@@ -52,7 +53,7 @@ class Application:
         self.send = InputBar(self.app, bot, bg=Theme.BAR_BG)
         self.send.pack(fill=tkinter.X, side=tkinter.BOTTOM)
 
-        self.app.protocol("WM_DELETE_WINDOW", self.on_closing)
+        self.app.protocol('WM_DELETE_WINDOW', self.on_closing)
         self.bot = bot
         try:
             self.app.mainloop()
@@ -68,4 +69,5 @@ class Application:
         # self.send = None
         # gc.collect()
 
+        stop_auth()
         self.bot.disconnect()

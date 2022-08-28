@@ -2,16 +2,16 @@ import json
 import os
 
 
-DEFALT_SETTINGS = {
+DEFAULT_SETTINGS = {
     'irc': {
-        'username': '',
         'channel': '',
-        'token': 'Generate a token at www.twitchapps.com/tmi/',
+        'token': '',
+        'scopes': 'chat:read+chat:edit'
     },
     'api': {
-        'client_id': "client_id https://glass.twitch.tv/console/apps",
-        'channel': '',
-        'token': "Generate a token with 'user_read channel_editor' scopes at https://twitchapps.com/tokengen/",
+        'client_id': 'https://dev.twitch.tv/console/apps',
+        'token': '',
+        'scopes': 'channel:read:editors+channel:manage:broadcast+user:read:email'
     },
     'logging': {
         'level': 20
@@ -24,11 +24,11 @@ DEFALT_SETTINGS = {
 
 
 def create_json(data: dict, file: str) -> None:
-    with open(file, "w") as _file:
+    with open(file, 'w') as _file:
         json.dump(data, _file, indent=4)
 
 def load_json(file: str) -> dict:
-    with open(file, "r") as _file:
+    with open(file, 'r') as _file:
         return json.load(_file)
 
 def make_dir(directory: str) -> None:
@@ -36,7 +36,7 @@ def make_dir(directory: str) -> None:
         os.makedirs(directory)
 
 def create_settings_json(file: str) -> dict:
-    create_json(DEFALT_SETTINGS, file)
+    create_json(DEFAULT_SETTINGS, file)
 
 def get_settings(file: str) -> dict:
     """Gets a dict containing the application settings as singleton*.
@@ -54,7 +54,7 @@ def get_settings(file: str) -> dict:
             get_settings.single = load_json(file)
         except FileNotFoundError:
             create_settings_json(file)
-            get_settings.single = DEFALT_SETTINGS
+            get_settings.single = DEFAULT_SETTINGS
     return get_settings.single
 
 get_settings.single = None

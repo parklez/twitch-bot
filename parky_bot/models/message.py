@@ -65,5 +65,5 @@ class Message:
         self.command = words[0].lower() if words else ''
 
         for word in words:
-            if word.startswith("@"):
-                self.targets.append(word.strip("@"))
+            if word.startswith('@'):
+                self.targets.append(word.strip('@'))

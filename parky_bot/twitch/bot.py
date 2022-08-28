@@ -8,7 +8,7 @@ CONSOLE = get_console_queue()
 
 
 class ParkyBot:
-    def __init__(self, irc, twitch=None):
+    def __init__(self, irc, twitch):
         self.irc = irc
         self.twitch = twitch
         self.handlers = []
@@ -18,7 +18,7 @@ class ParkyBot:
         self.irc_connected_successfully = False
 
     def connect_to_twitch(self):
-        if self.twitch and self.twitch.channel and self.twitch.token and self.twitch.client_id:
+        if self.twitch and self.twitch.token and self.twitch.client_id:
             LOGGER.debug('Initializing Twitch API...')
             self.twitch.connect()
 
@@ -144,10 +144,12 @@ class ParkyBot:
 
     def send_message(self, string):
         self.irc.send_message(string)
-        m = Message('')
-        m.message = string
-        m.sender = self.irc.username
-        CONSOLE.put_nowait(m)
+        # This is only necessary if the IRC user is not the owner of the channel(?)
+        if self.irc.username != self.twitch.channel:
+            m = Message('')
+            m.message = string
+            m.sender = self.irc.username
+            CONSOLE.put_nowait(m)
 
     def disconnect(self):
         self._pooling = False

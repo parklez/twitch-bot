@@ -19,20 +19,19 @@ SOUNDS_PATH = os.path.join(APP_PATH, 'sounds')
 
 # Loading settings
 SETTINGS = get_settings(SETTINGS_PATH)
-def get_running():
-    return get_running.state
+def app_running():
+    return app_running.state
 
-get_running.state = True
+app_running.state = True
 
 # Configure logger
 configure_logger(get_logger(), int(SETTINGS['logging']['level']))
 
 # Initilizing bot
-IRC = TwitchIRC(SETTINGS['irc']['username'],
+IRC = TwitchIRC(SETTINGS['api']['client_id'],
                 SETTINGS['irc']['channel'],
                 SETTINGS['irc']['token'])
 API = TwitchAPI(SETTINGS['api']['client_id'],
-                SETTINGS['api']['channel'],
                 SETTINGS['api']['token'])
 BOT = ParkyBot(IRC, API)
 
@@ -43,4 +42,4 @@ def start():
         threading.Thread(target=BOT.pooling).start()
         Application(BOT, SETTINGS)
     save_settings(SETTINGS, SETTINGS_PATH)
-    get_running.state = False
+    app_running.state = False

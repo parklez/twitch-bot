@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- https://stackoverflow.com/questions/1321878/how-to-prevent-favicon-ico-requests -->
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  <meta charset="UTF-8" />
+  <title></title>
+</head>
+
+<body>
+</body>
+<script>
+  const hash = window.location.hash.split("#")[1];
+  const params = Object.fromEntries(new URLSearchParams(hash));
+  const r = new XMLHttpRequest();
+
+  // https://2ality.com/2016/10/async-function-tips.html#immediately-invoked-async-function-expressions
+  (async () => {
+    r.open("POST", "http://localhost:1338/", true);
+    r.setRequestHeader("Content-Type", "text/plain");
+    await r.send(JSON.stringify(params));
+    await new Promise(r => setTimeout(r, 4000));
+    close()
+  })()
+</script>
+
+</html>

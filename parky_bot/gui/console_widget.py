@@ -61,7 +61,7 @@ class Console(tkinter.Frame):
         self.console.tag_config('CRITICAL', foreground=Theme.LOG_CRITICAL)
         self.console.focus()
 
-        if not self.settings['irc']['username']:
+        if not self.settings['irc']['token']:
             self.welcome()
         self.after(100, self.pooling)
 
