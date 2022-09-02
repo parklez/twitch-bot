@@ -44,7 +44,7 @@ class Application:
         self.button_bar = ButtonBar(self.app, bot, self.settings, bg=Theme.BAR_BG)
         self.button_bar.pack(fill=tkinter.X)
 
-        self.console = Console(self.app, self.settings)
+        self.console = Console(self.app, bot, self.settings)
         self.console.pack(fill=tkinter.BOTH,
                           pady=10,
                           padx=10,

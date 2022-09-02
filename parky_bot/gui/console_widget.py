@@ -12,10 +12,11 @@ QUEUE = get_console_queue()
 
 class Console(tkinter.Frame):
 
-    def __init__(self, parent, settings, max_lines=200, **kwargs):
+    def __init__(self, parent, bot, settings, max_lines=200, **kwargs):
         super().__init__(parent, **kwargs)
 
         self.settings = settings
+        self.bot = bot
         self.f_size = settings.get('settings', {}).get('font-size')
         self.max_lines = max_lines
         self.console = ScrolledText(self,
@@ -61,6 +62,10 @@ class Console(tkinter.Frame):
         self.console.tag_config('CRITICAL', foreground=Theme.LOG_CRITICAL)
         self.console.focus()
 
+        # User colors
+        self.irc_user_color = None
+        self.default_user_color = 'lightblue1'
+
         if not self.settings['irc']['token']:
             self.welcome()
         self.after(100, self.pooling)
@@ -74,12 +79,34 @@ class Console(tkinter.Frame):
                 break
         self.after(100, self.pooling)
 
+    def set_self_color(self) -> str:
+        user_info = self.bot.twitch.get_users([self.bot.irc.username.lower()])
+        if not user_info:
+            return self.default_user_color
+
+        user_color_info = self.bot.twitch.get_user_chat_color([user_info[0]['id']])
+        if not user_color_info:
+            return self.default_user_color
+
+        user_color = user_color_info[0].get('color')
+        if not user_color:
+            self.irc_user_color = self.default_user_color
+            return self.default_user_color
+
+        self.irc_user_color = user_color
+        return user_color
+
+    def get_user_color(self, text: dict) -> str:
+        if self.bot.irc.username.lower() == text.sender.lower():
+            return self.irc_user_color if self.irc_user_color else self.set_self_color()
+        return self.default_user_color if not text.tags.get('color') else text.tags.get('color')
+
     def insert(self, text):
         self.console.configure(state='normal') # Allow writing
         try: # Tcl can't render some characters
             if isinstance(text, Message):
                 self.alt_bg = not self.alt_bg
-                user_color = 'lightblue1' if not text.tags.get('color') else text.tags.get('color')
+                user_color = self.get_user_color(text)
                 username_tag = f'{text.sender}{"alt_bg" if self.alt_bg else ""}'
                 self.console.tag_config(username_tag,
                                         font=self.font,

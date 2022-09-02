@@ -65,6 +65,18 @@ class TwitchAPI:
         LOGGER.warning(f'Twitch API validation [{r.status_code}]: {r.text}')
         return False
 
+    def get_user_chat_color(self, users: list) -> list:
+        # https://dev.twitch.tv/docs/api/reference#get-user-chat-color
+
+        users = '&user_id='.join(users)
+        r = requests.get(f'{self.api_host}' \
+                         f'/chat/color?user_id={users}',
+                         headers=self.headers)
+        if r.status_code == 200:
+            return r.json()['data']
+        LOGGER.warning(f'get_user_chat_color [{r.status_code}]: {r.text}')
+        return []
+
     def get_users(self, users: list) -> list:
         # https://dev.twitch.tv/docs/api/reference#get-users
 
