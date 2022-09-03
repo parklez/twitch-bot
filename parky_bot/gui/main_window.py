@@ -6,13 +6,13 @@ from parky_bot.gui.input_widget import InputBar
 from parky_bot.twitch.oauth_implicit_flow import stop_auth
 
 
-try: # This allows Windows 10 to scale the window for high DPI monitors.
+try:  # This allows Windows 10 to scale the window for high DPI monitors.
     from ctypes import windll
     windll.shcore.SetProcessDpiAwareness(1)
 except:
     pass
 
-try: # For MacOS users :)
+try:  # For MacOS users :)
     """
     Python only imports modules once in this fashion,
     and since the code below only calls the subsequent
@@ -41,7 +41,8 @@ class Application:
         self.app.minsize(300, 400)
         self.app.geometry('500x400')
 
-        self.button_bar = ButtonBar(self.app, bot, self.settings, bg=Theme.BAR_BG)
+        self.button_bar = ButtonBar(
+            self.app, bot, self.settings, bg=Theme.BAR_BG)
         self.button_bar.pack(fill=tkinter.X)
 
         self.console = Console(self.app, bot, self.settings)
@@ -63,7 +64,7 @@ class Application:
     def on_closing(self):
         self.app.destroy()
         #import gc
-        #https://pysimplegui.readthedocs.io/en/latest/#multiple-threads
+        # https://pysimplegui.readthedocs.io/en/latest/#multiple-threads
         # self.button_bar = None
         # self.console = None
         # self.send = None

@@ -51,7 +51,8 @@ class ParkyBot:
             except (ConnectionAbortedError, OSError):
                 if not self._pooling:
                     break
-                LOGGER.error('Connection aborted... re-connecting in 3 seconds...')
+                LOGGER.error(
+                    'Connection aborted... re-connecting in 3 seconds...')
                 self.reconnect()
                 continue
             except KeyboardInterrupt:
@@ -59,7 +60,8 @@ class ParkyBot:
                 return
 
             if data == '':
-                LOGGER.error('Received 0 bytes from chat, re-connecting in 3 seconds...')
+                LOGGER.error(
+                    'Received 0 bytes from chat, re-connecting in 3 seconds...')
                 self.reconnect()
                 continue
 
@@ -94,7 +96,7 @@ class ParkyBot:
         """
         for decorator in self.handlers:
             if (message.command in decorator['commands'] and decorator['active']
-            and self.has_permission(decorator['access'], message)):
+                    and self.has_permission(decorator['access'], message)):
                 decorator['function'](message)
 
     @staticmethod
@@ -136,7 +138,7 @@ class ParkyBot:
                 'commands': commands,
                 'regexp': regexp,
                 'access': access
-                }
+            }
 
             self.handlers.append(func)
             return function

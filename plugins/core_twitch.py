@@ -15,6 +15,7 @@ def command_updategame(message: Message):
         else:
             BOT.send_message(f'Twitch API failed to update game!')
 
+
 @BOT.decorator(['!status', '!title'])
 def command_updatestatus(message: Message):
     prefix = len(message.command) + 1
@@ -22,11 +23,13 @@ def command_updatestatus(message: Message):
         return BOT.send_message(f'Status: "{BOT.twitch.status}"')
 
     if 'broadcaster' in message.badges:
-        result = BOT.twitch.update_stream(stream_title=message.message[prefix:])
+        result = BOT.twitch.update_stream(
+            stream_title=message.message[prefix:])
         if result:
             BOT.send_message(f'Title set to: "{BOT.twitch.status}"')
         else:
             BOT.send_message(f'Twitch API failed to update status!')
+
 
 @BOT.decorator(['!uptime'])
 def command_uptime(message: Message):
@@ -38,6 +41,6 @@ def command_uptime(message: Message):
     time = time.replace(':', ' hour(s), ', 1)
     time = time.replace(':', ' minutes, ')
     time += ' seconds.'
-    time = time.replace('0 hour(s), ', '') # Removing this case.
+    time = time.replace('0 hour(s), ', '')  # Removing this case.
 
     BOT.send_message(f'{BOT.twitch.channel} has been live for {time}')

@@ -18,13 +18,16 @@ class SettingsWindow(tkinter.Toplevel):
         self.resizable(1, 0)
         self.configure(background=Theme.BG)
 
-        self.irc_frame = IRCLabel(self, self.bot, self.settings, text='Chat', padx=10, pady=5)
+        self.irc_frame = IRCLabel(
+            self, self.bot, self.settings, text='Chat', padx=10, pady=5)
         self.irc_frame.pack(fill=tkinter.X, padx=10, pady=5)
 
-        self.api_frame = APILabel(self, self.bot, self.settings, text='Twitch API', padx=10, pady=5)
+        self.api_frame = APILabel(
+            self, self.bot, self.settings, text='Twitch API', padx=10, pady=5)
         self.api_frame.pack(fill=tkinter.X, padx=10, pady=(0, 5))
 
-        self.other_frame = OtherLabel(self, self.settings, text='Misc', padx=10, pady=5)
+        self.other_frame = OtherLabel(
+            self, self.settings, text='Misc', padx=10, pady=5)
         self.other_frame.pack(fill=tkinter.X, padx=10)
 
         self.save_button = tkinter.Button(self,
@@ -67,7 +70,8 @@ class APILabel(tkinter.LabelFrame):
         self.bot = bot
 
         # Client ID
-        self.client_id_label = tkinter.Label(self, text='Client ID: ', bg=Theme.BG, fg=Theme.FG)
+        self.client_id_label = tkinter.Label(
+            self, text='Client ID: ', bg=Theme.BG, fg=Theme.FG)
         self.client_id_label.grid(row=1, column=0, sticky='e', pady=(0, 10))
         self.client_text = tkinter.StringVar()
         self.client_id_entry = tkinter.Entry(
@@ -94,6 +98,7 @@ class APILabel(tkinter.LabelFrame):
         self.auth_thread = threading.Thread(target=handle_oauth, args=(
             self.bot, self.settings, self.settings['api']['scopes'], 'api')).start()
 
+
 class IRCLabel(tkinter.LabelFrame):
     def __init__(self, parent, bot, settings, **kwargs):
         super().__init__(parent, **kwargs)
@@ -105,7 +110,8 @@ class IRCLabel(tkinter.LabelFrame):
         self.settings = settings
 
         # Channel
-        self.channel_label = tkinter.Label(self, text='Channel: ', bg=Theme.BG, fg=Theme.FG)
+        self.channel_label = tkinter.Label(
+            self, text='Channel: ', bg=Theme.BG, fg=Theme.FG)
         self.channel_label.grid(row=1, column=0, sticky='e', pady=(0, 10))
         self.channel_text = tkinter.StringVar()
         self.channel_entry = tkinter.Entry(
@@ -132,6 +138,7 @@ class IRCLabel(tkinter.LabelFrame):
         self.auth_thread = threading.Thread(target=handle_oauth, args=(
             self.bot, self.settings, self.settings['irc']['scopes'], 'irc')).start()
 
+
 class OtherLabel(tkinter.LabelFrame):
 
     log_labels = {
@@ -150,15 +157,18 @@ class OtherLabel(tkinter.LabelFrame):
         self.configure({'background': Theme.BG,
                         'fg': Theme.FG})
 
-        self.log_label = tkinter.Label(self, text='Logging level: ', bg=Theme.BG, fg=Theme.FG)
+        self.log_label = tkinter.Label(
+            self, text='Logging level: ', bg=Theme.BG, fg=Theme.FG)
         self.log_label.grid(row=0, column=0, sticky='e')
 
         self.log_option = tkinter.StringVar()
-        self.log_entry = tkinter.OptionMenu(self, self.log_option, *self.log_labels.values())
+        self.log_entry = tkinter.OptionMenu(
+            self, self.log_option, *self.log_labels.values())
         self.log_entry.grid(row=0, column=1, sticky='we')
 
         # Font size
-        self.size_label = tkinter.Label(self, text='Font size: ', bg=Theme.BG, fg=Theme.FG)
+        self.size_label = tkinter.Label(
+            self, text='Font size: ', bg=Theme.BG, fg=Theme.FG)
         self.size_label.grid(row=1, column=0, sticky='e')
         self.size_text = tkinter.StringVar()
         self.size_entry = tkinter.Spinbox(self,

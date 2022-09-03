@@ -84,7 +84,8 @@ class Console(tkinter.Frame):
         if not user_info:
             return self.default_user_color
 
-        user_color_info = self.bot.twitch.get_user_chat_color([user_info[0]['id']])
+        user_color_info = self.bot.twitch.get_user_chat_color(
+            [user_info[0]['id']])
         if not user_color_info:
             return self.default_user_color
 
@@ -102,8 +103,8 @@ class Console(tkinter.Frame):
         return self.default_user_color if not text.tags.get('color') else text.tags.get('color')
 
     def insert(self, text):
-        self.console.configure(state='normal') # Allow writing
-        try: # Tcl can't render some characters
+        self.console.configure(state='normal')  # Allow writing
+        try:  # Tcl can't render some characters
             if isinstance(text, Message):
                 self.alt_bg = not self.alt_bg
                 user_color = self.get_user_color(text)
@@ -116,39 +117,49 @@ class Console(tkinter.Frame):
                                         spacing1=5,
                                         spacing3=5)
                 self.console.insert(tkinter.END, text.sender, username_tag)
-                self.console.insert(tkinter.END, f': {text.message}\n', 'TEXT_ALT' if self.alt_bg else 'TEXT')
+                self.console.insert(
+                    tkinter.END, f': {text.message}\n', 'TEXT_ALT' if self.alt_bg else 'TEXT')
             else:
-                message = LOGGER.handlers[1].format(text) # This is not a good way to access this
-                self.console.insert(tkinter.END, f'{message}\n', text.levelname)
+                # This is not a good way to access this
+                message = LOGGER.handlers[1].format(text)
+                self.console.insert(
+                    tkinter.END, f'{message}\n', text.levelname)
 
         except tkinter.TclError as e:
             if isinstance(text, Message):
                 # Replace every char outside of Tcl's allowed range with the ? char.
-                text.message = ''.join((ch if ord(ch) <= 0xFFFF else '\uFFFD') for ch in text.message)
+                text.message = ''.join(
+                    (ch if ord(ch) <= 0xFFFF else '\uFFFD') for ch in text.message)
                 self.console.insert(tkinter.END, f': {text.message}\n', 'TEXT')
 
             else:
                 self.console.insert(tkinter.END, f'{e}\n', 'ERROR')
 
-        #https://stackoverflow.com/questions/4609382/getting-the-total-number-of-lines-in-a-tkinter-text-widget
+        # https://stackoverflow.com/questions/4609382/getting-the-total-number-of-lines-in-a-tkinter-text-widget
         self.line_count = int(self.console.index('end-2c').split('.')[0])
         if self.line_count > self.max_lines:
             self.console.delete(1.0, 2.0)
 
-        self.console.configure(state='disabled') # Disallow writing
+        self.console.configure(state='disabled')  # Disallow writing
         self.console.yview(tkinter.END)
 
     def welcome(self):
         self.font = ('TkDefaultFont', 11, 'bold')
-        self.console.tag_configure('lightblue', foreground='lightblue1', font=self.font, justify='center')
+        self.console.tag_configure(
+            'lightblue', foreground='lightblue1', font=self.font, justify='center')
         self.console.tag_configure('white', foreground='white', font=self.font)
-        self.console.tag_configure('orange', foreground='orange', font=self.font)
-        self.console.tag_configure('pink', foreground='#FFC8D7', font=self.font)
-        self.console.tag_configure('red', foreground='red', font=self.font, spacing1=2, spacing3=2)
-        self.console.tag_config('grey', foreground='grey', font=('TkDefaultFont', 8, 'bold'))
+        self.console.tag_configure(
+            'orange', foreground='orange', font=self.font)
+        self.console.tag_configure(
+            'pink', foreground='#FFC8D7', font=self.font)
+        self.console.tag_configure(
+            'red', foreground='red', font=self.font, spacing1=2, spacing3=2)
+        self.console.tag_config('grey', foreground='grey',
+                                font=('TkDefaultFont', 8, 'bold'))
 
         self.console.configure(state='normal')
-        self.console.insert(tkinter.END, '~ Welcome to parky\'s twitch bot! ~\n\n', 'lightblue')
+        self.console.insert(
+            tkinter.END, '~ Welcome to parky\'s twitch bot! ~\n\n', 'lightblue')
         self.console.insert(tkinter.END, '\n', 'white')
         self.console.insert(tkinter.END, 'Quick setup:\n', 'orange')
         self.console.insert(tkinter.END, '\n', 'white')
@@ -160,10 +171,12 @@ class Console(tkinter.Frame):
 
         self.console.insert(tkinter.END, '" button.\n', 'white')
         self.console.insert(tkinter.END, '2', 'red')
-        self.console.insert(tkinter.END, '. Fill in IRC fields to gain chat access!\n', 'white')
+        self.console.insert(
+            tkinter.END, '. Fill in IRC fields to gain chat access!\n', 'white')
         self.console.insert(tkinter.END, '3', 'red')
         self.console.insert(tkinter.END, '. ', 'white')
-        self.console.insert(tkinter.END, 'Fill in Twitch API to gain access to channel metadata, such as current title, game, uptime, followers... ', 'white')
+        self.console.insert(
+            tkinter.END, 'Fill in Twitch API to gain access to channel metadata, such as current title, game, uptime, followers... ', 'white')
         self.console.insert(tkinter.END, '(optional)\n', 'grey')
         self.console.insert(tkinter.END, '\n', 'TEXT')
 

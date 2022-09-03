@@ -31,14 +31,15 @@ class TwitchIRC:
             self.add_token_to_headers(self.token)
             self.validate_token()
 
-        #self.welcome()
+        # self.welcome()
 
     def add_token_to_headers(self, token: str):
         self.headers['Authorization'] = f'Bearer {token}'
 
     def validate_token(self):
         # https://dev.twitch.tv/docs/authentication
-        r = requests.get('https://id.twitch.tv/oauth2/validate', headers=self.headers)
+        r = requests.get('https://id.twitch.tv/oauth2/validate',
+                         headers=self.headers)
         if r.ok:
             LOGGER.debug(r.json())
             self.username = r.json()['login']
@@ -63,8 +64,8 @@ class TwitchIRC:
         self.irc_sock = socket.socket()
         self.irc_sock.connect((self.host, self.port))
         self.request_tags()
-        #self.request_membership()
-        #self.request_commands()
+        # self.request_membership()
+        # self.request_commands()
         self.send_token()
         self.send_nick()
         self.join_channel()

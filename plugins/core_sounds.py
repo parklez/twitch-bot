@@ -21,6 +21,7 @@ def scan_sounds_dir():
         LOGGER.debug('Created "%s" dir', SOUNDS_PATH)
     return sounds
 
+
 def create_sounds(sounds: list):
     for sound in sounds:
         @BOT.decorator([f'!{sound[:-4].lower()}'])
@@ -28,6 +29,7 @@ def create_sounds(sounds: list):
             play_sound(sound)
 
         LOGGER.debug('Sound %s created.', sound)
+
 
 @BOT.decorator(['!sounds'])
 def command_replysounds(message: Message):
@@ -38,12 +40,14 @@ def command_replysounds(message: Message):
     message = message[:-2] + ' KappaKappa'
     BOT.send_message(message)
 
+
 def play_sound(sound: AudioPlayer) -> None:
     try:
         sound.volume = SETTINGS['settings']['volume']
         sound.play()
     except Exception as err:
         LOGGER.error(err, exc_info=True)
+
 
 SOUNDS = scan_sounds_dir()
 create_sounds(SOUNDS)

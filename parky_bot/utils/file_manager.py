@@ -16,7 +16,7 @@ DEFAULT_SETTINGS = {
     'logging': {
         'level': 20
     },
-    'settings':{
+    'settings': {
         'volume': 80,
         'font-size': 11
     }
@@ -27,16 +27,20 @@ def create_json(data: dict, file: str) -> None:
     with open(file, 'w') as _file:
         json.dump(data, _file, indent=4)
 
+
 def load_json(file: str) -> dict:
     with open(file, 'r') as _file:
         return json.load(_file)
+
 
 def make_dir(directory: str) -> None:
     if not os.path.exists(directory):
         os.makedirs(directory)
 
+
 def create_settings_json(file: str) -> dict:
     create_json(DEFAULT_SETTINGS, file)
+
 
 def get_settings(file: str) -> dict:
     """Gets a dict containing the application settings as singleton*.
@@ -57,7 +61,9 @@ def get_settings(file: str) -> dict:
             get_settings.single = DEFAULT_SETTINGS
     return get_settings.single
 
+
 get_settings.single = None
+
 
 def save_settings(data: dict, file: str) -> None:
     create_json(data, file)

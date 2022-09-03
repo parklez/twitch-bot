@@ -23,4 +23,5 @@ def command_toggle_plugin(message: Message):
                 decorator['active'] = True
                 BOT.send_message(f'Command "{command[2]}" enabled!')
     if not found:
-        BOT.send_message(f'Command {command[2]} not found. Did you forget a "!"?')
+        BOT.send_message(
+            f'Command {command[2]} not found. Did you forget a "!"?')

@@ -36,6 +36,7 @@ class TokenRequestHandler(SimpleHTTPRequestHandler):
         except Exception as error:
             LOGGER.error(error)
 
+
 class RedirectRequestHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=os.path.dirname(__file__), **kwargs)
@@ -51,9 +52,11 @@ def _send_stop_requests() -> None:
     except:
         pass
 
+
 def stop_auth() -> None:
     if handle_oauth.handling:
         threading.Thread(target=_send_stop_requests).start()
+
 
 def build_url(client_id: str, scopes: str) -> str:
     # TODO: randomly generated state
@@ -68,6 +71,7 @@ def build_url(client_id: str, scopes: str) -> str:
         f'&scope={scopes}' \
         f'&state={state}'
     return twitch_oauth
+
 
 def handle_oauth(bot, settings: dict, scopes: str, auth_type: str) -> None:
     if handle_oauth.handling:
@@ -123,5 +127,6 @@ def handle_oauth(bot, settings: dict, scopes: str, auth_type: str) -> None:
         token_server.server_close()
 
         handle_oauth.handling = False
+
 
 handle_oauth.handling = False

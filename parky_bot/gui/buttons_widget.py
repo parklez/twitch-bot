@@ -14,21 +14,22 @@ class ButtonBar(tkinter.Frame):
         self.settings_button = tkinter.Button(self,
                                               image=self.settings_img,
                                               compound=tkinter.CENTER,
-                                              #text='Settings',
-                                              #padx=10,
-                                              #pady=0,
-                                              #height=28,
+                                              # text='Settings',
+                                              # padx=10,
+                                              # pady=0,
+                                              # height=28,
                                               bg=Theme.BUTTON_BG,
                                               fg=Theme.BUTTON_FG,
                                               highlightbackground=Theme.BAR_BG,
-                                              #relief='flat',
+                                              # relief='flat',
                                               activebackground=Theme.BUTTON_BG,
                                               command=self.open_settings)
         self.settings_button.grid(row=0, column=0, padx=10)
 
-        #https://stackoverflow.com/questions/42174987/how-do-i-use-the-base64-encoded-image-string-in-tkinter-label/42175482
+        # https://stackoverflow.com/questions/42174987/how-do-i-use-the-base64-encoded-image-string-in-tkinter-label/42175482
         self.vol_img = tkinter.PhotoImage(data=Theme.VOL_ICON)
-        self.vol_img_label = tkinter.Label(self, image=self.vol_img, bg=Theme.BAR_BG)
+        self.vol_img_label = tkinter.Label(
+            self, image=self.vol_img, bg=Theme.BAR_BG)
         self.vol_img_label.grid(row=0, column=1, padx=(10, 0), sticky='e')
 
         self.vol_meter = tkinter.Scale(self, orient=tkinter.HORIZONTAL,

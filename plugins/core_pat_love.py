@@ -3,13 +3,13 @@ from parky_bot.settings import BOT
 from parky_bot.models.message import Message
 
 
-RESPONSES  = ('{} gives {}\'s head a soft pat Daijoubu',
-              '{} WanISee // pat pat pat {}',
-              '{} slowly strokes {}\'s hair LoudDoge',
-              '{} messes with {}\'s hair PillowYes',
-              '{} pats {}\'s head and they blush LewdChamp',
-              '{} pats {} NepComfy',
-              '{} tries to pat {} but they move away KannaSpooks')
+RESPONSES = ('{} gives {}\'s head a soft pat Daijoubu',
+             '{} WanISee // pat pat pat {}',
+             '{} slowly strokes {}\'s hair LoudDoge',
+             '{} messes with {}\'s hair PillowYes',
+             '{} pats {}\'s head and they blush LewdChamp',
+             '{} pats {} NepComfy',
+             '{} tries to pat {} but they move away KannaSpooks')
 
 
 @BOT.decorator(['!pat'])
@@ -26,6 +26,7 @@ def command_pat(message: Message):
         return
 
     BOT.send_message(random.choice(RESPONSES).format(message.sender, target))
+
 
 @BOT.decorator(['!love'])
 def command_love(message: Message):

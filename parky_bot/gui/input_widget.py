@@ -12,7 +12,8 @@ class InputBar(tkinter.Frame):
         self.text = tkinter.StringVar()
         self.input_field = tkinter.Entry(self, textvariable=self.text,
                                          highlightbackground=Theme.BG)
-        self.input_field.grid(column=0, row=0, padx=10, pady=15, sticky=tkinter.EW)
+        self.input_field.grid(column=0, row=0, padx=10,
+                              pady=15, sticky=tkinter.EW)
         self.input_field.bind('<Return>', lambda _: self.send_msg())
 
         self.send_button = tkinter.Button(self, text='Send',
@@ -29,7 +30,7 @@ class InputBar(tkinter.Frame):
         m = Message('')
         m.message = self.text.get().strip()
         m.sender = self.bot.irc.username
-        m.badges = {'broadcaster': 1} # Assumes owner is running it
+        m.badges = {'broadcaster': 1}  # Assumes owner is running it
         m.command = m.message.split()[0] if m.message else m.message
         if self.bot and self.bot.irc.username and m.message:
             self.bot.send_message(m.message)

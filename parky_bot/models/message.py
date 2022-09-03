@@ -42,20 +42,21 @@ class Message:
         if self.string.startswith('@'):
             regex = r'@(.*) :(.*)\!.*@.*\.tmi\.twitch\.tv PRIVMSG #(.*)'
             (tags,
-            self.sender,
-            message) = re.search(regex, self.string).groups()
+             self.sender,
+             message) = re.search(regex, self.string).groups()
 
             tags = tags.split(';')
             self.tags = dict([tag.split('=') for tag in tags])
 
             badges = self.tags.get('badges')
             if badges:
-                self.badges = dict([badge.split('/') for badge in badges.split(',')])
+                self.badges = dict([badge.split('/')
+                                   for badge in badges.split(',')])
 
         else:
             regex = r':(.*)\!.*@.*\.tmi\.twitch\.tv PRIVMSG #(.*)'
             (self.sender,
-            message) = re.search(regex, self.string).groups()
+             message) = re.search(regex, self.string).groups()
 
         self.channel = message[:message.find(':')-1]
         self.message = message[message.find(':')+1:]

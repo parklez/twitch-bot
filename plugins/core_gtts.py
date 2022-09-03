@@ -26,6 +26,7 @@ def command_replytts(message: Message):
               'Example: !fr animé milkers Honk'
     BOT.send_message(message)
 
+
 @BOT.decorator(['!br', '!au', '!s', '!en', '!de', '!es', '!ja', '!jp', '!it', '!pl', '!pt',
                 '!ru', '!se', '!uk', '!cn', '!fi', '!fr', '!us'])
 def command_gtts(message: Message):
@@ -34,9 +35,9 @@ def command_gtts(message: Message):
         return
 
     langs = {'!br': 'pt-br', '!au': 'en-au', '!s': 'en-gb', '!en': 'en-gb', '!de': 'de',
-            '!es': 'es-es', '!ja': 'ja', '!jp': 'ja', '!it': 'it', '!pl': 'pl',
-            '!pt': 'pt-pt', '!ru': 'ru', '!se': 'sv', '!uk': 'uk', '!cn': 'zh-cn',
-            '!fi': 'fi', '!fr': 'fr', '!us': 'en-us'}
+             '!es': 'es-es', '!ja': 'ja', '!jp': 'ja', '!it': 'it', '!pl': 'pl',
+             '!pt': 'pt-pt', '!ru': 'ru', '!se': 'sv', '!uk': 'uk', '!cn': 'zh-cn',
+             '!fi': 'fi', '!fr': 'fr', '!us': 'en-us'}
 
     result = gtts.gTTS(
         message.message[size:size+100],
@@ -44,11 +45,14 @@ def command_gtts(message: Message):
 
     QUEUE.put_nowait(result)
 
+
 def gtts_daemon():
     while app_running():
         try:
-            response = QUEUE.get(block=False) # This blocks and hangs the program entirely
-            file_name = os.path.join(TEMP_DIR, f'gtts_{datetime.now().microsecond}.mp3')
+            # This blocks and hangs the program entirely
+            response = QUEUE.get(block=False)
+            file_name = os.path.join(
+                TEMP_DIR, f'gtts_{datetime.now().microsecond}.mp3')
             response.save(file_name)
             sound = AudioPlayer(file_name)
             sound.volume = SETTINGS.get('volume', 100)
@@ -56,11 +60,12 @@ def gtts_daemon():
             os.remove(file_name)
             QUEUE.task_done()
         except queue.Empty:
-            pass # Ignore and try again later
+            pass  # Ignore and try again later
         except Exception as err:
             os.remove(file_name)
-            LOGGER.error(err) #, exc_info=True
-        time.sleep(1) # Lessen the CPU impact.
+            LOGGER.error(err)  # , exc_info=True
+        time.sleep(1)  # Lessen the CPU impact.
+
 
 make_dir(TEMP_DIR)
 threading.Thread(target=gtts_daemon).start()

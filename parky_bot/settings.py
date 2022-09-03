@@ -19,8 +19,11 @@ SOUNDS_PATH = os.path.join(APP_PATH, 'sounds')
 
 # Loading settings
 SETTINGS = get_settings(SETTINGS_PATH)
+
+
 def app_running():
     return app_running.state
+
 
 app_running.state = True
 
@@ -35,9 +38,10 @@ API = TwitchAPI(SETTINGS['api']['client_id'],
                 SETTINGS['api']['token'])
 BOT = ParkyBot(IRC, API)
 
+
 def start():
     if '--console' in sys.argv:
-            BOT.pooling()
+        BOT.pooling()
     else:
         threading.Thread(target=BOT.pooling).start()
         Application(BOT, SETTINGS)

@@ -1,4 +1,4 @@
-from parky_bot.settings import BOT, APP_PATH
+from parky_bot.settings import BOT
 from parky_bot.models.message import Message
 from parky_bot.utils.file_manager import create_json, load_json
 
@@ -23,6 +23,7 @@ def save_response_file(command: dict, file=CUSTOM_RESPONSES_FILE) -> str:
     create_json(loaded_list, file)
     return preexisting
 
+
 def create_responses_from_file(file=CUSTOM_RESPONSES_FILE):
     """Load json file cotaining a list of dicts, representing
     a command object.
@@ -39,13 +40,14 @@ def create_responses_from_file(file=CUSTOM_RESPONSES_FILE):
             # for every iteration, the function code is overwritten,
             # and only the arguments are being correctly saved by the
             # decorator.
-            @BOT.decorator([custom_command['command']]) 
+            @BOT.decorator([custom_command['command']])
             def custom_function(_, r=custom_command['response']):
                 # My theory can be "proven" by checking this:
                 #print(custom_command['command'], id(custom_command['command']))
                 BOT.send_message(r)
     except FileNotFoundError:
         return
+
 
 def erase_response_from_file(trigger: str, file=CUSTOM_RESPONSES_FILE) -> bool:
     loaded_list = load_json(file)
@@ -56,6 +58,7 @@ def erase_response_from_file(trigger: str, file=CUSTOM_RESPONSES_FILE) -> bool:
 
             return True
     return False
+
 
 @BOT.decorator(['!add'], access=1)
 def command_add_custom_responses(message: Message):
@@ -77,7 +80,7 @@ def command_add_custom_responses(message: Message):
     command = commands[1].lower()
     response = m[len(commands[0])+len(commands[1])+2:]
 
-    #https://www.codementor.io/@arpitbhayani/overload-functions-in-python-13e32ahzqt
+    # https://www.codementor.io/@arpitbhayani/overload-functions-in-python-13e32ahzqt
     # When overloading the same name, a new function is created entirely. check id().
     # Python will not loose its memory address since it's being referenced elsewhere.
     @BOT.decorator([command])
@@ -86,6 +89,7 @@ def command_add_custom_responses(message: Message):
 
     result = save_response_file({'command': command, 'response': response})
     BOT.send_message(f'"{command}" {result}! \U0001F4BE')
+
 
 @BOT.decorator(['!remove', '!erase', '!del'], access=1)
 def command_remove_custom_responses(message: Message):
@@ -100,5 +104,6 @@ def command_remove_custom_responses(message: Message):
             BOT.handlers.remove(handler)
 
     BOT.send_message(f'{commands[1]} {"deleted!" if result else "not found!"}')
+
 
 create_responses_from_file()

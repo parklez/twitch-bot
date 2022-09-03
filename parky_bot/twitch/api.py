@@ -26,10 +26,10 @@ class TwitchAPI:
         if self.token:
             self.add_token_to_headers(self.token)
 
-        self.channel = '' # Username/Login from the channel connected to
-        self.broadcaster_id = '' # Unique identifier of the above channel
-        self.status = '' # Also known as stream title
-        self.game = '' # Stream game
+        self.channel = ''  # Username/Login from the channel connected to
+        self.broadcaster_id = ''  # Unique identifier of the above channel
+        self.status = ''  # Also known as stream title
+        self.game = ''  # Stream game
 
     def add_token_to_headers(self, token: str):
         self.headers['Authorization'] = f'Bearer {token}'
@@ -69,7 +69,7 @@ class TwitchAPI:
         # https://dev.twitch.tv/docs/api/reference#get-user-chat-color
 
         users = '&user_id='.join(users)
-        r = requests.get(f'{self.api_host}' \
+        r = requests.get(f'{self.api_host}'
                          f'/chat/color?user_id={users}',
                          headers=self.headers)
         if r.status_code == 200:
@@ -81,7 +81,7 @@ class TwitchAPI:
         # https://dev.twitch.tv/docs/api/reference#get-users
 
         users = '&login='.join(users)
-        r = requests.get(f'{self.api_host}' \
+        r = requests.get(f'{self.api_host}'
                          f'/users?login={users}',
                          headers=self.headers)
         if r.status_code == 200:
@@ -92,7 +92,7 @@ class TwitchAPI:
     def get_channel_by_id(self, broadcaster_id: str) -> dict:
         # https://dev.twitch.tv/docs/api/reference#get-channel-information
 
-        r = requests.get(f'{self.api_host}/channels' \
+        r = requests.get(f'{self.api_host}/channels'
                          f'?broadcaster_id={broadcaster_id}',
                          headers=self.headers)
         if r.status_code == 200:
@@ -103,10 +103,10 @@ class TwitchAPI:
     def get_games(self, game_title: str) -> tuple[str, str]:
         # https://dev.twitch.tv/docs/api/reference#get-games
 
-        r = requests.get(f'{self.api_host}' \
+        r = requests.get(f'{self.api_host}'
                          f'/games?name={game_title}',
                          headers=self.headers
-        )
+                         )
 
         if r.status_code == 200:
             try:
@@ -142,10 +142,10 @@ class TwitchAPI:
         if not post_data:
             return
 
-        r = requests.patch(f'{self.api_host}' \
-                            f'/channels?broadcaster_id={self.broadcaster_id}',
-                            json=post_data,
-                            headers=self.headers)
+        r = requests.patch(f'{self.api_host}'
+                           f'/channels?broadcaster_id={self.broadcaster_id}',
+                           json=post_data,
+                           headers=self.headers)
 
         if r.status_code == 204:
             self.game = game_proper_title if game_proper_title else self.game
@@ -159,7 +159,7 @@ class TwitchAPI:
         # https://dev.twitch.tv/docs/api/reference#get-streams
 
         user_ids = '&user_id='.join(user_ids)
-        r = requests.get(f'{self.api_host}' \
+        r = requests.get(f'{self.api_host}'
                          f'/streams/&user_id={user_ids}',
                          headers=self.headers)
         if r.status_code == 200:

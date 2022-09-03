@@ -82,6 +82,9 @@ python -m parky_bot.app
 python -m parky_bot.app --console
 ```
 
+# Linting
+This project uses `autopep8` for linting. Subject to change.
+
 ## Disclaimer
 This project is under heavy development and subject to refactoring and code smells.
 

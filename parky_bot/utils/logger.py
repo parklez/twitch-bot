@@ -42,10 +42,11 @@ def configure_logger(logger: logging.Logger, level: int):
         logger.addHandler(console_handler)
 
         # Defining levels
-        stdout_handler.setLevel(logging.DEBUG) # Hardcoded
+        stdout_handler.setLevel(logging.DEBUG)  # Hardcoded
         console_handler.setLevel(level)
-        logger.setLevel(logging.DEBUG) # Minimal global logging level.
-        logger.propagate = False # Stops duplicated logging in virtual envs
+        logger.setLevel(logging.DEBUG)  # Minimal global logging level.
+        logger.propagate = False  # Stops duplicated logging in virtual envs
+
 
 def get_logger():
     """This function returns a single logging object.
@@ -57,6 +58,7 @@ def get_logger():
     logger = logging.getLogger('parky_bot')
 
     return logger
+
 
 def get_console_queue():
     return CONSOLE_QUEUE
