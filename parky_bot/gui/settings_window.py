@@ -161,8 +161,14 @@ class OtherLabel(tkinter.LabelFrame):
         self.size_label = tkinter.Label(self, text='Font size: ', bg=Theme.BG, fg=Theme.FG)
         self.size_label.grid(row=1, column=0, sticky='e')
         self.size_text = tkinter.StringVar()
-        self.size_entry = tkinter.Entry(self, textvariable=self.size_text, bg=Theme.BAR_BG, fg=Theme.FG, insertbackground=Theme.FG)
-        self.size_entry.grid(row=1, column=1, sticky='we')
+        self.size_entry = tkinter.Spinbox(self,
+                                          from_=1,
+                                          to=100,
+                                          textvariable=self.size_text,
+                                          bg=Theme.BAR_BG,
+                                          fg=Theme.FG,
+                                          insertbackground=Theme.FG)
+        self.size_entry.grid(row=1, column=1, sticky='we', pady=(10, 0))
 
         self.columnconfigure(1, weight=1)
 
