@@ -15,6 +15,8 @@ import json
 import hashlib
 import os
 import threading
+import sys
+
 import requests
 
 from http.server import HTTPServer, SimpleHTTPRequestHandler
@@ -39,7 +41,14 @@ class TokenRequestHandler(SimpleHTTPRequestHandler):
 
 class RedirectRequestHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory=os.path.dirname(__file__), **kwargs)
+        html_path = os.path.dirname(__file__)
+
+        # In case this this app is bundled with pyinstaller
+        if getattr(sys, 'frozen', True):
+            from parky_bot.settings import APP_PATH
+            html_path = os.path.join(APP_PATH, 'bin')
+
+        super().__init__(*args, directory=html_path, **kwargs)
 
 
 def _send_stop_requests() -> None:

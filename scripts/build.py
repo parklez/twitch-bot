@@ -9,7 +9,7 @@ IGNORE_LIST_LINUX = ['libpython3.9.so.1.0',
                      '_struct.cpython-39-x86_64-linux-gnu.so',
                      'zlib.cpython-39-x86_64-linux-gnu.so']
 
-IGNORE_LIST = ['bin', 'certifi', 'base_library.zip']
+IGNORE_LIST = ['bin', 'base_library.zip']
 IGNORE_LIST += (IGNORE_LIST_WIN if platform.system()
                 == 'Windows' else IGNORE_LIST_LINUX)
 
@@ -28,6 +28,8 @@ subprocess.run(['pyinstaller',
                 '--hidden-import', 'requests',
                 '--hidden-import', 'audioplayer',
                 '--runtime-hook', HOOK_PATH,
+                # https://pyinstaller.org/en/stable/usage.html#cmdoption-add-data
+                '--add-data', 'parky_bot/twitch/index.html;.',
                 SCRIPT_PATH])
 
 # Moving files to 'lib'
